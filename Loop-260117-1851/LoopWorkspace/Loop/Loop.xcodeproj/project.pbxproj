@@ -2058,6 +2058,7 @@
 				439706E522D2E84900C81566 /* PredictionSettingTableViewCell.swift */,
 				1DE09BA824A3E23F009EE9F9 /* SettingsView.swift */,
 				DDC389FB2A2BC6670066E2E8 /* SettingsView+algorithmExperimentsSection.swift */,
+				D43070352F1D0BD40039B00C /* InsuSettingsView.swift */,
 				C1DE5D22251BFC4D00439E49 /* SimpleBolusView.swift */,
 				43F64DD81D9C92C900D24DC6 /* TitleSubtitleTableViewCell.swift */,
 				4311FB9A1F37FE1B00D4C0A7 /* TitleSubtitleTextFieldTableViewCell.swift */,
@@ -2170,7 +2171,6 @@
 		4F7528931DFE1E1600C322D6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				D43070352F1D0BD40039B00C /* InsuSettingsView.swift */,
 				716108362F1C988E0054ED70 /* HistoryView.swift */,
 				716108372F1C988E0054ED70 /* ProfileView.swift */,
 				716108382F1C988E0054ED70 /* StatsView.swift */,
@@ -3654,6 +3654,7 @@
 				435400341C9F878D00D5819C /* SetBolusUserInfo.swift in Sources */,
 				A9DCF32A25B0FABF00C89088 /* LoopUIColorPalette+Default.swift in Sources */,
 				1DDE273E24AEA4B000796622 /* SettingsView.swift in Sources */,
+				D43070362F1D0BD40039B00C /* InsuSettingsView.swift in Sources */,
 				A9B607B0247F000F00792BE4 /* UserNotifications+Loop.swift in Sources */,
 				43F89CA322BDFBBD006BB54E /* UIActivityIndicatorView.swift in Sources */,
 				A999D40624663D18004C89D4 /* PumpManagerError.swift in Sources */,
@@ -3968,7 +3969,6 @@
 				D430702F2F1CCA820039B00C /* StatsHeaderView.swift in Sources */,
 				D43070302F1CCA820039B00C /* GlucoseSummaryCard.swift in Sources */,
 				D43070312F1CCA820039B00C /* GlucoseChartCard.swift in Sources */,
-				D43070362F1D0BD40039B00C /* InsuSettingsView.swift in Sources */,
 				D43070322F1CCA820039B00C /* TimeInRangeCard.swift in Sources */,
 				716108C42F1CC5F10054ED70 /* PauseGlucoseCardView.swift in Sources */,
 				716108C52F1CC5F10054ED70 /* ActivityCardView.swift in Sources */,

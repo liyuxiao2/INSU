@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "" : {
-
-    },
     "\n%1$@\n\n%2$@ is operating with Closed Loop in the ON position." : {
       "comment" : "Green closed loop ON message (1: last loop string) (2: app name)",
       "localizations" : {
@@ -1371,6 +1368,9 @@
         }
       }
     },
+    "%lld Days" : {
+
+    },
     "<1 min ago" : {
       "comment" : "Format string describing last completion",
       "localizations" : {
@@ -1449,9 +1449,6 @@
       }
     },
     "4PM" : {
-
-    },
-    "7 Days" : {
 
     },
     "7-Day Glucose Summary" : {
@@ -1778,9 +1775,6 @@
         }
       }
     },
-    "Configure your " : {
-
-    },
     "Confirm Bolus" : {
 
     },
@@ -2034,9 +2028,6 @@
     "GMI (%)" : {
 
     },
-    "Grams of carbs covered by 1 unit of insulin" : {
-
-    },
     "Hello, %@" : {
 
     },
@@ -2171,12 +2162,6 @@
     "History Page" : {
 
     },
-    "How long insulin remains active in your body" : {
-
-    },
-    "How much 1 unit of insulin lowers your blood glucose" : {
-
-    },
     "Input Bolus" : {
 
     },
@@ -2268,9 +2253,6 @@
           }
         }
       }
-    },
-    "Log Out" : {
-
     },
     "Loop Failure" : {
       "comment" : "Title of red loop message",
@@ -3341,9 +3323,6 @@
         }
       }
     },
-    "Recommended Ranges" : {
-
-    },
     "Resume Insulin" : {
 
     },
@@ -3448,9 +3427,6 @@
           }
         }
       }
-    },
-    "The American Diabetes Association recommends a target range of 3.9-10.0 mmol/L (70-180 mg/dL) for most adults with diabetes." : {
-
     },
     "Time in Range" : {
 

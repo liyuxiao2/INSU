@@ -67,7 +67,7 @@ struct TimeRangeSelector: View {
             HStack(spacing: 0) {
                 ForEach(options, id: \.self) { option in
                     Button(action: { onSelect(option) }) {
-                        Text(option == options.last ? "\(option) \(suffix)" : "\(option)")
+                        Text(option == selected ? "\(option) \(suffix)" : "\(option)")
                             .font(.system(size: 14, weight: selected == option ? .bold : .regular))
                             .foregroundColor(Color.insuTextPrimary)
                             .frame(maxWidth: .infinity)

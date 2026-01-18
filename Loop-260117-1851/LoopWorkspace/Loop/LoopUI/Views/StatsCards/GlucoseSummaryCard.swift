@@ -90,7 +90,7 @@ struct DayRangeSelector: View {
             HStack(spacing: 0) {
                 ForEach(options, id: \.self) { option in
                     Button(action: { onSelect(option) }) {
-                        Text(option == 7 ? "7 Days" : "\(option)")
+                        Text(option == selected ? "\(option) Days" : "\(option)")
                             .font(.system(size: 14, weight: selected == option ? .bold : .regular))
                             .foregroundColor(Color.insuTextPrimary)
                             .frame(maxWidth: .infinity)
