@@ -18,6 +18,7 @@ public struct ProfileView: View {
     let onAddCGM: () -> Void
     let onPumpTapped: () -> Void
     let onCGMTapped: () -> Void
+    let onHelpTapped: () -> Void
 
     public init(
         isPumpSetUp: Bool = false,
@@ -29,7 +30,8 @@ public struct ProfileView: View {
         onAddPump: @escaping () -> Void = {},
         onAddCGM: @escaping () -> Void = {},
         onPumpTapped: @escaping () -> Void = {},
-        onCGMTapped: @escaping () -> Void = {}
+        onCGMTapped: @escaping () -> Void = {},
+        onHelpTapped: @escaping () -> Void = {}
     ) {
         self.isPumpSetUp = isPumpSetUp
         self.pumpName = pumpName
@@ -41,6 +43,7 @@ public struct ProfileView: View {
         self.onAddCGM = onAddCGM
         self.onPumpTapped = onPumpTapped
         self.onCGMTapped = onCGMTapped
+        self.onHelpTapped = onHelpTapped
     }
 
     public var body: some View {
@@ -121,7 +124,7 @@ public struct ProfileView: View {
 
                 // Help Button
                 Button(action: {
-                    // Help action
+                    onHelpTapped()
                 }) {
                     Text("Help")
                 }

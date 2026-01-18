@@ -538,6 +538,14 @@
 		D43070322F1CCA820039B00C /* TimeInRangeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430702D2F1CCA820039B00C /* TimeInRangeCard.swift */; };
 		D43070342F1CD5D50039B00C /* SettingsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43070332F1CD5D50039B00C /* SettingsTabView.swift */; };
 		D43070362F1D0BD40039B00C /* InsuSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43070352F1D0BD40039B00C /* InsuSettingsView.swift */; };
+		D43070402F1D2FCF0039B00C /* NutritionAssistantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430703D2F1D2FCF0039B00C /* NutritionAssistantView.swift */; };
+		D43070412F1D2FCF0039B00C /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43070382F1D2FCF0039B00C /* CameraView.swift */; };
+		D43070422F1D2FCF0039B00C /* ChatInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43070392F1D2FCF0039B00C /* ChatInputView.swift */; };
+		D43070432F1D2FCF0039B00C /* ChatMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430703B2F1D2FCF0039B00C /* ChatMessageView.swift */; };
+		D43070442F1D2FCF0039B00C /* NutritionAssistantViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430703E2F1D2FCF0039B00C /* NutritionAssistantViewModel.swift */; };
+		D43070452F1D2FCF0039B00C /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430703A2F1D2FCF0039B00C /* ChatMessage.swift */; };
+		D43070462F1D2FCF0039B00C /* NutritionAssistantHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430703C2F1D2FCF0039B00C /* NutritionAssistantHeader.swift */; };
+		D43070482F1D31370039B00C /* GeminiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43070472F1D31370039B00C /* GeminiService.swift */; };
 		DD3DBD292A33AFE9000F8B5B /* IntegralRetrospectiveCorrectionSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3DBD282A33AFE9000F8B5B /* IntegralRetrospectiveCorrectionSelectionView.swift */; };
 		DDC389F62A2B61750066E2E8 /* ApplicationFactorStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC389F52A2B61750066E2E8 /* ApplicationFactorStrategy.swift */; };
 		DDC389F82A2B620B0066E2E8 /* GlucoseBasedApplicationFactorStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC389F72A2B620B0066E2E8 /* GlucoseBasedApplicationFactorStrategy.swift */; };
@@ -1387,6 +1395,14 @@
 		D430702D2F1CCA820039B00C /* TimeInRangeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeInRangeCard.swift; sourceTree = "<group>"; };
 		D43070332F1CD5D50039B00C /* SettingsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTabView.swift; sourceTree = "<group>"; };
 		D43070352F1D0BD40039B00C /* InsuSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsuSettingsView.swift; sourceTree = "<group>"; };
+		D43070382F1D2FCF0039B00C /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		D43070392F1D2FCF0039B00C /* ChatInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputView.swift; sourceTree = "<group>"; };
+		D430703A2F1D2FCF0039B00C /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		D430703B2F1D2FCF0039B00C /* ChatMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageView.swift; sourceTree = "<group>"; };
+		D430703C2F1D2FCF0039B00C /* NutritionAssistantHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionAssistantHeader.swift; sourceTree = "<group>"; };
+		D430703D2F1D2FCF0039B00C /* NutritionAssistantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionAssistantView.swift; sourceTree = "<group>"; };
+		D430703E2F1D2FCF0039B00C /* NutritionAssistantViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionAssistantViewModel.swift; sourceTree = "<group>"; };
+		D43070472F1D31370039B00C /* GeminiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeminiService.swift; sourceTree = "<group>"; };
 		DB3B89F7A5787E3591AF9FAD /* InsuBolusHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InsuBolusHeaderView.swift; sourceTree = "<group>"; };
 		DD3DBD282A33AFE9000F8B5B /* IntegralRetrospectiveCorrectionSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegralRetrospectiveCorrectionSelectionView.swift; sourceTree = "<group>"; };
 		DDC389F52A2B61750066E2E8 /* ApplicationFactorStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationFactorStrategy.swift; sourceTree = "<group>"; };
@@ -2066,6 +2082,7 @@
 				DD3DBD282A33AFE9000F8B5B /* IntegralRetrospectiveCorrectionSelectionView.swift */,
 				F38A921C46D0828C25289CE3 /* InsuOnboarding */,
 				0B0EF97EFDD8F5A084626BD4 /* InsuBolusViewModelAdapter.swift */,
+				D430703F2F1D2FCF0039B00C /* NutritionAssistant */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2110,6 +2127,7 @@
 				A96DAC2B2838F31200D94E38 /* SharedLogging.swift */,
 				7E69CFFB2A16A77E00203CBD /* ResetLoopManager.swift */,
 				84AA81E42A4A3981000B658B /* DeeplinkManager.swift */,
+				D43070472F1D31370039B00C /* GeminiService.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -2625,6 +2643,20 @@
 				D430702D2F1CCA820039B00C /* TimeInRangeCard.swift */,
 			);
 			path = StatsCards;
+			sourceTree = "<group>";
+		};
+		D430703F2F1D2FCF0039B00C /* NutritionAssistant */ = {
+			isa = PBXGroup;
+			children = (
+				D43070382F1D2FCF0039B00C /* CameraView.swift */,
+				D43070392F1D2FCF0039B00C /* ChatInputView.swift */,
+				D430703A2F1D2FCF0039B00C /* ChatMessage.swift */,
+				D430703B2F1D2FCF0039B00C /* ChatMessageView.swift */,
+				D430703C2F1D2FCF0039B00C /* NutritionAssistantHeader.swift */,
+				D430703D2F1D2FCF0039B00C /* NutritionAssistantView.swift */,
+				D430703E2F1D2FCF0039B00C /* NutritionAssistantViewModel.swift */,
+			);
+			path = NutritionAssistant;
 			sourceTree = "<group>";
 		};
 		E90909CB24E34A7A00F963D2 /* high_and_rising_with_cob */ = {
@@ -3566,6 +3598,13 @@
 				4302F4E11D4E9C8900F0FCAF /* TextFieldTableViewController.swift in Sources */,
 				1452F4AB2A851EDF00F8B9E4 /* AddEditFavoriteFoodView.swift in Sources */,
 				C1742332259BEADC00399C9D /* ManualEntryDoseView.swift in Sources */,
+				D43070402F1D2FCF0039B00C /* NutritionAssistantView.swift in Sources */,
+				D43070412F1D2FCF0039B00C /* CameraView.swift in Sources */,
+				D43070422F1D2FCF0039B00C /* ChatInputView.swift in Sources */,
+				D43070432F1D2FCF0039B00C /* ChatMessageView.swift in Sources */,
+				D43070442F1D2FCF0039B00C /* NutritionAssistantViewModel.swift in Sources */,
+				D43070452F1D2FCF0039B00C /* ChatMessage.swift in Sources */,
+				D43070462F1D2FCF0039B00C /* NutritionAssistantHeader.swift in Sources */,
 				43F64DD91D9C92C900D24DC6 /* TitleSubtitleTableViewCell.swift in Sources */,
 				43FCEEA9221A615B0013DD30 /* StatusChartsManager.swift in Sources */,
 				A9F703752489C9A000C98AD8 /* GlucoseStore+SimulatedCoreData.swift in Sources */,
@@ -3709,6 +3748,7 @@
 				89A1B66E24ABFDF800117AC2 /* SupportedBolusVolumesUserInfo.swift in Sources */,
 				C1C660D1252E4DD5009B5C32 /* LoopConstants.swift in Sources */,
 				432E73CB1D24B3D6009AD15D /* RemoteDataServicesManager.swift in Sources */,
+				D43070482F1D31370039B00C /* GeminiService.swift in Sources */,
 				C18913B52524F24C007B0683 /* DeviceDataManager+SimpleBolusViewModelDelegate.swift in Sources */,
 				7E69CFFC2A16A77E00203CBD /* ResetLoopManager.swift in Sources */,
 				B40D07C7251A89D500C1C6D7 /* GlucoseDisplay.swift in Sources */,
