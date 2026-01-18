@@ -28,7 +28,7 @@ public struct SettingsTabView<Content: View>: View {
                     Spacer()
                 }
                 .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
-                .padding(.top, 60) // Account for safe area
+                .padding(.top, 16)
 
                 // Settings content
                 content

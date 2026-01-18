@@ -34,130 +34,145 @@ public struct SettingsView: View {
             case deletePumpData
             case confirmLogout
         }
-        
+
         enum ActionSheet: String, Identifiable {
             var id: String {
                 rawValue
             }
-            
+
             case cgmPicker
             case pumpPicker
             case servicePicker
         }
-        
+
         enum Sheet: String, Identifiable {
             var id: String {
                 rawValue
             }
-            
+
             case favoriteFoods
         }
     }
-    
+
     @State private var actionSheet: Destination.ActionSheet?
     @State private var alert: Destination.Alert?
     @State private var sheet: Destination.Sheet?
-    
+
     var localizedAppNameAndVersion: String
 
-    public init(viewModel: SettingsViewModel, localizedAppNameAndVersion: String) {
+    /// When true, hides NavigationView wrapper (for use as embedded tab)
+    private let isEmbeddedInTab: Bool
+
+    public init(viewModel: SettingsViewModel, localizedAppNameAndVersion: String, isEmbeddedInTab: Bool = false) {
         self.viewModel = viewModel
         self.versionUpdateViewModel = viewModel.versionUpdateViewModel
         self.localizedAppNameAndVersion = localizedAppNameAndVersion
+        self.isEmbeddedInTab = isEmbeddedInTab
     }
     
     public var body: some View {
-        NavigationView {
-            List {
-                Group {
-                    loopSection
-                    if versionUpdateViewModel.softwareUpdateAvailable {
-                        softwareUpdateSection
+        if isEmbeddedInTab {
+            // Embedded in tab - no NavigationView wrapper, no Done button
+            settingsListContent
+        } else {
+            // Modal presentation - wrap in NavigationView with Done button
+            NavigationView {
+                settingsListContent
+                    .navigationBarTitleDisplayMode(.large)
+                    .navigationTitle(Text(NSLocalizedString("Settings", comment: "Settings screen title")))
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            dismissButton
+                        }
                     }
-                    if FeatureFlags.automaticBolusEnabled {
-                        dosingStrategySection
-                    }
-                    alertManagementSection
-                    if viewModel.pumpManagerSettingsViewModel.isSetUp() {
-                        configurationSection
-                    }
-                    deviceSettingsSection
-                    if FeatureFlags.allowExperimentalFeatures {
-                        favoriteFoodsSection
-                    }
-                    if (viewModel.pumpManagerSettingsViewModel.isTestingDevice || viewModel.cgmManagerSettingsViewModel.isTestingDevice) && viewModel.showDeleteTestData {
-                        deleteDataSection
-                    }
-                }
-                Group {
-                    if viewModel.servicesViewModel.showServices {
-                        servicesSection
-                    }
-
-                    ForEach(customSections) { customSectionName in
-                        menuItemsForSection(name: customSectionName)
-                    }
-
-                    supportSection
-
-                    if let profileExpiration = BuildDetails.default.profileExpiration, FeatureFlags.profileExpirationSettingsViewEnabled {
-                        appExpirationSection(profileExpiration: profileExpiration)
-                    }
-
-                    logoutSection
-                }
             }
-            .listStyle(.insetGrouped)
-            .background(Color.white)
-            .onAppear {
-                // Set list background color for iOS 15 compatibility
-                UITableView.appearance().backgroundColor = .white
-            }
-            .navigationBarTitleDisplayMode(.large)
-            .navigationTitle(Text(NSLocalizedString("Settings", comment: "Settings screen title")))
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    dismissButton
-                }
-            }
-            .actionSheet(item: $actionSheet) { actionSheet in
-                switch actionSheet {
-                case .cgmPicker:
-                    return ActionSheet(
-                        title: Text("Add CGM", comment: "The title of the CGM chooser in settings"),
-                        buttons: cgmChoices
-                    )
-                case .pumpPicker:
-                    return ActionSheet(
-                        title: Text("Add Pump", comment: "The title of the pump chooser in settings"),
-                        buttons: pumpChoices
-                    )
-                case .servicePicker:
-                    return ActionSheet(
-                        title: Text("Add Service", comment: "The title of the add service action sheet in settings"),
-                        buttons: serviceChoices
-                    )
-                }
-            }
-            .alert(item: $alert) { alert in
-                switch alert {
-                case .deleteCGMData:
-                    return makeDeleteAlert(for: self.viewModel.cgmManagerSettingsViewModel)
-                case .deletePumpData:
-                    return makeDeleteAlert(for: self.viewModel.pumpManagerSettingsViewModel)
-                case .confirmLogout:
-                    return makeLogoutAlert()
-                }
-            }
-            .sheet(item: $sheet) { sheet in
-                switch sheet {
-                case .favoriteFoods:
-                    FavoriteFoodsView()
-                }
-            }
-            .tint(.insuPrimaryBlue)
+            .navigationViewStyle(.stack)
         }
-        .navigationViewStyle(.stack)
+    }
+
+    @ViewBuilder
+    private var settingsListContent: some View {
+        List {
+            Group {
+                loopSection
+                if versionUpdateViewModel.softwareUpdateAvailable {
+                    softwareUpdateSection
+                }
+                if FeatureFlags.automaticBolusEnabled {
+                    dosingStrategySection
+                }
+                alertManagementSection
+                if viewModel.pumpManagerSettingsViewModel.isSetUp() {
+                    configurationSection
+                }
+                deviceSettingsSection
+                if FeatureFlags.allowExperimentalFeatures {
+                    favoriteFoodsSection
+                }
+                if (viewModel.pumpManagerSettingsViewModel.isTestingDevice || viewModel.cgmManagerSettingsViewModel.isTestingDevice) && viewModel.showDeleteTestData {
+                    deleteDataSection
+                }
+            }
+            Group {
+                if viewModel.servicesViewModel.showServices {
+                    servicesSection
+                }
+
+                ForEach(customSections) { customSectionName in
+                    menuItemsForSection(name: customSectionName)
+                }
+
+                supportSection
+
+                if let profileExpiration = BuildDetails.default.profileExpiration, FeatureFlags.profileExpirationSettingsViewEnabled {
+                    appExpirationSection(profileExpiration: profileExpiration)
+                }
+
+                logoutSection
+            }
+        }
+        .listStyle(.insetGrouped)
+        .background(Color.white)
+        .onAppear {
+            // Set list background color for iOS 15 compatibility
+            UITableView.appearance().backgroundColor = .white
+        }
+        .actionSheet(item: $actionSheet) { actionSheet in
+            switch actionSheet {
+            case .cgmPicker:
+                return ActionSheet(
+                    title: Text("Add CGM", comment: "The title of the CGM chooser in settings"),
+                    buttons: cgmChoices
+                )
+            case .pumpPicker:
+                return ActionSheet(
+                    title: Text("Add Pump", comment: "The title of the pump chooser in settings"),
+                    buttons: pumpChoices
+                )
+            case .servicePicker:
+                return ActionSheet(
+                    title: Text("Add Service", comment: "The title of the add service action sheet in settings"),
+                    buttons: serviceChoices
+                )
+            }
+        }
+        .alert(item: $alert) { alert in
+            switch alert {
+            case .deleteCGMData:
+                return makeDeleteAlert(for: self.viewModel.cgmManagerSettingsViewModel)
+            case .deletePumpData:
+                return makeDeleteAlert(for: self.viewModel.pumpManagerSettingsViewModel)
+            case .confirmLogout:
+                return makeLogoutAlert()
+            }
+        }
+        .sheet(item: $sheet) { sheet in
+            switch sheet {
+            case .favoriteFoods:
+                FavoriteFoodsView()
+            }
+        }
+        .tint(.insuPrimaryBlue)
     }
 
     private func menuItemsForSection(name: String) -> some View {

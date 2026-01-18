@@ -31,7 +31,7 @@ public struct ProfileView: View {
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(.black)
                 }
-                .padding(.top, 60) // Account for safe area
+                .padding(.top, 16)
                 
                 // Expandable Sections
                 VStack(spacing: 20) {

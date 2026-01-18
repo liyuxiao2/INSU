@@ -34,7 +34,7 @@ public struct StatsView: View {
                     TimeInRangeCard(viewModel: viewModel)
                 }
                 .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
-                .padding(.top, 60) // Account for safe area (status bar/dynamic island)
+                .padding(.top, 16)
                 .padding(.bottom, InsuSpacing.tabBarHeight + 20)
             }
         }

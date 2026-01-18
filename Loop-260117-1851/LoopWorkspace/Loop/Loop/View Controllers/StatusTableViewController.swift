@@ -93,12 +93,6 @@ final class StatusTableViewController: LoopChartsTableViewController {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
 
-            // Check if we're already showing this tab's content
-            let currentlyShowingHome = self.activeContentController == nil
-            let switchingToHome = tab == .home
-
-            if currentlyShowingHome && switchingToHome { return }
-            
             // Remove existing content overlay
             if let active = self.activeContentController {
                 active.willMove(toParent: nil)
@@ -106,15 +100,12 @@ final class StatusTableViewController: LoopChartsTableViewController {
                 active.removeFromParent()
                 self.activeContentController = nil
             }
-            
-            // If Home, we are done (reveals the table view)
-            if tab == .home {
-                return
-            }
-            
-            // Otherwise, create new hosting controller
+
+            // Create content view for the selected tab
             let contentView: AnyView
             switch tab {
+            case .home:
+                contentView = self.createHomeView()
             case .stats:
                 let isPumpConnected = self.deviceManager.pumpManager != nil
                 let statsViewModel = StatsViewModel(isPumpConnected: isPumpConnected)
@@ -126,37 +117,46 @@ final class StatusTableViewController: LoopChartsTableViewController {
             case .profile:
                 contentView = AnyView(ProfileView())
             case .settings:
-                // Settings tab - show settings as embedded view
                 contentView = self.createSettingsView()
-            case .home:
-                return
             }
-            
+
             let hosting = UIHostingController(rootView: contentView)
-            hosting.view.backgroundColor = .systemBackground
-            
+            hosting.view.backgroundColor = .white
+
             guard let nav = self.navigationController else { return }
-            
+
             nav.addChild(hosting)
             hosting.view.translatesAutoresizingMaskIntoConstraints = false
-            
+
             // Insert below the custom navigation bar
             if let barView = self.navigationOverlay?.view {
                 nav.view.insertSubview(hosting.view, belowSubview: barView)
             } else {
                 nav.view.addSubview(hosting.view)
             }
-            
+
             NSLayoutConstraint.activate([
-                hosting.view.topAnchor.constraint(equalTo: nav.view.topAnchor),
+                hosting.view.topAnchor.constraint(equalTo: nav.view.safeAreaLayoutGuide.topAnchor),
                 hosting.view.leadingAnchor.constraint(equalTo: nav.view.leadingAnchor),
                 hosting.view.trailingAnchor.constraint(equalTo: nav.view.trailingAnchor),
                 hosting.view.bottomAnchor.constraint(equalTo: nav.view.bottomAnchor)
             ])
-            
+
             hosting.didMove(toParent: nav)
             self.activeContentController = hosting
         }
+    }
+
+    private func createHomeView() -> AnyView {
+        return AnyView(
+            HomeCardContainer(
+                viewModel: homeViewModel,
+                onInputBolus: { [weak self] in
+                    self?.presentBolusScreen()
+                }
+            )
+            .background(Color.white)
+        )
     }
 
     override func viewDidLoad() {
@@ -278,14 +278,17 @@ final class StatusTableViewController: LoopChartsTableViewController {
         navigationController?.setNavigationBarHidden(true, animated: animated)
         // Hide native toolbar to use custom HomeNavigationBar
         navigationController?.setToolbarHidden(true, animated: animated)
-        
-        setupCustomNavigationBar()
-        
-        // adjust content inset to prevent content from being hidden behind the new bar
-        let bottomInset = InsuSpacing.tabBarHeight + 20
-        tableView.contentInset.bottom = bottomInset
-        tableView.verticalScrollIndicatorInsets.bottom = bottomInset
-        
+        navigationController?.view.backgroundColor = .white
+
+        // Hide table view since all content is now shown via overlays
+        tableView.isHidden = true
+
+        // Only setup overlays if they don't already exist (prevents shift on modal dismiss)
+        if navigationOverlay == nil {
+            setupCustomNavigationBar()
+            handleTabChange(to: tabSelectionState.selectedTab)
+        }
+
         updateToolbarItems()
 
         alertPermissionsChecker.checkNow()
@@ -326,21 +329,25 @@ final class StatusTableViewController: LoopChartsTableViewController {
         super.viewWillDisappear(animated)
 
         onscreen = false
-        
-        // Remove active content overlay
-        if let active = activeContentController {
-            active.willMove(toParent: nil)
-            active.view.removeFromSuperview()
-            active.removeFromParent()
-            activeContentController = nil
-        }
-        
-        // Remove custom navigation bar
-        navigationOverlay?.view.removeFromSuperview()
-        navigationOverlay?.removeFromParent()
-        navigationOverlay = nil
 
-        if presentedViewController == nil {
+        // Only remove overlays if this view controller is actually being removed from the hierarchy
+        // (not when pushing another view controller or presenting a modal)
+        let isActuallyLeaving = isBeingDismissed || isMovingFromParent
+
+        if isActuallyLeaving {
+            // Remove active content overlay
+            if let active = activeContentController {
+                active.willMove(toParent: nil)
+                active.view.removeFromSuperview()
+                active.removeFromParent()
+                activeContentController = nil
+            }
+
+            // Remove custom navigation bar
+            navigationOverlay?.view.removeFromSuperview()
+            navigationOverlay?.removeFromParent()
+            navigationOverlay = nil
+
             navigationController?.setNavigationBarHidden(false, animated: animated)
         }
     }
@@ -1527,7 +1534,8 @@ final class StatusTableViewController: LoopChartsTableViewController {
     }
 
     @IBAction func presentBolusScreen() {
-        presentBolusEntryView()
+        // Use the new INSU bolus flow UI
+        presentInsuBolusFlow()
     }
     
     @ViewBuilder
@@ -1547,19 +1555,46 @@ final class StatusTableViewController: LoopChartsTableViewController {
                     screenWidth: UIScreen.main.bounds.width,
                     isManualGlucoseEntryEnabled: enableManualGlucoseEntry
                 )
-                
+
                 Task { @MainActor in
                     await viewModel.generateRecommendationAndStartObserving()
                 }
-                
+
                 viewModel.analyticsServicesManager = deviceManager.analyticsServicesManager
-                
+
                 return viewModel
             }()
-            
+
             BolusEntryView(viewModel: viewModel)
                 .environmentObject(deviceManager.displayGlucosePreference)
         }
+    }
+
+    /// Creates the new INSU bolus flow view
+    @ViewBuilder
+    func insuBolusFlowView(onDismiss: @escaping () -> Void) -> some View {
+        let simpleViewModel = SimpleBolusViewModel(
+            delegate: deviceManager,
+            displayMealEntry: true
+        )
+
+        let adapter = InsuBolusViewModelAdapter(
+            simpleViewModel: simpleViewModel,
+            displayGlucosePreference: deviceManager.displayGlucosePreference,
+            latestGlucose: { [weak self] in
+                self?.deviceManager.glucoseStore.latestGlucose?.quantity
+            }
+        )
+
+        let glucoseUnit = deviceManager.displayGlucosePreference.unit.localizedShortUnitString
+
+        InsuBolusFlowView(
+            viewModel: adapter,
+            userName: homeViewModel.userName,
+            glucoseUnit: glucoseUnit,
+            onDismiss: onDismiss
+        )
+        .environmentObject(deviceManager.displayGlucosePreference)
     }
 
     func presentBolusEntryView(enableManualGlucoseEntry: Bool = false) {
@@ -1568,9 +1603,29 @@ final class StatusTableViewController: LoopChartsTableViewController {
                 enableManualGlucoseEntry: enableManualGlucoseEntry
             )
         )
-        
+
         let navigationWrapper = UINavigationController(rootViewController: hostingController)
         hostingController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: navigationWrapper, action: #selector(dismissWithAnimation))
+        present(navigationWrapper, animated: true)
+        deviceManager.analyticsServicesManager.didDisplayBolusScreen()
+    }
+
+    /// Presents the new INSU bolus flow
+    func presentInsuBolusFlow() {
+        let bolusView = insuBolusFlowView(onDismiss: { [weak self] in
+            self?.dismiss(animated: true)
+        })
+
+        let hostingController = DismissibleHostingController(
+            content: bolusView,
+            dismissalMode: .modalDismiss,
+            isModalInPresentation: false
+        )
+        hostingController.view.backgroundColor = UIColor(Color.insuBlue)
+
+        let navigationWrapper = UINavigationController(rootViewController: hostingController)
+        navigationWrapper.setNavigationBarHidden(true, animated: false)
+
         present(navigationWrapper, animated: true)
         deviceManager.analyticsServicesManager.didDisplayBolusScreen()
     }
@@ -1846,12 +1901,7 @@ final class StatusTableViewController: LoopChartsTableViewController {
             delegate: self)
 
         return AnyView(
-            SettingsTabView {
-                SettingsView(viewModel: viewModel, localizedAppNameAndVersion: supportManager.localizedAppNameAndVersion)
-                    .environmentObject(deviceManager.displayGlucosePreference)
-                    .environment(\.appName, Bundle.main.bundleDisplayName)
-                    .navigationBarHidden(true)
-            }
+            InsuSettingsView()
         )
     }
 
