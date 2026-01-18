@@ -72,6 +72,10 @@ struct InsuSettingsView: View {
                         NavigationLink(destination: BolusSettingsView()) {
                             SettingsRowContent(title: "Bolus")
                         }
+
+                        NavigationLink(destination: WorkoutSettingsView()) {
+                            SettingsRowContent(title: "Workout / Activity")
+                        }
                     }
                     .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
                     .padding(.top, 24)
@@ -571,6 +575,117 @@ private struct BolusSettingsView: View {
                             SettingsInfoRow(label: "Active Insulin", value: "Enabled")
                             SettingsInfoRow(label: "Glucose Trend", value: "Enabled")
                         }
+                    }
+                    .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
+                    .padding(.top, 16)
+                    .padding(.bottom, 40)
+                }
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarHidden(true)
+    }
+}
+
+// MARK: - Workout Settings View
+
+private struct WorkoutSettingsView: View {
+    @Environment(\.presentationMode) var presentationMode
+    @State private var workoutLowTarget = "8.0"
+    @State private var workoutHighTarget = "10.0"
+    @State private var isWorkoutEnabled = true
+    @State private var unit = "mmol/L"
+
+    var body: some View {
+        ZStack {
+            Color.white.ignoresSafeArea()
+
+            VStack(spacing: 0) {
+                SettingsDetailHeader(title: "Workout / Activity", onBack: { presentationMode.wrappedValue.dismiss() })
+
+                ScrollView {
+                    VStack(spacing: 16) {
+                        SettingsSectionCard(title: "Workout Correction Range") {
+                            SettingsToggleRow(label: "Enable Workout Target", isOn: $isWorkoutEnabled)
+
+                            if isWorkoutEnabled {
+                                SettingsTextField(label: "Low Target", text: $workoutLowTarget, suffix: unit)
+                                SettingsTextField(label: "High Target", text: $workoutHighTarget, suffix: unit)
+                            }
+                        }
+
+                        // Info card
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "figure.run")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(Color.insuDarkBlue)
+                                Text("About Workout Mode")
+                                    .font(.system(size: 14, weight: .bold))
+                                    .foregroundColor(.black)
+                            }
+
+                            Text("When you activate Workout mode from the home screen, Loop will target a higher glucose range to help prevent lows during physical activity.")
+                                .font(.system(size: 12))
+                                .foregroundColor(.gray)
+
+                            Text("Recommended workout range: 8.0-10.0 mmol/L (140-180 mg/dL)")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundColor(Color.insuDarkBlue)
+                                .padding(.top, 4)
+                        }
+                        .padding(16)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.insuBlue.opacity(0.5))
+                        .cornerRadius(12)
+
+                        // How to use card
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("How to Use")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(.black)
+
+                            HStack(alignment: .top, spacing: 12) {
+                                Text("1.")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(Color.insuDarkBlue)
+                                Text("Configure your workout target range above")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.gray)
+                            }
+
+                            HStack(alignment: .top, spacing: 12) {
+                                Text("2.")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(Color.insuDarkBlue)
+                                Text("Tap the Activity button on the home screen before exercising")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.gray)
+                            }
+
+                            HStack(alignment: .top, spacing: 12) {
+                                Text("3.")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(Color.insuDarkBlue)
+                                Text("Select how long you'll be active")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.gray)
+                            }
+
+                            HStack(alignment: .top, spacing: 12) {
+                                Text("4.")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(Color.insuDarkBlue)
+                                Text("Tap the Activity button again when done to end workout mode")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.gray)
+                            }
+                        }
+                        .padding(16)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.white)
+                        .cornerRadius(12)
+                        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
                     }
                     .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
                     .padding(.top, 16)

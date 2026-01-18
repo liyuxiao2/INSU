@@ -12173,6 +12173,9 @@
         }
       }
     },
+    "Closed Loop Not Available" : {
+      "comment" : "Title for closed loop not available alert"
+    },
     "Closed Loop OFF" : {
       "comment" : "Alert title for closed loop off informational modal",
       "localizations" : {
@@ -28744,8 +28747,14 @@
         }
       }
     },
+    "Please complete your therapy settings before enabling closed loop." : {
+      "comment" : "Message for incomplete settings alert"
+    },
     "Please configure a Workout correction range in your Therapy Settings before using this feature." : {
       "comment" : "Message for workout not configured alert"
+    },
+    "Please connect a pump before enabling closed loop." : {
+      "comment" : "Message for no pump alert"
     },
     "Please connect a pump before suspending insulin delivery." : {
       "comment" : "Message for no pump alert"
