@@ -1416,6 +1416,12 @@
         }
       }
     },
+    "Active Mode: %@" : {
+
+    },
+    "Change Mode" : {
+
+    },
     "Closed loop" : {
       "comment" : "Accessibility hint describing completion HUD for a closed loop",
       "localizations" : {
@@ -1713,6 +1719,9 @@
         }
       }
     },
+    "Dashboard" : {
+
+    },
     "dB" : {
       "comment" : "The short unit display string for decibles",
       "localizations" : {
@@ -1957,6 +1966,9 @@
         }
       }
     },
+    "Hello, %@" : {
+
+    },
     "HIGH" : {
       "comment" : "String displayed instead of a glucose value above the CGM range",
       "localizations" : {
@@ -2081,6 +2093,21 @@
           }
         }
       }
+    },
+    "History Page" : {
+
+    },
+    "Input Bolus" : {
+
+    },
+    "IOB " : {
+
+    },
+    "Jan 18 (2:29 PM)" : {
+
+    },
+    "Last Bolus" : {
+
     },
     "Last completed loop %1$@." : {
       "comment" : "Last loop time completed message (1: last loop time string)",
@@ -3081,6 +3108,12 @@
         }
       }
     },
+    "Pod Expires: Tomorrow" : {
+
+    },
+    "Profile Page" : {
+
+    },
     "QUANTITY_VALUE_AND_UNIT" : {
       "comment" : "Format string for combining localized numeric value and unit. (1: numeric value)(2: unit)",
       "extractionState" : "extracted_with_value",
@@ -3206,6 +3239,9 @@
           }
         }
       }
+    },
+    "Stats Page" : {
+
     },
     "Tap Settings to toggle Closed Loop ON if you wish for the app to automate your insulin." : {
       "comment" : "Instructions for user to close loop if it is allowed.",
@@ -3527,6 +3563,12 @@
           }
         }
       }
+    },
+    "View Pod Details" : {
+
+    },
+    "View your " : {
+
     },
     "Waiting for first run" : {
       "comment" : "Accessibility label describing completion HUD waiting for first run",

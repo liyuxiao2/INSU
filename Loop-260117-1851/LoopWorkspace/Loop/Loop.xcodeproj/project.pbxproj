@@ -248,6 +248,17 @@
 		4FF4D0F81E1725B000846527 /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434F54561D287FDB002A9274 /* NibLoadable.swift */; };
 		4FF4D1001E18374700846527 /* WatchContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF4D0FF1E18374700846527 /* WatchContext.swift */; };
 		4FF4D1011E18375000846527 /* WatchContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF4D0FF1E18374700846527 /* WatchContext.swift */; };
+		7161082D2F1C88E10054ED70 /* HomeNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7161082C2F1C88E10054ED70 /* HomeNavigationBar.swift */; };
+		7161082E2F1C88E10054ED70 /* HomeCardContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108262F1C88E10054ED70 /* HomeCardContainer.swift */; };
+		7161082F2F1C88E10054ED70 /* HomeCardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108272F1C88E10054ED70 /* HomeCardStyle.swift */; };
+		716108302F1C88E10054ED70 /* PodStatusCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7161082A2F1C88E10054ED70 /* PodStatusCardView.swift */; };
+		716108312F1C88E10054ED70 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108282F1C88E10054ED70 /* HomeViewModel.swift */; };
+		716108322F1C88E10054ED70 /* InsulinModeCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108292F1C88E10054ED70 /* InsulinModeCardView.swift */; };
+		716108332F1C88E10054ED70 /* DashboardCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108252F1C88E10054ED70 /* DashboardCardView.swift */; };
+		716108352F1C916A0054ED70 /* LastBolusCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108342F1C916A0054ED70 /* LastBolusCardView.swift */; };
+		716108392F1C988E0054ED70 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108362F1C988E0054ED70 /* HistoryView.swift */; };
+		7161083A2F1C988E0054ED70 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108372F1C988E0054ED70 /* ProfileView.swift */; };
+		7161083B2F1C988E0054ED70 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108382F1C988E0054ED70 /* StatsView.swift */; };
 		7D23667D21250C7E0028B67D /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D23667C21250C7E0028B67D /* LocalizedString.swift */; };
 		7E69CFFC2A16A77E00203CBD /* ResetLoopManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E69CFFB2A16A77E00203CBD /* ResetLoopManager.swift */; };
 		84AA81D32A4A27A3000B658B /* LoopWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AA81D22A4A27A3000B658B /* LoopWidgets.swift */; };
@@ -996,6 +1007,17 @@
 		4FDDD23620DC51DF00D04B16 /* LoopDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoopDataManager.swift; sourceTree = "<group>"; };
 		4FF4D0FF1E18374700846527 /* WatchContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchContext.swift; sourceTree = "<group>"; };
 		4FFEDFBE20E5CF22000BFC58 /* ChartHUDController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartHUDController.swift; sourceTree = "<group>"; };
+		716108252F1C88E10054ED70 /* DashboardCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardCardView.swift; sourceTree = "<group>"; };
+		716108262F1C88E10054ED70 /* HomeCardContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCardContainer.swift; sourceTree = "<group>"; };
+		716108272F1C88E10054ED70 /* HomeCardStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCardStyle.swift; sourceTree = "<group>"; };
+		716108282F1C88E10054ED70 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		716108292F1C88E10054ED70 /* InsulinModeCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsulinModeCardView.swift; sourceTree = "<group>"; };
+		7161082A2F1C88E10054ED70 /* PodStatusCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodStatusCardView.swift; sourceTree = "<group>"; };
+		7161082C2F1C88E10054ED70 /* HomeNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNavigationBar.swift; sourceTree = "<group>"; };
+		716108342F1C916A0054ED70 /* LastBolusCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastBolusCardView.swift; sourceTree = "<group>"; };
+		716108362F1C988E0054ED70 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		716108372F1C988E0054ED70 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		716108382F1C988E0054ED70 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		7D23667C21250C7E0028B67D /* LocalizedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalizedString.swift; path = LoopUI/Common/LocalizedString.swift; sourceTree = SOURCE_ROOT; };
 		7D9BEEE62335A6B3005DCFD6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7D9BEEE82335A6B9005DCFD6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -2098,6 +2120,12 @@
 		4F7528931DFE1E1600C322D6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				716108362F1C988E0054ED70 /* HistoryView.swift */,
+				716108372F1C988E0054ED70 /* ProfileView.swift */,
+				716108382F1C988E0054ED70 /* StatsView.swift */,
+				716108342F1C916A0054ED70 /* LastBolusCardView.swift */,
+				7161082B2F1C88E10054ED70 /* HomeCards */,
+				7161082C2F1C88E10054ED70 /* HomeNavigationBar.swift */,
 				437CEEBF1CD6FCD8003C8C80 /* BasalRateHUDView.swift */,
 				43B371851CE583890013C5A6 /* BasalStateView.swift */,
 				B4E96D4E248A6E20002DABAD /* CGMStatusHUDView.swift */,
@@ -2215,6 +2243,19 @@
 				E9B08015253BBD7300BAD8F8 /* UserDefaults+LoopIntents.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		7161082B2F1C88E10054ED70 /* HomeCards */ = {
+			isa = PBXGroup;
+			children = (
+				716108252F1C88E10054ED70 /* DashboardCardView.swift */,
+				716108262F1C88E10054ED70 /* HomeCardContainer.swift */,
+				716108272F1C88E10054ED70 /* HomeCardStyle.swift */,
+				716108282F1C88E10054ED70 /* HomeViewModel.swift */,
+				716108292F1C88E10054ED70 /* InsulinModeCardView.swift */,
+				7161082A2F1C88E10054ED70 /* PodStatusCardView.swift */,
+			);
+			path = HomeCards;
 			sourceTree = "<group>";
 		};
 		7D23667B21250C5A0028B67D /* Common */ = {
@@ -3788,15 +3829,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7161082D2F1C88E10054ED70 /* HomeNavigationBar.swift in Sources */,
+				7161082E2F1C88E10054ED70 /* HomeCardContainer.swift in Sources */,
+				7161082F2F1C88E10054ED70 /* HomeCardStyle.swift in Sources */,
+				716108302F1C88E10054ED70 /* PodStatusCardView.swift in Sources */,
+				716108312F1C88E10054ED70 /* HomeViewModel.swift in Sources */,
+				716108322F1C88E10054ED70 /* InsulinModeCardView.swift in Sources */,
+				716108332F1C88E10054ED70 /* DashboardCardView.swift in Sources */,
 				7D23667D21250C7E0028B67D /* LocalizedString.swift in Sources */,
 				4FF4D0F81E1725B000846527 /* NibLoadable.swift in Sources */,
 				4326BA641F3A44D9007CCAD4 /* ChartLineModel.swift in Sources */,
 				4374B5F0209D857E00D17AA8 /* OSLog.swift in Sources */,
 				B4E96D4F248A6E20002DABAD /* CGMStatusHUDView.swift in Sources */,
+				716108352F1C916A0054ED70 /* LastBolusCardView.swift in Sources */,
 				B4E96D4B248A6B6E002DABAD /* DeviceStatusHUDView.swift in Sources */,
 				4F7528AA1DFE215100C322D6 /* HKUnit.swift in Sources */,
 				B490A03F24D0550F00F509FA /* GlucoseRangeCategory.swift in Sources */,
 				4F2C15931E09BF2C00E160D4 /* HUDView.swift in Sources */,
+				716108392F1C988E0054ED70 /* HistoryView.swift in Sources */,
+				7161083A2F1C988E0054ED70 /* ProfileView.swift in Sources */,
+				7161083B2F1C988E0054ED70 /* StatsView.swift in Sources */,
 				43BFF0B71E45C20C00FF19A9 /* NumberFormatter.swift in Sources */,
 				B43DA44124D9C12100CAFF4E /* DismissibleHostingController.swift in Sources */,
 				4F7528A51DFE208C00C322D6 /* NSTimeInterval.swift in Sources */,
