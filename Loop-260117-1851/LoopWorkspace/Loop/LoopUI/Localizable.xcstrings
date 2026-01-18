@@ -3160,9 +3160,6 @@
     "Pod Expires: Tomorrow" : {
 
     },
-    "Profile" : {
-
-    },
     "QUANTITY_VALUE_AND_UNIT" : {
       "comment" : "Format string for combining localized numeric value and unit. (1: numeric value)(2: unit)",
       "extractionState" : "extracted_with_value",

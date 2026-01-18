@@ -33,7 +33,7 @@ public class HomeViewModel: ObservableObject {
     // MARK: - Initialization
 
     public init(
-        userName: String = "User",
+        userName: String = "Arian",
         glucoseValue: Double = 0.0,
         glucoseUnit: String = "mmol/L",
         trendArrow: String? = nil,
