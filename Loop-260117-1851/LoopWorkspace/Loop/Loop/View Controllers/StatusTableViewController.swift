@@ -106,7 +106,13 @@ final class StatusTableViewController: LoopChartsTableViewController {
             let contentView: AnyView
             switch tab {
             case .stats:
-                contentView = AnyView(StatsView())
+                let isPumpConnected = self.deviceManager.pumpManager != nil
+                let statsViewModel = StatsViewModel(isPumpConnected: isPumpConnected)
+                // Update user name from home view model if available
+                if !self.homeViewModel.userName.isEmpty && self.homeViewModel.userName != "User" {
+                    statsViewModel.updateUserName(self.homeViewModel.userName)
+                }
+                contentView = AnyView(StatsView(viewModel: statsViewModel))
             case .history:
                 contentView = AnyView(HistoryView())
             case .profile:

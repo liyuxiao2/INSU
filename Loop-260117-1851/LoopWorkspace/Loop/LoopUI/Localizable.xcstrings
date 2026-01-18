@@ -1339,6 +1339,19 @@
         }
       }
     },
+    "%lld" : {
+
+    },
+    "%lld %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld %2$@"
+          }
+        }
+      }
+    },
     "<1 min ago" : {
       "comment" : "Format string describing last completion",
       "localizations" : {
@@ -1416,10 +1429,16 @@
         }
       }
     },
+    "7 Days" : {
+
+    },
     "Active Mode: %@" : {
 
     },
     "Arian Emamjomeh" : {
+
+    },
+    "Average Glucose (%@)" : {
 
     },
     "Change Mode" : {
@@ -1968,6 +1987,9 @@
           }
         }
       }
+    },
+    "GMI (%)" : {
+
     },
     "Hello, %@" : {
 
@@ -3001,6 +3023,9 @@
     "No FAQs currently available." : {
 
     },
+    "Now" : {
+
+    },
     "Open loop" : {
       "comment" : "Accessbility hint describing completion HUD for an open loop",
       "localizations" : {
@@ -3249,7 +3274,7 @@
         }
       }
     },
-    "Stats Page" : {
+    "Sensor Info" : {
 
     },
     "Tap Settings to toggle Closed Loop ON if you wish for the app to automate your insulin." : {
@@ -3328,6 +3353,12 @@
           }
         }
       }
+    },
+    "Target Range" : {
+
+    },
+    "Time in Range" : {
+
     },
     "U" : {
       "comment" : "The short unit display string for international units of insulin",

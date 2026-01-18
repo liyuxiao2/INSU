@@ -15,7 +15,7 @@ import LoopKit
 public class HomeViewModel: ObservableObject {
     // MARK: - Published Properties
 
-    @Published var userName: String
+    @Published public var userName: String
     @Published var glucoseValue: Double
     @Published var glucoseUnit: String
     @Published var trendArrow: String?

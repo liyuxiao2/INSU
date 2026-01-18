@@ -107,9 +107,19 @@ public struct SettingsView: View {
                     logoutSection
                 }
             }
-            .insetGroupedListStyle()
-            .navigationBarTitle(Text(NSLocalizedString("Settings", comment: "Settings screen title")))
-            .navigationBarItems(trailing: dismissButton)
+            .listStyle(.insetGrouped)
+            .background(Color.white)
+            .onAppear {
+                // Set list background color for iOS 15 compatibility
+                UITableView.appearance().backgroundColor = .white
+            }
+            .navigationBarTitleDisplayMode(.large)
+            .navigationTitle(Text(NSLocalizedString("Settings", comment: "Settings screen title")))
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    dismissButton
+                }
+            }
             .actionSheet(item: $actionSheet) { actionSheet in
                 switch actionSheet {
                 case .cgmPicker:
@@ -145,12 +155,13 @@ public struct SettingsView: View {
                     FavoriteFoodsView()
                 }
             }
+            .tint(.insuPrimaryBlue)
         }
         .navigationViewStyle(.stack)
     }
 
     private func menuItemsForSection(name: String) -> some View {
-        Section(header: SectionHeader(label: name)) {
+        Section(header: InsuSectionHeader(label: name)) {
             ForEach(pluginMenuItems.filter {$0.section.customLocalizedTitle == name}) { item in
                 item.view
             }
@@ -197,24 +208,33 @@ extension SettingsView {
         
     private var dismissButton: some View {
         Button(action: dismiss) {
-            Text("Done").bold()
+            Text("Done")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundColor(.insuPrimaryBlue)
         }
     }
     
     private var loopSection: some View {
-        Section(header: SectionHeader(label: localizedAppNameAndVersion)) {
+        Section(header: InsuSectionHeader(label: localizedAppNameAndVersion)) {
             Toggle(isOn: closedLoopToggleState) {
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text("Closed Loop", comment: "The title text for the looping enabled switch cell")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(.black)
                         .padding(.vertical, 3)
                     if !viewModel.isOnboardingComplete {
-                        DescriptiveText(label: NSLocalizedString("Closed Loop requires Setup to be Complete", comment: "The description text for the looping enabled switch cell when onboarding is not complete"))
+                        Text(NSLocalizedString("Closed Loop requires Setup to be Complete", comment: "The description text for the looping enabled switch cell when onboarding is not complete"))
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundColor(.insuGray)
                     } else if let closedLoopDescriptiveText = viewModel.closedLoopDescriptiveText {
-                        DescriptiveText(label: closedLoopDescriptiveText)
+                        Text(closedLoopDescriptiveText)
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundColor(.insuGray)
                     }
                 }
                 .fixedSize(horizontal: false, vertical: true)
             }
+            .tint(.insuPrimaryBlue)
             .disabled(!viewModel.isOnboardingComplete || !viewModel.isClosedLoopAllowed)
         }
     }
@@ -230,12 +250,14 @@ extension SettingsView {
     }
 
     private var dosingStrategySection: some View {
-        Section(header: SectionHeader(label: NSLocalizedString("Dosing Strategy", comment: "The title of the Dosing Strategy section in settings"))) {
-            
+        Section(header: InsuSectionHeader(label: NSLocalizedString("Dosing Strategy", comment: "The title of the Dosing Strategy section in settings"))) {
+
             NavigationLink(destination: DosingStrategySelectionView(automaticDosingStrategy: $viewModel.automaticDosingStrategy))
             {
                 HStack {
                     Text(viewModel.automaticDosingStrategy.title)
+                        .font(.system(size: 17, weight: .regular))
+                        .foregroundColor(.black)
                 }
             }
         }
@@ -262,9 +284,8 @@ extension SettingsView {
                     action: {},
                     includeArrow: false,
                     imageView: Image(systemName: "bell.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 30),
+                        .font(.system(size: 22))
+                        .foregroundColor(.insuPrimaryBlue),
                     secondaryImageView: alertWarning,
                     label: NSLocalizedString("Alert Management", comment: "Alert Permissions button text"),
                     descriptiveText: NSLocalizedString("Alert Permissions and Mute Alerts", comment: "Alert Permissions descriptive text")
@@ -294,11 +315,13 @@ extension SettingsView {
     }
 
     private var configurationSection: some View {
-        Section(header: SectionHeader(label: NSLocalizedString("Configuration", comment: "The title of the Configuration section in settings"))) {
+        Section(header: InsuSectionHeader(label: NSLocalizedString("Configuration", comment: "The title of the Configuration section in settings"))) {
             NavigationLink(destination: therapySettingsView) {
                 LargeButton(action: { },
                             includeArrow: false,
-                            imageView: Image("Therapy Icon"),
+                            imageView: Image("Therapy Icon")
+                                .renderingMode(.template)
+                                .foregroundColor(.insuPrimaryBlue),
                             label: NSLocalizedString("Therapy Settings", comment: "Title text for button to Therapy Settings"),
                             descriptiveText: NSLocalizedString("Diabetes Treatment", comment: "Descriptive text for Therapy Settings"))
             }
@@ -376,7 +399,9 @@ extension SettingsView {
         Section {
             LargeButton(action: { sheet = .favoriteFoods },
                         includeArrow: true,
-                        imageView: Image("Favorite Foods Icon").renderingMode(.template).foregroundColor(carbTintColor),
+                        imageView: Image("Favorite Foods Icon")
+                            .renderingMode(.template)
+                            .foregroundColor(.insuPrimaryBlue),
                         label: "Favorite Foods",
                         descriptiveText: "Simplify Carb Entry")
         }
@@ -395,7 +420,7 @@ extension SettingsView {
     }
     
     private var servicesSection: some View {
-        Section(header: SectionHeader(label: NSLocalizedString("Services", comment: "The title of the services section in settings"))) {
+        Section(header: InsuSectionHeader(label: NSLocalizedString("Services", comment: "The title of the services section in settings"))) {
             ForEach(viewModel.servicesViewModel.activeServices().indices, id: \.self) { index in
                 LargeButton(action: { self.viewModel.servicesViewModel.didTapService(index) },
                             includeArrow: true,
@@ -454,11 +479,13 @@ extension SettingsView {
     }
     
     private var supportSection: some View {
-        Section(header: SectionHeader(label: NSLocalizedString("Support", comment: "The title of the support section in settings"))) {
+        Section(header: InsuSectionHeader(label: NSLocalizedString("Support", comment: "The title of the support section in settings"))) {
             Button(action: {
                 self.viewModel.didTapIssueReport()
             }) {
                 Text("Issue Report", comment: "The title text for the issue report menu item")
+                    .font(.system(size: 17, weight: .regular))
+                    .foregroundColor(.insuPrimaryBlue)
             }
 
             ForEach(pluginMenuItems.filter( { $0.section == .support })) {
@@ -467,6 +494,8 @@ extension SettingsView {
 
             NavigationLink(destination: CriticalEventLogExportView(viewModel: viewModel.criticalEventLogExportViewModel)) {
                 Text(NSLocalizedString("Export Critical Event Logs", comment: "The title of the export critical event logs in support"))
+                    .font(.system(size: 17, weight: .regular))
+                    .foregroundColor(.black)
             }
         }
     }
@@ -479,9 +508,11 @@ extension SettingsView {
                 HStack {
                     Spacer()
                     Text(NSLocalizedString("Log Out", comment: "The title text for the logout button"))
+                        .font(.system(size: 17, weight: .semibold))
                         .foregroundColor(.red)
                     Spacer()
                 }
+                .padding(.vertical, 8)
             }
         }
     }
@@ -571,11 +602,9 @@ extension SettingsView {
     }()
 
     private var plusImage: some View {
-        Image(systemName: "plus.circle")
-            .resizable()
-            .scaledToFit()
-            .accentColor(Color(.systemGray))
-            .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+        Image(systemName: "plus")
+            .font(.system(size: 22, weight: .medium))
+            .foregroundColor(.insuPrimaryBlue)
     }
     
     @ViewBuilder
@@ -597,14 +626,14 @@ extension SettingsView {
 }
 
 fileprivate struct LargeButton<Content: View, SecondaryContent: View>: View {
-    
+
     let action: () -> Void
     var includeArrow: Bool
     let imageView: Content
     let secondaryImageView: SecondaryContent
     let label: String
     let descriptiveText: String
-    
+
     init(
         action: @escaping () -> Void,
         includeArrow: Bool = true,
@@ -621,37 +650,49 @@ fileprivate struct LargeButton<Content: View, SecondaryContent: View>: View {
         self.descriptiveText = descriptiveText
     }
 
-    // TODO: The design doesn't show this, but do we need to consider different values here for different size classes?
     private let spacing: CGFloat = 15
-    private let imageWidth: CGFloat = 60
-    private let imageHeight: CGFloat = 60
+    private let imageWidth: CGFloat = 50
+    private let imageHeight: CGFloat = 50
     private let secondaryImageWidth: CGFloat = 30
     private let secondaryImageHeight: CGFloat = 30
-    private let topBottomPadding: CGFloat = 10
-    
+    private let topBottomPadding: CGFloat = 12
+
     public var body: some View {
         Button(action: action) {
             HStack {
                 HStack(spacing: spacing) {
-                    imageView.frame(maxWidth: imageWidth, maxHeight: imageHeight)
-                    VStack(alignment: .leading) {
+                    // Icon container with INSU light blue background
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.insuLightBlue)
+                            .frame(width: imageWidth, height: imageHeight)
+                        imageView
+                            .frame(maxWidth: imageWidth - 16, maxHeight: imageHeight - 16)
+                    }
+                    .frame(width: imageWidth, height: imageHeight)
+
+                    VStack(alignment: .leading, spacing: 4) {
                         Text(label)
-                            .foregroundColor(.primary)
-                        DescriptiveText(label: descriptiveText)
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(.black)
+                        if !descriptiveText.isEmpty {
+                            Text(descriptiveText)
+                                .font(.system(size: 14, weight: .regular))
+                                .foregroundColor(.insuGray)
+                        }
                     }
                 }
-                
-                if !(secondaryImageView is EmptyView) || includeArrow {
-                    Spacer()
-                }
-                
+
+                Spacer()
+
                 if !(secondaryImageView is EmptyView) {
                     secondaryImageView.frame(width: secondaryImageWidth, height: secondaryImageHeight)
                 }
-                
+
                 if includeArrow {
-                    // TODO: Ick. I can't use a NavigationLink because we're not Navigating, but this seems worse somehow.
-                    Image(systemName: "chevron.right").foregroundColor(.gray).font(.footnote)
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.insuGray)
                 }
             }
             .padding(EdgeInsets(top: topBottomPadding, leading: 0, bottom: topBottomPadding, trailing: 0))
@@ -659,8 +700,21 @@ fileprivate struct LargeButton<Content: View, SecondaryContent: View>: View {
     }
 }
 
+// MARK: - INSU Section Header
+
+fileprivate struct InsuSectionHeader: View {
+    let label: String
+
+    var body: some View {
+        Text(label)
+            .font(.system(size: 13, weight: .semibold))
+            .foregroundColor(.insuGray)
+            .textCase(.uppercase)
+    }
+}
+
 public struct SettingsView_Previews: PreviewProvider {
-        
+
     public static var previews: some View {
         let displayGlucosePreference = DisplayGlucosePreference(displayGlucoseUnit: .milligramsPerDeciliter)
         let viewModel = SettingsViewModel.preview
@@ -670,7 +724,7 @@ public struct SettingsView_Previews: PreviewProvider {
                 .previewDevice(PreviewDevice(rawValue: "iPhone SE 2"))
                 .previewDisplayName("SE light")
                 .environmentObject(displayGlucosePreference)
-            
+
             SettingsView(viewModel: viewModel, localizedAppNameAndVersion: "Loop Demo V1")
                 .colorScheme(.dark)
                 .previewDevice(PreviewDevice(rawValue: "iPhone 11 Pro Max"))
