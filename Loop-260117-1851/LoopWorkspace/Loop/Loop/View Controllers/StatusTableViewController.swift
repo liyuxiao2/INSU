@@ -124,7 +124,33 @@ final class StatusTableViewController: LoopChartsTableViewController {
                 }
                 contentView = AnyView(StatsView(viewModel: statsViewModel))
             case .profile:
-                contentView = AnyView(ProfileView())
+                let isPumpSetUp = self.deviceManager.pumpManager?.isOnboarded == true
+                let pumpName = self.deviceManager.pumpManager?.localizedTitle ?? ""
+                let pumpImage = self.deviceManager.pumpManager?.smallImage
+                let isCGMSetUp = self.deviceManager.cgmManager?.isOnboarded == true
+                let cgmName = self.deviceManager.cgmManager?.localizedTitle ?? ""
+                let cgmImage = (self.deviceManager.cgmManager as? DeviceManagerUI)?.smallImage
+
+                contentView = AnyView(ProfileView(
+                    isPumpSetUp: isPumpSetUp,
+                    pumpName: pumpName,
+                    pumpImage: pumpImage,
+                    isCGMSetUp: isCGMSetUp,
+                    cgmName: cgmName,
+                    cgmImage: cgmImage,
+                    onAddPump: { [weak self] in
+                        self?.addNewPumpManager()
+                    },
+                    onAddCGM: { [weak self] in
+                        self?.addNewCGMManager()
+                    },
+                    onPumpTapped: { [weak self] in
+                        self?.onPumpTapped()
+                    },
+                    onCGMTapped: { [weak self] in
+                        self?.onCGMTapped()
+                    }
+                ))
             case .settings:
                 // Settings tab - show settings as embedded view
                 contentView = self.createSettingsView()
@@ -1862,7 +1888,8 @@ final class StatusTableViewController: LoopChartsTableViewController {
         }
         settingsViewController.pumpManagerOnboardingDelegate = deviceManager
         settingsViewController.completionDelegate = self
-        show(settingsViewController, sender: self)
+        // Present modally to work when ProfileView overlay is showing
+        navigationController?.present(settingsViewController, animated: true)
     }
 
     private func onCGMTapped() {
@@ -1874,7 +1901,8 @@ final class StatusTableViewController: LoopChartsTableViewController {
         var settings = cgmManager.settingsViewController(bluetoothProvider: deviceManager.bluetoothProvider, displayGlucosePreference: deviceManager.displayGlucosePreference, colorPalette: .default, allowDebugFeatures: FeatureFlags.allowDebugFeatures)
         settings.cgmManagerOnboardingDelegate = deviceManager
         settings.completionDelegate = self
-        show(settings, sender: self)
+        // Present modally to work when ProfileView overlay is showing
+        navigationController?.present(settings, animated: true)
     }
 
     private func updateHomeViewModel() {

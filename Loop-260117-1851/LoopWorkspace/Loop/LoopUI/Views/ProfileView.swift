@@ -1,10 +1,47 @@
 import SwiftUI
+import UIKit
 
 public struct ProfileView: View {
     @State private var isPersonalDetailsExpanded = false
     @State private var isFAQsExpanded = false
 
-    public init() {}
+    // Device status
+    let isPumpSetUp: Bool
+    let pumpName: String
+    let pumpImage: UIImage?
+    let isCGMSetUp: Bool
+    let cgmName: String
+    let cgmImage: UIImage?
+
+    // Actions
+    let onAddPump: () -> Void
+    let onAddCGM: () -> Void
+    let onPumpTapped: () -> Void
+    let onCGMTapped: () -> Void
+
+    public init(
+        isPumpSetUp: Bool = false,
+        pumpName: String = "",
+        pumpImage: UIImage? = nil,
+        isCGMSetUp: Bool = false,
+        cgmName: String = "",
+        cgmImage: UIImage? = nil,
+        onAddPump: @escaping () -> Void = {},
+        onAddCGM: @escaping () -> Void = {},
+        onPumpTapped: @escaping () -> Void = {},
+        onCGMTapped: @escaping () -> Void = {}
+    ) {
+        self.isPumpSetUp = isPumpSetUp
+        self.pumpName = pumpName
+        self.pumpImage = pumpImage
+        self.isCGMSetUp = isCGMSetUp
+        self.cgmName = cgmName
+        self.cgmImage = cgmImage
+        self.onAddPump = onAddPump
+        self.onAddCGM = onAddCGM
+        self.onPumpTapped = onPumpTapped
+        self.onCGMTapped = onCGMTapped
+    }
 
     public var body: some View {
         ScrollView {
@@ -32,7 +69,37 @@ public struct ProfileView: View {
                         .foregroundColor(.black)
                 }
                 .padding(.top, 60) // Account for safe area
-                
+
+                // Pump and CGM rows
+                VStack(spacing: 12) {
+                    // Pump row
+                    if isPumpSetUp {
+                        deviceRow(
+                            image: pumpImage,
+                            title: pumpName,
+                            subtitle: "Insulin Pump",
+                            showArrow: true,
+                            action: onPumpTapped
+                        )
+                    } else {
+                        deviceSetupRow(icon: "plus", title: "Add Pump", subtitle: "Tap here to set up a pump", action: onAddPump)
+                    }
+
+                    // CGM row
+                    if isCGMSetUp {
+                        deviceRow(
+                            image: cgmImage,
+                            title: cgmName,
+                            subtitle: "Continuous Glucose Monitor",
+                            showArrow: true,
+                            action: onCGMTapped
+                        )
+                    } else {
+                        deviceSetupRow(icon: "plus", title: "Add CGM", subtitle: "Tap here to set up a CGM", action: onAddCGM)
+                    }
+                }
+                .padding(.top, 10)
+
                 // Expandable Sections
                 VStack(spacing: 20) {
                     expandableButton(title: "Personal Details", isExpanded: $isPersonalDetailsExpanded) {
@@ -41,7 +108,7 @@ public struct ProfileView: View {
                             .font(InsuTypography.subtitle)
                             .padding()
                     }
-                    
+
                     expandableButton(title: "FAQs", isExpanded: $isFAQsExpanded) {
                         // Content for FAQs
                         Text("No FAQs currently available.")
@@ -49,9 +116,9 @@ public struct ProfileView: View {
                             .padding()
                     }
                 }
-                
+
                 Spacer(minLength: 40)
-                
+
                 // Help Button
                 Button(action: {
                     // Help action
@@ -59,14 +126,14 @@ public struct ProfileView: View {
                     Text("Help")
                 }
                 .buttonStyle(InsuPrimaryButtonStyle())
-                
+
                 Spacer(minLength: InsuSpacing.tabBarHeight + 20) // Bottom padding for nav bar
             }
             .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
         }
         .background(Color.white.edgesIgnoringSafeArea(.all))
     }
-    
+
     private func expandableButton<Content: View>(title: String, isExpanded: Binding<Bool>, @ViewBuilder content: () -> Content) -> some View {
         VStack(spacing: 0) {
             Button(action: {
@@ -78,9 +145,9 @@ public struct ProfileView: View {
                     Text(title)
                         .font(.system(size: 18, weight: .bold))
                         .foregroundColor(.black)
-                    
+
                     Spacer()
-                    
+
                     Image(systemName: "arrowtriangle.down.fill")
                         .rotationEffect(.degrees(isExpanded.wrappedValue ? 180 : 0))
                         .foregroundColor(.insuDarkBlue)
@@ -89,7 +156,7 @@ public struct ProfileView: View {
                 .background(Color.insuBlue)
                 .cornerRadius(15) // Rounded corners for the header
             }
-            
+
             if isExpanded.wrappedValue {
                 content()
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -99,5 +166,83 @@ public struct ProfileView: View {
             }
         }
     }
-}
 
+    private func deviceSetupRow(icon: String, title: String, subtitle: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 16) {
+                // Plus icon in rounded rectangle
+                Image(systemName: icon)
+                    .font(.system(size: 24, weight: .semibold))
+                    .foregroundColor(.insuDarkBlue)
+                    .frame(width: 56, height: 56)
+                    .background(Color.insuBlue)
+                    .cornerRadius(12)
+
+                // Text
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundColor(.black)
+
+                    Text(subtitle)
+                        .font(.system(size: 14))
+                        .foregroundColor(.gray)
+                }
+
+                Spacer()
+            }
+            .padding(.vertical, 12)
+            .padding(.horizontal, 16)
+            .background(Color.white)
+            .cornerRadius(15)
+            .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+        }
+    }
+
+    private func deviceRow(image: UIImage?, title: String, subtitle: String, showArrow: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 16) {
+                // Device image
+                if let uiImage = image {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 56, height: 56)
+                        .background(Color.insuBlue)
+                        .cornerRadius(12)
+                } else {
+                    Image(systemName: "sensor.tag.radiowaves.forward")
+                        .font(.system(size: 24))
+                        .foregroundColor(.insuDarkBlue)
+                        .frame(width: 56, height: 56)
+                        .background(Color.insuBlue)
+                        .cornerRadius(12)
+                }
+
+                // Text
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundColor(.black)
+
+                    Text(subtitle)
+                        .font(.system(size: 14))
+                        .foregroundColor(.gray)
+                }
+
+                Spacer()
+
+                if showArrow {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.gray)
+                }
+            }
+            .padding(.vertical, 12)
+            .padding(.horizontal, 16)
+            .background(Color.white)
+            .cornerRadius(15)
+            .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+        }
+    }
+}
