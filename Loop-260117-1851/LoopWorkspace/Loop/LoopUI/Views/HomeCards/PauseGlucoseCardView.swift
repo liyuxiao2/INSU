@@ -9,14 +9,16 @@
 import SwiftUI
 
 public struct PauseGlucoseCardView: View {
-    let onPause: () -> Void
+    let isSuspended: Bool
+    let onToggle: () -> Void
 
-    public init(onPause: @escaping () -> Void) {
-        self.onPause = onPause
+    public init(isSuspended: Bool = false, onToggle: @escaping () -> Void) {
+        self.isSuspended = isSuspended
+        self.onToggle = onToggle
     }
 
     public var body: some View {
-        Button(action: onPause) {
+        Button(action: onToggle) {
             ZStack {
                 // Outer blue card
                 RoundedRectangle(cornerRadius: InsuSpacing.cardCornerRadius)
@@ -24,12 +26,12 @@ public struct PauseGlucoseCardView: View {
 
                 // Inner white card
                 VStack(spacing: 8) {
-                    // Pause icon
-                    Image(systemName: "pause.fill")
+                    // Icon changes based on state
+                    Image(systemName: isSuspended ? "play.fill" : "pause.fill")
                         .font(.system(size: 44, weight: .regular))
-                        .foregroundColor(Color.insuDarkBlue)
+                        .foregroundColor(isSuspended ? .green : Color.insuDarkBlue)
 
-                    Text("Pause Glucose")
+                    Text(isSuspended ? "Resume Insulin" : "Pause Insulin")
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(Color.insuTextPrimary)
                         .multilineTextAlignment(.center)
@@ -48,9 +50,16 @@ public struct PauseGlucoseCardView: View {
 
 struct PauseGlucoseCardView_Previews: PreviewProvider {
     static var previews: some View {
-        PauseGlucoseCardView(onPause: {})
-            .frame(width: 157, height: 118)
-            .padding()
-            .previewDisplayName("Pause Glucose Card")
+        Group {
+            PauseGlucoseCardView(isSuspended: false, onToggle: {})
+                .frame(width: 157, height: 118)
+                .padding()
+                .previewDisplayName("Pause Insulin")
+
+            PauseGlucoseCardView(isSuspended: true, onToggle: {})
+                .frame(width: 157, height: 118)
+                .padding()
+                .previewDisplayName("Resume Insulin")
+        }
     }
 }

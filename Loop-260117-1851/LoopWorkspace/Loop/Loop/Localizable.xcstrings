@@ -9854,7 +9854,7 @@
       "comment" : "Title for Bottom row configuration"
     },
     "Cancel" : {
-      "comment" : "Button label for cancel\nButton text to cancel\nCancel button for reset loop alert\nCancel export button title\nThe title of the cancel action in an action sheet",
+      "comment" : "Button label for cancel\nButton text to cancel\nCancel button\nCancel button for reset loop alert\nCancel export button title\nThe title of the cancel action in an action sheet",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -16786,6 +16786,9 @@
         }
       }
     },
+    "End Workout" : {
+      "comment" : "End workout button"
+    },
     "Enter a blood glucose from a meter for a recommended bolus amount." : {
       "comment" : "Caption for bolus screen notice when glucose data is missing or stale",
       "localizations" : {
@@ -18286,7 +18289,7 @@
       }
     },
     "Failed to Resume Insulin Delivery" : {
-      "comment" : "The alert title for a resume error",
+      "comment" : "Alert title for resume error\nThe alert title for a resume error",
       "localizations" : {
         "da" : {
           "stringUnit" : {
@@ -18379,6 +18382,9 @@
           }
         }
       }
+    },
+    "Failed to Suspend Insulin Delivery" : {
+      "comment" : "Alert title for suspend error"
     },
     "Favorite Foods" : {
       "comment" : "Title for Favorite Foods view",
@@ -27154,6 +27160,9 @@
         }
       }
     },
+    "No Pump Connected" : {
+      "comment" : "Title for no pump alert"
+    },
     "No Recent Glucose" : {
       "comment" : "The title of the cell indicating that there is no recent glucose",
       "localizations" : {
@@ -28318,7 +28327,7 @@
       }
     },
     "OK" : {
-      "comment" : "Alert acknowledgment OK button\nCritical Alert permissions disabled alert button\nDefault action for alert when alert acknowledgment fails\nNotifications permissions disabled alert button\nText for ok action on notification of upcoming TestFlight expiration\nText for ok action on notification of upcoming profile expiration\nThe title of the notification action to acknowledge a device alert",
+      "comment" : "Alert acknowledgment OK button\nCritical Alert permissions disabled alert button\nDefault action for alert when alert acknowledgment fails\nNotifications permissions disabled alert button\nOK button\nText for ok action on notification of upcoming TestFlight expiration\nText for ok action on notification of upcoming profile expiration\nThe title of the notification action to acknowledge a device alert",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -28707,6 +28716,12 @@
           }
         }
       }
+    },
+    "Please configure a Workout correction range in your Therapy Settings before using this feature." : {
+      "comment" : "Message for workout not configured alert"
+    },
+    "Please connect a pump before suspending insulin delivery." : {
+      "comment" : "Message for no pump alert"
     },
     "Possible Missed Meal" : {
       "comment" : "The notification title for a meal that was possibly not logged in Loop.",
@@ -39638,6 +39653,12 @@
         }
       }
     },
+    "Workout Active" : {
+      "comment" : "Title for workout active alert"
+    },
+    "Workout Not Configured" : {
+      "comment" : "Title for workout not configured alert"
+    },
     "Workout Targets" : {
       "comment" : "The label of the workout mode toggle button",
       "localizations" : {
@@ -39934,6 +39955,9 @@
           }
         }
       }
+    },
+    "Would you like to end your workout preset?" : {
+      "comment" : "Message for workout active alert"
     },
     "Yes" : {
       "comment" : "The title of the action used when confirming entered amount of carbohydrates.",

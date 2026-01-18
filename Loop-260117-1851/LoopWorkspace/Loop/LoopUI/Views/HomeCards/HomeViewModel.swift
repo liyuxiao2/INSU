@@ -29,11 +29,13 @@ public class HomeViewModel: ObservableObject {
     @Published var lastBolusValue: Double
     @Published var lastBolusUnit: String
     @Published var lastBolusDate: String
+    @Published var isInsulinSuspended: Bool
+    @Published var isWorkoutActive: Bool
 
     // MARK: - Initialization
 
     public init(
-        userName: String = "User",
+        userName: String = "Arian",
         glucoseValue: Double = 0.0,
         glucoseUnit: String = "mmol/L",
         trendArrow: String? = nil,
@@ -46,7 +48,9 @@ public class HomeViewModel: ObservableObject {
         isAutomatedMode: Bool = false,
         lastBolusValue: Double = 0.0,
         lastBolusUnit: String = "Units",
-        lastBolusDate: String = "--"
+        lastBolusDate: String = "--",
+        isInsulinSuspended: Bool = false,
+        isWorkoutActive: Bool = false
     ) {
         self.userName = userName
         self.glucoseValue = glucoseValue
@@ -62,6 +66,8 @@ public class HomeViewModel: ObservableObject {
         self.lastBolusValue = lastBolusValue
         self.lastBolusUnit = lastBolusUnit
         self.lastBolusDate = lastBolusDate
+        self.isInsulinSuspended = isInsulinSuspended
+        self.isWorkoutActive = isWorkoutActive
     }
 
     // MARK: - Update Methods
@@ -97,6 +103,18 @@ public class HomeViewModel: ObservableObject {
     public func updateUserName(_ name: String) {
         DispatchQueue.main.async {
             self.userName = name
+        }
+    }
+
+    public func updateSuspendedState(_ isSuspended: Bool) {
+        DispatchQueue.main.async {
+            self.isInsulinSuspended = isSuspended
+        }
+    }
+
+    public func updateWorkoutState(_ isActive: Bool) {
+        DispatchQueue.main.async {
+            self.isWorkoutActive = isActive
         }
     }
 }

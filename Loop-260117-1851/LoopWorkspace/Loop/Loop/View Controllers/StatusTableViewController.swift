@@ -48,6 +48,10 @@ final class StatusTableViewController: LoopChartsTableViewController {
     // MARK: - Home UI Redesign Properties
 
     private var homeViewModel: HomeViewModel = HomeViewModel()
+    private lazy var statsViewModel: StatsViewModel = {
+        let isPumpConnected = self.deviceManager.pumpManager != nil
+        return StatsViewModel(isPumpConnected: isPumpConnected)
+    }()
     private var cardHostingController: UIHostingController<HomeCardContainer>?
     private var navigationOverlay: UIHostingController<HomeNavigationBar>?
     private var activeContentController: UIViewController?
@@ -107,15 +111,43 @@ final class StatusTableViewController: LoopChartsTableViewController {
             case .home:
                 contentView = self.createHomeView()
             case .stats:
-                let isPumpConnected = self.deviceManager.pumpManager != nil
-                let statsViewModel = StatsViewModel(isPumpConnected: isPumpConnected)
-                // Update user name from home view model if available
-                if !self.homeViewModel.userName.isEmpty && self.homeViewModel.userName != "User" {
-                    statsViewModel.updateUserName(self.homeViewModel.userName)
+                // Set up refresh callback if not already set
+                if self.statsViewModel.onRefreshNeeded == nil {
+                    self.statsViewModel.onRefreshNeeded = { [weak self] in
+                        self?.updateStatsViewModel()
+                    }
                 }
-                contentView = AnyView(StatsView(viewModel: statsViewModel))
+                // Update stats with latest data before showing
+                self.updateStatsViewModel()
+                contentView = AnyView(StatsView(viewModel: self.statsViewModel))
             case .profile:
-                contentView = AnyView(ProfileView())
+                let isPumpSetUp = self.deviceManager.pumpManager?.isOnboarded == true
+                let pumpName = self.deviceManager.pumpManager?.localizedTitle ?? ""
+                let pumpImage = self.deviceManager.pumpManager?.smallImage
+                let isCGMSetUp = self.deviceManager.cgmManager?.isOnboarded == true
+                let cgmName = self.deviceManager.cgmManager?.localizedTitle ?? ""
+                let cgmImage = (self.deviceManager.cgmManager as? DeviceManagerUI)?.smallImage
+
+                contentView = AnyView(ProfileView(
+                    isPumpSetUp: isPumpSetUp,
+                    pumpName: pumpName,
+                    pumpImage: pumpImage,
+                    isCGMSetUp: isCGMSetUp,
+                    cgmName: cgmName,
+                    cgmImage: cgmImage,
+                    onAddPump: { [weak self] in
+                        self?.addNewPumpManager()
+                    },
+                    onAddCGM: { [weak self] in
+                        self?.addNewCGMManager()
+                    },
+                    onPumpTapped: { [weak self] in
+                        self?.onPumpTapped()
+                    },
+                    onCGMTapped: { [weak self] in
+                        self?.onCGMTapped()
+                    }
+                ))
             case .settings:
                 contentView = self.createSettingsView()
             }
@@ -430,6 +462,13 @@ final class StatusTableViewController: LoopChartsTableViewController {
                 log.debug("New basalDeliveryState: %@", String(describing: basalDeliveryState))
                 refreshContext.update(with: .status)
                 reloadData(animated: true)
+
+                // Update homeViewModel suspended state
+                if case .suspended = basalDeliveryState {
+                    homeViewModel.updateSuspendedState(true)
+                } else {
+                    homeViewModel.updateSuspendedState(false)
+                }
             }
         }
     }
@@ -752,6 +791,11 @@ final class StatusTableViewController: LoopChartsTableViewController {
 
             // Update HomeViewModel with latest data
             self.updateHomeViewModel()
+
+            // Update StatsViewModel if stats tab is active
+            if self.tabSelectionState.selectedTab == .stats {
+                self.updateStatsViewModel()
+            }
 
             // Show/hide the table view rows
             let statusRowMode = self.determineStatusRowMode()
@@ -1113,6 +1157,17 @@ final class StatusTableViewController: LoopChartsTableViewController {
                     viewModel: homeViewModel,
                     onInputBolus: { [weak self] in
                         self?.presentBolusScreen()
+                    },
+                    onToggleSuspend: { [weak self] in
+                        self?.toggleInsulinSuspend()
+                    },
+                    onToggleClosedLoop: { [weak self] in
+                        guard let self = self else { return }
+                        let currentDosingEnabled = self.deviceManager.loopManager.settings.dosingEnabled
+                        self.dosingEnabledChanged(!currentDosingEnabled)
+                    },
+                    onActivityTapped: { [weak self] in
+                        self?.handleActivityTapped()
                     }
                 )
                 cardHostingController = UIHostingController(rootView: cardContainerView)
@@ -1740,7 +1795,8 @@ final class StatusTableViewController: LoopChartsTableViewController {
     }
     
     func presentWorkoutModeAlertController() {
-        let vc = UIAlertController(workoutDurationSelectionHandler: { duration in
+        let vc = UIAlertController(workoutDurationSelectionHandler: { [weak self] duration in
+            guard let self = self else { return }
             let startDate = Date()
 
             guard self.preMealMode != true else {
@@ -1752,6 +1808,7 @@ final class StatusTableViewController: LoopChartsTableViewController {
                     self.deviceManager.loopManager.mutateSettings { settings in
                         settings.enableLegacyWorkoutOverride(at: startDate, for: duration)
                     }
+                    self.homeViewModel.updateWorkoutState(true)
                 }
                 return
             }
@@ -1759,6 +1816,7 @@ final class StatusTableViewController: LoopChartsTableViewController {
             self.deviceManager.loopManager.mutateSettings { settings in
                 settings.enableLegacyWorkoutOverride(at: startDate, for: duration)
             }
+            self.homeViewModel.updateWorkoutState(true)
         })
 
         present(vc, animated: true, completion: nil)
@@ -1912,7 +1970,8 @@ final class StatusTableViewController: LoopChartsTableViewController {
         }
         settingsViewController.pumpManagerOnboardingDelegate = deviceManager
         settingsViewController.completionDelegate = self
-        show(settingsViewController, sender: self)
+        // Present modally to work when ProfileView overlay is showing
+        navigationController?.present(settingsViewController, animated: true)
     }
 
     private func onCGMTapped() {
@@ -1924,7 +1983,90 @@ final class StatusTableViewController: LoopChartsTableViewController {
         var settings = cgmManager.settingsViewController(bluetoothProvider: deviceManager.bluetoothProvider, displayGlucosePreference: deviceManager.displayGlucosePreference, colorPalette: .default, allowDebugFeatures: FeatureFlags.allowDebugFeatures)
         settings.cgmManagerOnboardingDelegate = deviceManager
         settings.completionDelegate = self
-        show(settings, sender: self)
+        // Present modally to work when ProfileView overlay is showing
+        navigationController?.present(settings, animated: true)
+    }
+
+    private func toggleInsulinSuspend() {
+        guard let pumpManager = deviceManager.pumpManager else {
+            let alert = UIAlertController(
+                title: NSLocalizedString("No Pump Connected", comment: "Title for no pump alert"),
+                message: NSLocalizedString("Please connect a pump before suspending insulin delivery.", comment: "Message for no pump alert"),
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: .default))
+            navigationController?.present(alert, animated: true)
+            return
+        }
+
+        if case .suspended = basalDeliveryState {
+            // Currently suspended - resume delivery
+            pumpManager.resumeDelivery { [weak self] error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        let alert = UIAlertController(
+                            with: error,
+                            title: NSLocalizedString("Failed to Resume Insulin Delivery", comment: "Alert title for resume error")
+                        )
+                        self?.present(alert, animated: true)
+                    } else {
+                        self?.homeViewModel.updateSuspendedState(false)
+                    }
+                }
+            }
+        } else {
+            // Not suspended - suspend delivery
+            pumpManager.suspendDelivery { [weak self] error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        let alert = UIAlertController(
+                            with: error,
+                            title: NSLocalizedString("Failed to Suspend Insulin Delivery", comment: "Alert title for suspend error")
+                        )
+                        self?.present(alert, animated: true)
+                    } else {
+                        self?.homeViewModel.updateSuspendedState(true)
+                    }
+                }
+            }
+        }
+    }
+
+    private func handleActivityTapped() {
+        // Check if workout is currently active
+        if let override = deviceManager.loopManager.settings.scheduleOverride,
+           override.context == .legacyWorkout,
+           override.isActive() {
+            // Workout is active - offer to cancel
+            let alert = UIAlertController(
+                title: NSLocalizedString("Workout Active", comment: "Title for workout active alert"),
+                message: NSLocalizedString("Would you like to end your workout preset?", comment: "Message for workout active alert"),
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: NSLocalizedString("End Workout", comment: "End workout button"), style: .destructive) { [weak self] _ in
+                self?.deviceManager.loopManager.mutateSettings { settings in
+                    settings.clearOverride(matching: .legacyWorkout)
+                }
+                self?.homeViewModel.updateWorkoutState(false)
+            })
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button"), style: .cancel))
+            present(alert, animated: true)
+        } else {
+            // Check if workout target range is configured
+            guard deviceManager.loopManager.settings.legacyWorkoutTargetRange != nil else {
+                let alert = UIAlertController(
+                    title: NSLocalizedString("Workout Not Configured", comment: "Title for workout not configured alert"),
+                    message: NSLocalizedString("Please configure a Workout correction range in your Therapy Settings before using this feature.", comment: "Message for workout not configured alert"),
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: .default))
+                present(alert, animated: true)
+                return
+            }
+
+            // Show workout duration picker
+            presentWorkoutModeAlertController()
+        }
     }
 
     private func updateHomeViewModel() {
@@ -1953,15 +2095,171 @@ final class StatusTableViewController: LoopChartsTableViewController {
         let modeName = isAutomated ? "Automated" : "Manual"
         homeViewModel.updateMode(name: modeName, isAutomated: isAutomated)
 
+        // Update workout state
+        let isWorkoutActive = deviceManager.loopManager.settings.scheduleOverride?.context == .legacyWorkout &&
+            deviceManager.loopManager.settings.scheduleOverride?.isActive() == true
+        homeViewModel.updateWorkoutState(isWorkoutActive)
+
         // Update user name (could be from settings or user profile)
         // For now, using a default
         homeViewModel.updateUserName("User")
+    }
+
+    private func updateStatsViewModel() {
+        let unit = statusCharts.glucose.glucoseUnit
+
+        // Update glucose unit
+        statsViewModel.updateGlucoseUnit(unit.shortLocalizedUnitString())
+
+        // Update user name
+        statsViewModel.updateUserName(homeViewModel.userName)
+
+        // Get target range from therapy settings
+        if let targets = deviceManager.loopManager.settings.glucoseTargetRangeSchedule {
+            let now = Date()
+            let targetRange = targets.value(at: now)
+            let lowValue = targetRange.minValue.doubleValue(for: unit)
+            let highValue = targetRange.maxValue.doubleValue(for: unit)
+            statsViewModel.updateTargetRange(low: lowValue, high: highValue)
+        }
+
+        // Fetch glucose data for chart (based on selected hours)
+        let hoursToFetch = statsViewModel.selectedHourRange
+        let chartStartDate = Calendar.current.date(byAdding: .hour, value: -hoursToFetch, to: Date())!
+
+        deviceManager.glucoseStore.getGlucoseSamples(start: chartStartDate, end: nil) { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let samples):
+                // Convert to GlucoseDataPoint for chart
+                let dataPoints = samples.map { sample in
+                    GlucoseDataPoint(
+                        date: sample.startDate,
+                        value: sample.quantity.doubleValue(for: unit)
+                    )
+                }
+                self.statsViewModel.updateGlucoseData(dataPoints)
+
+            case .failure(let error):
+                self.log.error("Failed to fetch glucose samples for chart: %{public}@", String(describing: error))
+            }
+        }
+
+        // Fetch glucose data for summary stats (based on selected days)
+        let daysToFetch = statsViewModel.selectedDayRange
+        let summaryStartDate = Calendar.current.date(byAdding: .day, value: -daysToFetch, to: Date())!
+
+        deviceManager.glucoseStore.getGlucoseSamples(start: summaryStartDate, end: nil) { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let samples):
+                // Convert to GlucoseDataPoint for chart
+                let dataPoints = samples.map { sample in
+                    GlucoseDataPoint(
+                        date: sample.startDate,
+                        value: sample.quantity.doubleValue(for: unit)
+                    )
+                }
+                self.statsViewModel.updateGlucoseData(dataPoints)
+
+                // Calculate average glucose
+                if !samples.isEmpty {
+                    let sum = samples.reduce(0.0) { $0 + $1.quantity.doubleValue(for: unit) }
+                    let average = sum / Double(samples.count)
+                    self.statsViewModel.updateAverageGlucose(average)
+
+                    // Calculate GMI (Glucose Management Indicator)
+                    // GMI formula: 3.31 + (0.02392 × average glucose in mg/dL)
+                    let averageMgDl: Double
+                    if unit == HKUnit.millimolesPerLiter {
+                        averageMgDl = average * 18.0 // Convert mmol/L to mg/dL
+                    } else {
+                        averageMgDl = average
+                    }
+                    let gmi = 3.31 + (0.02392 * averageMgDl)
+                    self.statsViewModel.updateGMI(gmi)
+                }
+
+                // Calculate Time in Range percentages
+                if !samples.isEmpty, let targets = self.deviceManager.loopManager.settings.glucoseTargetRangeSchedule {
+                    let now = Date()
+                    let targetRange = targets.value(at: now)
+                    let targetLow = targetRange.minValue.doubleValue(for: unit)
+                    let targetHigh = targetRange.maxValue.doubleValue(for: unit)
+
+                    // Define thresholds (standard CGM ranges)
+                    let veryLowThreshold: Double
+                    let lowThreshold: Double
+                    let highThreshold: Double
+                    let veryHighThreshold: Double
+
+                    if unit == HKUnit.millimolesPerLiter {
+                        veryLowThreshold = 2.2  // <2.2 mmol/L is very low
+                        lowThreshold = targetLow
+                        highThreshold = targetHigh
+                        veryHighThreshold = 13.9 // >13.9 mmol/L is very high
+                    } else {
+                        veryLowThreshold = 40   // <40 mg/dL is very low
+                        lowThreshold = targetLow
+                        highThreshold = targetHigh
+                        veryHighThreshold = 250 // >250 mg/dL is very high
+                    }
+
+                    var veryLowCount = 0
+                    var lowCount = 0
+                    var inRangeCount = 0
+                    var highCount = 0
+                    var veryHighCount = 0
+
+                    for sample in samples {
+                        let value = sample.quantity.doubleValue(for: unit)
+
+                        if value < veryLowThreshold {
+                            veryLowCount += 1
+                        } else if value < lowThreshold {
+                            lowCount += 1
+                        } else if value <= highThreshold {
+                            inRangeCount += 1
+                        } else if value <= veryHighThreshold {
+                            highCount += 1
+                        } else {
+                            veryHighCount += 1
+                        }
+                    }
+
+                    let total = Double(samples.count)
+                    self.statsViewModel.updateTimeInRange(
+                        veryHigh: (Double(veryHighCount) / total) * 100.0,
+                        high: (Double(highCount) / total) * 100.0,
+                        inRange: (Double(inRangeCount) / total) * 100.0,
+                        low: (Double(lowCount) / total) * 100.0,
+                        veryLow: (Double(veryLowCount) / total) * 100.0
+                    )
+                }
+
+                // Calculate days of data available
+                if let firstSample = samples.first, let lastSample = samples.last {
+                    let timeInterval = lastSample.startDate.timeIntervalSince(firstSample.startDate)
+                    let daysAvailable = Int(ceil(timeInterval / 86400)) // 86400 seconds in a day
+                    self.statsViewModel.updateDaysAvailable(daysAvailable)
+                }
+
+            case .failure(let error):
+                self.log.error("Failed to fetch glucose samples for stats: %{public}@", String(describing: error))
+            }
+        }
     }
 
     private func automaticDosingStatusChanged(_ automaticDosingEnabled: Bool) {
         updatePresetModeAvailability(automaticDosingEnabled: automaticDosingEnabled)
         hudView?.loopCompletionHUD.loopIconClosed = automaticDosingEnabled
         hudView?.loopCompletionHUD.closedLoopDisallowedLocalizedDescription = deviceManager.closedLoopDisallowedLocalizedDescription
+
+        // Update homeViewModel mode
+        let modeName = automaticDosingEnabled ? "Automated" : "Manual"
+        homeViewModel.updateMode(name: modeName, isAutomated: automaticDosingEnabled)
     }
 
     // MARK: - HUDs

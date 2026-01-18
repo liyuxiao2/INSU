@@ -3209,7 +3209,7 @@
         }
       }
     },
-    "Pause Glucose" : {
+    "Pause Insulin" : {
 
     },
     "Pod Expires: Tomorrow" : {
@@ -3342,6 +3342,9 @@
       }
     },
     "Recommended Ranges" : {
+
+    },
+    "Resume Insulin" : {
 
     },
     "Sensor Info" : {
@@ -3900,6 +3903,9 @@
           }
         }
       }
+    },
+    "Workout Active" : {
+
     }
   },
   "version" : "1.0"

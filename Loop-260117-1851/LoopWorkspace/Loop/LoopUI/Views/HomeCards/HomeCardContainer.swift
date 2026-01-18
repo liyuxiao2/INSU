@@ -13,10 +13,16 @@ public struct HomeCardContainer: View {
     @State private var currentPage = 0
 
     let onInputBolus: () -> Void
+    let onToggleSuspend: () -> Void
+    let onToggleClosedLoop: () -> Void
+    let onActivityTapped: () -> Void
 
-    public init(viewModel: HomeViewModel, onInputBolus: @escaping () -> Void) {
+    public init(viewModel: HomeViewModel, onInputBolus: @escaping () -> Void, onToggleSuspend: @escaping () -> Void = {}, onToggleClosedLoop: @escaping () -> Void = {}, onActivityTapped: @escaping () -> Void = {}) {
         self.viewModel = viewModel
         self.onInputBolus = onInputBolus
+        self.onToggleSuspend = onToggleSuspend
+        self.onToggleClosedLoop = onToggleClosedLoop
+        self.onActivityTapped = onActivityTapped
     }
 
     private func getSubtitleForPage(_ page: Int) -> String {
@@ -95,7 +101,7 @@ public struct HomeCardContainer: View {
                                 iobValue: viewModel.iobValue,
                                 iobUnit: viewModel.iobUnit,
                                 isAutomated: viewModel.isAutomatedMode,
-                                onChangeMode: {}
+                                onChangeMode: onToggleClosedLoop
                             )
                             .tag(2)
                         }
@@ -124,12 +130,12 @@ public struct HomeCardContainer: View {
                         )
                         .frame(width: 171, height: InsuSpacing.smallCardHeight)
 
-                        // Right side: Pause Glucose + Activity cards (stacked)
+                        // Right side: Pause/Resume Insulin + Activity cards (stacked)
                         VStack(spacing: 7) {
-                            PauseGlucoseCardView(onPause: {})
+                            PauseGlucoseCardView(isSuspended: viewModel.isInsulinSuspended, onToggle: onToggleSuspend)
                                 .frame(height: 118)
 
-                            ActivityCardView(onActivity: {})
+                            ActivityCardView(isWorkoutActive: viewModel.isWorkoutActive, onActivity: onActivityTapped)
                                 .frame(height: 118)
                         }
                         .frame(width: 170)
