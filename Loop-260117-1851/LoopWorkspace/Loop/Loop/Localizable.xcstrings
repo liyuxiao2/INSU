@@ -5326,6 +5326,7 @@
     },
     "Add Meal" : {
       "comment" : "The label of the carb entry button",
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -9113,7 +9114,7 @@
       }
     },
     "Bolus" : {
-      "comment" : "Label for bolus entry row on bolus screen\nLabel for bolus entry row on simple bolus screen\nThe label of the bolus entry button\nTitle for bolus entry screen",
+      "comment" : "Label for bolus entry row on bolus screen\nLabel for bolus entry row on simple bolus screen\nTitle for bolus entry screen",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -33169,7 +33170,7 @@
       }
     },
     "Settings" : {
-      "comment" : "Label of button that navigation user to iOS Settings\nSettings screen title\nThe label of the settings button",
+      "comment" : "Label of button that navigation user to iOS Settings\nSettings screen title",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

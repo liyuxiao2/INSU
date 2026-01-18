@@ -45,6 +45,103 @@ final class StatusTableViewController: LoopChartsTableViewController {
 
     lazy private var cancellables = Set<AnyCancellable>()
 
+    // MARK: - Home UI Redesign Properties
+
+    private var homeViewModel: HomeViewModel = HomeViewModel()
+    private var cardHostingController: UIHostingController<HomeCardContainer>?
+    private var navigationOverlay: UIHostingController<HomeNavigationBar>?
+    private var activeContentController: UIViewController?
+    private var selectedTab: HomeTab = .home
+
+    private func setupCustomNavigationBar() {
+        guard let navigationController = self.navigationController, navigationOverlay == nil else { return }
+        
+        let navBar = HomeNavigationBar(
+            selectedTab: Binding(
+                get: { [weak self] in self?.selectedTab ?? .home },
+                set: { [weak self] newValue in self?.switchTab(to: newValue) }
+            ),
+            onTabSelected: { [weak self] tab in
+                self?.switchTab(to: tab)
+            }
+        )
+        
+        let hostingController = UIHostingController(rootView: navBar)
+        hostingController.view.backgroundColor = .clear
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        
+        navigationController.view.addSubview(hostingController.view)
+        hostingController.didMove(toParent: navigationController)
+        
+        NSLayoutConstraint.activate([
+            hostingController.view.leadingAnchor.constraint(equalTo: navigationController.view.leadingAnchor),
+            hostingController.view.trailingAnchor.constraint(equalTo: navigationController.view.trailingAnchor),
+            hostingController.view.bottomAnchor.constraint(equalTo: navigationController.view.bottomAnchor)
+        ])
+        
+        self.navigationOverlay = hostingController
+    }
+
+    private func switchTab(to tab: HomeTab) {
+        // Ensure we are on main thread
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            guard tab != self.selectedTab else { return }
+            self.selectedTab = tab
+            
+            // Remove existing content overlay
+            if let active = self.activeContentController {
+                active.willMove(toParent: nil)
+                active.view.removeFromSuperview()
+                active.removeFromParent()
+                self.activeContentController = nil
+            }
+            
+            // If Home, we are done (reveals the table view)
+            if tab == .home {
+                return
+            }
+            
+            // Otherwise, create new hosting controller
+            let contentView: AnyView
+            switch tab {
+            case .stats:
+                contentView = AnyView(StatsView())
+            case .history:
+                contentView = AnyView(HistoryView())
+            case .profile:
+                contentView = AnyView(ProfileView())
+            case .home:
+                return
+            }
+            
+            let hosting = UIHostingController(rootView: contentView)
+            hosting.view.backgroundColor = .systemBackground
+            
+            guard let nav = self.navigationController else { return }
+            
+            nav.addChild(hosting)
+            hosting.view.translatesAutoresizingMaskIntoConstraints = false
+            
+            // Insert below the custom navigation bar
+            if let barView = self.navigationOverlay?.view {
+                nav.view.insertSubview(hosting.view, belowSubview: barView)
+            } else {
+                nav.view.addSubview(hosting.view)
+            }
+            
+            NSLayoutConstraint.activate([
+                hosting.view.topAnchor.constraint(equalTo: nav.view.topAnchor),
+                hosting.view.leadingAnchor.constraint(equalTo: nav.view.leadingAnchor),
+                hosting.view.trailingAnchor.constraint(equalTo: nav.view.trailingAnchor),
+                hosting.view.bottomAnchor.constraint(equalTo: nav.view.bottomAnchor)
+            ])
+            
+            hosting.didMove(toParent: nav)
+            self.activeContentController = hosting
+        }
+    }
+
     override func viewDidLoad() {
 
         super.viewDidLoad()
@@ -162,7 +259,15 @@ final class StatusTableViewController: LoopChartsTableViewController {
         super.viewWillAppear(animated)
 
         navigationController?.setNavigationBarHidden(true, animated: animated)
-        navigationController?.setToolbarHidden(false, animated: animated)
+        // Hide native toolbar to use custom HomeNavigationBar
+        navigationController?.setToolbarHidden(true, animated: animated)
+        
+        setupCustomNavigationBar()
+        
+        // adjust content inset to prevent content from being hidden behind the new bar
+        let bottomInset = InsuSpacing.tabBarHeight + 20
+        tableView.contentInset.bottom = bottomInset
+        tableView.verticalScrollIndicatorInsets.bottom = bottomInset
         
         updateToolbarItems()
 
@@ -204,6 +309,19 @@ final class StatusTableViewController: LoopChartsTableViewController {
         super.viewWillDisappear(animated)
 
         onscreen = false
+        
+        // Remove active content overlay
+        if let active = activeContentController {
+            active.willMove(toParent: nil)
+            active.view.removeFromSuperview()
+            active.removeFromParent()
+            activeContentController = nil
+        }
+        
+        // Remove custom navigation bar
+        navigationOverlay?.view.removeFromSuperview()
+        navigationOverlay?.removeFromParent()
+        navigationOverlay = nil
 
         if presentedViewController == nil {
             navigationController?.setNavigationBarHidden(false, animated: animated)
@@ -274,40 +392,12 @@ final class StatusTableViewController: LoopChartsTableViewController {
     }
 
     private func setupToolbarItems() {
-        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-        let carbs = UIBarButtonItem(image: UIImage(named: "carbs"), style: .plain, target: self, action: #selector(userTappedAddCarbs))
-        let bolus = UIBarButtonItem(image: UIImage(named: "bolus"), style: .plain, target: self, action: #selector(presentBolusScreen))
-        let settings = UIBarButtonItem(image: UIImage(named: "settings"), style: .plain, target: self, action: #selector(onSettingsTapped))
-        
-        let preMeal = createPreMealButtonItem(selected: false, isEnabled: true)
-        let workout = createWorkoutButtonItem(selected: false, isEnabled: true)
-        toolbarItems = [
-            carbs,
-            space,
-            preMeal,
-            space,
-            bolus,
-            space,
-            workout,
-            space,
-            settings
-        ]
+        // Native toolbar disabled for custom Home UI
+        toolbarItems = []
     }
         
     private func updateToolbarItems() {
-        let isPumpOnboarded = onboardingManager.isComplete || deviceManager.pumpManager?.isOnboarded == true
-
-        toolbarItems![0].accessibilityLabel = NSLocalizedString("Add Meal", comment: "The label of the carb entry button")
-        toolbarItems![0].isEnabled = isPumpOnboarded
-        toolbarItems![0].tintColor = UIColor.carbTintColor
-        toolbarItems![4].accessibilityLabel = NSLocalizedString("Bolus", comment: "The label of the bolus entry button")
-        toolbarItems![4].isEnabled = isPumpOnboarded
-        toolbarItems![4].tintColor = UIColor.insulinTintColor
-        toolbarItems![8].accessibilityLabel = NSLocalizedString("Settings", comment: "The label of the settings button")
-        toolbarItems![8].tintColor = UIColor.secondaryLabel
-        
-        toolbarItems![2] = createPreMealButtonItem(selected: preMealMode == true && preMealModeAllowed, isEnabled: preMealModeAllowed)
-        toolbarItems![6] = createWorkoutButtonItem(selected: workoutMode == true && workoutModeAllowed, isEnabled: workoutModeAllowed)
+        // Native toolbar disabled for custom Home UI
     }
 
     public var basalDeliveryState: PumpManagerStatus.BasalDeliveryState? = nil {
@@ -635,6 +725,9 @@ final class StatusTableViewController: LoopChartsTableViewController {
                 hudView.pumpStatusHUD.presentStatusBadge(self.deviceManager.pumpStatusBadge)
                 hudView.pumpStatusHUD.lifecycleProgress = self.deviceManager.pumpLifecycleProgress
             }
+
+            // Update HomeViewModel with latest data
+            self.updateHomeViewModel()
 
             // Show/hide the table view rows
             let statusRowMode = self.determineStatusRowMode()
@@ -986,8 +1079,27 @@ final class StatusTableViewController: LoopChartsTableViewController {
                 return cell
             }
         case .hud:
-            let cell = tableView.dequeueReusableCell(withIdentifier: HUDViewTableViewCell.className, for: indexPath) as! HUDViewTableViewCell
-            hudView = cell.hudView
+            // SwiftUI HomeCardContainer
+            let cell = UITableViewCell()
+            cell.selectionStyle = .none
+            cell.backgroundColor = .clear
+
+            if cardHostingController == nil {
+                let cardContainerView = HomeCardContainer(
+                    viewModel: homeViewModel,
+                    onInputBolus: { [weak self] in
+                        self?.presentBolusScreen()
+                    }
+                )
+                cardHostingController = UIHostingController(rootView: cardContainerView)
+            }
+
+            if let hostingController = cardHostingController {
+                hostingController.view.frame = cell.contentView.bounds
+                hostingController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                hostingController.view.backgroundColor = .clear
+                cell.contentView.addSubview(hostingController.view)
+            }
 
             return cell
         case .charts:
@@ -1187,8 +1299,8 @@ final class StatusTableViewController: LoopChartsTableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch Section(rawValue: indexPath.section)! {
         case .charts:
-            // Compute the height of the HUD, defaulting to 70
-            let hudHeight = ceil(hudView?.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height ?? 74)
+            // Compute the height of the HUD (card container), using a fixed height
+            let hudHeight: CGFloat = 700  // Home page content height
             var availableSize = max(tableView.bounds.width, tableView.bounds.height)
             availableSize -= (tableView.safeAreaInsets.top + tableView.safeAreaInsets.bottom + hudHeight)
 
@@ -1198,7 +1310,11 @@ final class StatusTableViewController: LoopChartsTableViewController {
             case .iob, .dose, .cob:
                 return max(106, 0.21 * availableSize)
             }
-        case .hud, .status, .alertWarning:
+        case .hud:
+            // SwiftUI HomeCardContainer height (matching Figma design)
+            // Header: 60 + Main card: 234 + Indicator: 32 + Small cards: 258 + Button: 46 + Spacing: 70
+            return 700
+        case .status, .alertWarning:
             return UITableView.automaticDimension
         }
     }
@@ -1669,6 +1785,37 @@ final class StatusTableViewController: LoopChartsTableViewController {
         settings.cgmManagerOnboardingDelegate = deviceManager
         settings.completionDelegate = self
         show(settings, sender: self)
+    }
+
+    private func updateHomeViewModel() {
+        // Update glucose
+        if let glucose = deviceManager.glucoseStore.latestGlucose {
+            let unit = statusCharts.glucose.glucoseUnit
+            let value = glucose.quantity.doubleValue(for: unit)
+            let isStale = glucose.startDate.timeIntervalSinceNow < -LoopCoreConstants.inputDataRecencyInterval
+            let trend = deviceManager.glucoseDisplay(for: glucose)?.trendType
+
+            homeViewModel.updateGlucose(value: value, unit: unit, trend: trend, isStale: isStale)
+        }
+
+        // Update IOB
+        if let maxValue = statusCharts.iob.iobPoints.allElementsAdjacent(to: Date()).max(by: {
+            return $0.y.scalar < $1.y.scalar
+        }) {
+            homeViewModel.updateIOB(value: maxValue.y.scalar)
+        }
+
+        // Update reservoir level - placeholder for UI
+        homeViewModel.updateReservoir(level: 0)
+
+        // Update mode
+        let isAutomated = automaticDosingStatus.automaticDosingEnabled
+        let modeName = isAutomated ? "Automated" : "Manual"
+        homeViewModel.updateMode(name: modeName, isAutomated: isAutomated)
+
+        // Update user name (could be from settings or user profile)
+        // For now, using a default
+        homeViewModel.updateUserName("User")
     }
 
     private func automaticDosingStatusChanged(_ automaticDosingEnabled: Bool) {
