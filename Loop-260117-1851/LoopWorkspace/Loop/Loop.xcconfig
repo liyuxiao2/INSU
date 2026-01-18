@@ -54,3 +54,6 @@ URL_SCHEME_NAME = $(MAIN_APP_DISPLAY_NAME)
 // Optional overrides
 #include? "LoopOverride.xcconfig"
 #include? "../LoopConfigOverride.xcconfig"
+
+// Gemini API configuration
+#include? "GeminiAPIKey.xcconfig"

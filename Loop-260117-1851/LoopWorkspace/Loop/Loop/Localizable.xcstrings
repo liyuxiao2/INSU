@@ -3136,6 +3136,12 @@
         }
       }
     },
+    "%lldg" : {
+
+    },
+    "%lldg carbs" : {
+
+    },
     "⚠️" : {
       "localizations" : {
         "da" : {
@@ -5449,6 +5455,9 @@
           }
         }
       }
+    },
+    "Add Photo" : {
+
     },
     "Add predictive line" : {
       "comment" : "Title for predictive line toggle"
@@ -8071,6 +8080,9 @@
     },
     "Are you sure you want to log out? You will need to complete the onboarding process again." : {
       "comment" : "Logout confirmation message"
+    },
+    "Ask about food or carbs..." : {
+
     },
     "at %@" : {
       "comment" : "Format fragment for a specific time",
@@ -11964,6 +11976,9 @@
           }
         }
       }
+    },
+    "Choose from Library" : {
+
     },
     "Close" : {
       "comment" : "Button title to close view\nThe button label of the action used to dismiss the unsafe notification permission alert",
@@ -25371,6 +25386,9 @@
         }
       }
     },
+    "Meal Summary" : {
+
+    },
     "mg/dL" : {
       "comment" : "The short unit display string for milligrams of glucose per decilter",
       "localizations" : {
@@ -28178,6 +28196,9 @@
         }
       }
     },
+    "Nutrition Assistant" : {
+
+    },
     "Off" : {
       "comment" : "Notification Setting Status is Off",
       "localizations" : {
@@ -28835,6 +28856,9 @@
           }
         }
       }
+    },
+    "Powered by AI" : {
+
     },
     "Pre-Meal Targets" : {
       "comment" : "The label of the pre-meal mode toggle button",
@@ -34660,6 +34684,9 @@
         }
       }
     },
+    "Take Photo" : {
+
+    },
     "Tap here to set up a CGM" : {
       "comment" : "Descriptive text for button to add CGM device",
       "localizations" : {
@@ -35303,6 +35330,9 @@
           }
         }
       }
+    },
+    "Tap to use" : {
+
     },
     "Tap Unmute to resume sound for your alerts and alarms." : {
       "comment" : "The alert body for unmute alert confirmation",
@@ -36726,6 +36756,9 @@
           }
         }
       }
+    },
+    "TOTAL" : {
+
     },
     "Transmitter Low Battery" : {
       "localizations" : {
@@ -38532,6 +38565,9 @@
           }
         }
       }
+    },
+    "Use %lldg carbs" : {
+
     },
     "Use BG coloring" : {
       "comment" : "Title for BG coloring"

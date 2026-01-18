@@ -146,6 +146,9 @@ final class StatusTableViewController: LoopChartsTableViewController {
                     },
                     onCGMTapped: { [weak self] in
                         self?.onCGMTapped()
+                    },
+                    onHelpTapped: { [weak self] in
+                        self?.presentNutritionAssistant()
                     }
                 ))
             case .settings:
@@ -1677,6 +1680,78 @@ final class StatusTableViewController: LoopChartsTableViewController {
         let bolusView = insuBolusFlowView(onDismiss: { [weak self] in
             self?.dismiss(animated: true)
         })
+
+        let hostingController = DismissibleHostingController(
+            content: bolusView,
+            dismissalMode: .modalDismiss,
+            isModalInPresentation: false
+        )
+        hostingController.view.backgroundColor = UIColor(Color.insuBlue)
+
+        let navigationWrapper = UINavigationController(rootViewController: hostingController)
+        navigationWrapper.setNavigationBarHidden(true, animated: false)
+
+        present(navigationWrapper, animated: true)
+        deviceManager.analyticsServicesManager.didDisplayBolusScreen()
+    }
+
+    // MARK: - Nutrition Assistant
+
+    /// Presents the Nutrition Assistant chat modal
+    func presentNutritionAssistant() {
+        let nutritionView = NutritionAssistantView(
+            onDismiss: { [weak self] in
+                self?.dismiss(animated: true)
+            },
+            onCarbsSelected: { [weak self] carbs in
+                self?.dismiss(animated: true) {
+                    self?.presentBolusWithCarbs(carbs)
+                }
+            }
+        )
+
+        let hostingController = DismissibleHostingController(
+            content: nutritionView,
+            dismissalMode: .modalDismiss,
+            isModalInPresentation: false
+        )
+        hostingController.view.backgroundColor = UIColor.white
+
+        let navigationWrapper = UINavigationController(rootViewController: hostingController)
+        navigationWrapper.setNavigationBarHidden(true, animated: false)
+
+        present(navigationWrapper, animated: true)
+    }
+
+    /// Presents the INSU bolus flow with pre-populated carb values from the nutrition assistant
+    func presentBolusWithCarbs(_ carbs: Double) {
+        let simpleViewModel = SimpleBolusViewModel(
+            delegate: deviceManager,
+            displayMealEntry: true
+        )
+
+        // Pre-populate the carb value - this triggers automatic bolus recommendation recalculation
+        simpleViewModel.enteredCarbString = String(Int(carbs))
+
+        let adapter = InsuBolusViewModelAdapter(
+            simpleViewModel: simpleViewModel,
+            displayGlucosePreference: deviceManager.displayGlucosePreference,
+            latestGlucose: { [weak self] in
+                self?.deviceManager.glucoseStore.latestGlucose?.quantity
+            }
+        )
+
+        let glucoseUnit = deviceManager.displayGlucosePreference.unit.localizedShortUnitString
+
+        let bolusView = InsuBolusFlowView(
+            viewModel: adapter,
+            userName: homeViewModel.userName,
+            glucoseUnit: glucoseUnit,
+            onDismiss: { [weak self] in
+                self?.dismiss(animated: true)
+            }
+        )
+        .environmentObject(deviceManager.displayGlucosePreference)
 
         let hostingController = DismissibleHostingController(
             content: bolusView,
