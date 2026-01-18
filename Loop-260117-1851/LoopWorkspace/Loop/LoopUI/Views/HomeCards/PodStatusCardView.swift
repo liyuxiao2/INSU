@@ -77,14 +77,12 @@ public struct PodStatusCardView: View {
                 // View Pod Details button
                 Button(action: onViewDetails) {
                     Text("View Pod Details")
-                        .font(InsuTypography.cardDate)
-                        .foregroundColor(Color.insuTextPrimary)
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
-                        .background(
-                            RoundedRectangle(cornerRadius: 15)
-                                .stroke(Color.insuGray.opacity(0.3), lineWidth: 1)
-                        )
+                        .padding(.vertical, 14)
+                        .background(Color.insuDarkBlue)
+                        .cornerRadius(15)
                 }
                 .padding(.horizontal, 40)
                 .padding(.bottom, 16)
