@@ -48,6 +48,10 @@ final class StatusTableViewController: LoopChartsTableViewController {
     // MARK: - Home UI Redesign Properties
 
     private var homeViewModel: HomeViewModel = HomeViewModel()
+    private lazy var statsViewModel: StatsViewModel = {
+        let isPumpConnected = self.deviceManager.pumpManager != nil
+        return StatsViewModel(isPumpConnected: isPumpConnected)
+    }()
     private var cardHostingController: UIHostingController<HomeCardContainer>?
     private var navigationOverlay: UIHostingController<HomeNavigationBar>?
     private var activeContentController: UIViewController?
@@ -116,13 +120,15 @@ final class StatusTableViewController: LoopChartsTableViewController {
             let contentView: AnyView
             switch tab {
             case .stats:
-                let isPumpConnected = self.deviceManager.pumpManager != nil
-                let statsViewModel = StatsViewModel(isPumpConnected: isPumpConnected)
-                // Update user name from home view model if available
-                if !self.homeViewModel.userName.isEmpty && self.homeViewModel.userName != "User" {
-                    statsViewModel.updateUserName(self.homeViewModel.userName)
+                // Set up refresh callback if not already set
+                if self.statsViewModel.onRefreshNeeded == nil {
+                    self.statsViewModel.onRefreshNeeded = { [weak self] in
+                        self?.updateStatsViewModel()
+                    }
                 }
-                contentView = AnyView(StatsView(viewModel: statsViewModel))
+                // Update stats with latest data before showing
+                self.updateStatsViewModel()
+                contentView = AnyView(StatsView(viewModel: self.statsViewModel))
             case .profile:
                 let isPumpSetUp = self.deviceManager.pumpManager?.isOnboarded == true
                 let pumpName = self.deviceManager.pumpManager?.localizedTitle ?? ""
@@ -778,6 +784,11 @@ final class StatusTableViewController: LoopChartsTableViewController {
 
             // Update HomeViewModel with latest data
             self.updateHomeViewModel()
+
+            // Update StatsViewModel if stats tab is active
+            if self.tabSelectionState.selectedTab == .stats {
+                self.updateStatsViewModel()
+            }
 
             // Show/hide the table view rows
             let statusRowMode = self.determineStatusRowMode()
@@ -2042,6 +2053,153 @@ final class StatusTableViewController: LoopChartsTableViewController {
         // Update user name (could be from settings or user profile)
         // For now, using a default
         homeViewModel.updateUserName("User")
+    }
+
+    private func updateStatsViewModel() {
+        let unit = statusCharts.glucose.glucoseUnit
+
+        // Update glucose unit
+        statsViewModel.updateGlucoseUnit(unit.shortLocalizedUnitString())
+
+        // Update user name
+        statsViewModel.updateUserName(homeViewModel.userName)
+
+        // Get target range from therapy settings
+        if let targets = deviceManager.loopManager.settings.glucoseTargetRangeSchedule {
+            let now = Date()
+            let targetRange = targets.value(at: now)
+            let lowValue = targetRange.minValue.doubleValue(for: unit)
+            let highValue = targetRange.maxValue.doubleValue(for: unit)
+            statsViewModel.updateTargetRange(low: lowValue, high: highValue)
+        }
+
+        // Fetch glucose data for chart (based on selected hours)
+        let hoursToFetch = statsViewModel.selectedHourRange
+        let chartStartDate = Calendar.current.date(byAdding: .hour, value: -hoursToFetch, to: Date())!
+
+        deviceManager.glucoseStore.getGlucoseSamples(start: chartStartDate, end: nil) { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let samples):
+                // Convert to GlucoseDataPoint for chart
+                let dataPoints = samples.map { sample in
+                    GlucoseDataPoint(
+                        date: sample.startDate,
+                        value: sample.quantity.doubleValue(for: unit)
+                    )
+                }
+                self.statsViewModel.updateGlucoseData(dataPoints)
+
+            case .failure(let error):
+                self.log.error("Failed to fetch glucose samples for chart: %{public}@", String(describing: error))
+            }
+        }
+
+        // Fetch glucose data for summary stats (based on selected days)
+        let daysToFetch = statsViewModel.selectedDayRange
+        let summaryStartDate = Calendar.current.date(byAdding: .day, value: -daysToFetch, to: Date())!
+
+        deviceManager.glucoseStore.getGlucoseSamples(start: summaryStartDate, end: nil) { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let samples):
+                // Convert to GlucoseDataPoint for chart
+                let dataPoints = samples.map { sample in
+                    GlucoseDataPoint(
+                        date: sample.startDate,
+                        value: sample.quantity.doubleValue(for: unit)
+                    )
+                }
+                self.statsViewModel.updateGlucoseData(dataPoints)
+
+                // Calculate average glucose
+                if !samples.isEmpty {
+                    let sum = samples.reduce(0.0) { $0 + $1.quantity.doubleValue(for: unit) }
+                    let average = sum / Double(samples.count)
+                    self.statsViewModel.updateAverageGlucose(average)
+
+                    // Calculate GMI (Glucose Management Indicator)
+                    // GMI formula: 3.31 + (0.02392 × average glucose in mg/dL)
+                    let averageMgDl: Double
+                    if unit == HKUnit.millimolesPerLiter {
+                        averageMgDl = average * 18.0 // Convert mmol/L to mg/dL
+                    } else {
+                        averageMgDl = average
+                    }
+                    let gmi = 3.31 + (0.02392 * averageMgDl)
+                    self.statsViewModel.updateGMI(gmi)
+                }
+
+                // Calculate Time in Range percentages
+                if !samples.isEmpty, let targets = self.deviceManager.loopManager.settings.glucoseTargetRangeSchedule {
+                    let now = Date()
+                    let targetRange = targets.value(at: now)
+                    let targetLow = targetRange.minValue.doubleValue(for: unit)
+                    let targetHigh = targetRange.maxValue.doubleValue(for: unit)
+
+                    // Define thresholds (standard CGM ranges)
+                    let veryLowThreshold: Double
+                    let lowThreshold: Double
+                    let highThreshold: Double
+                    let veryHighThreshold: Double
+
+                    if unit == HKUnit.millimolesPerLiter {
+                        veryLowThreshold = 2.2  // <2.2 mmol/L is very low
+                        lowThreshold = targetLow
+                        highThreshold = targetHigh
+                        veryHighThreshold = 13.9 // >13.9 mmol/L is very high
+                    } else {
+                        veryLowThreshold = 40   // <40 mg/dL is very low
+                        lowThreshold = targetLow
+                        highThreshold = targetHigh
+                        veryHighThreshold = 250 // >250 mg/dL is very high
+                    }
+
+                    var veryLowCount = 0
+                    var lowCount = 0
+                    var inRangeCount = 0
+                    var highCount = 0
+                    var veryHighCount = 0
+
+                    for sample in samples {
+                        let value = sample.quantity.doubleValue(for: unit)
+
+                        if value < veryLowThreshold {
+                            veryLowCount += 1
+                        } else if value < lowThreshold {
+                            lowCount += 1
+                        } else if value <= highThreshold {
+                            inRangeCount += 1
+                        } else if value <= veryHighThreshold {
+                            highCount += 1
+                        } else {
+                            veryHighCount += 1
+                        }
+                    }
+
+                    let total = Double(samples.count)
+                    self.statsViewModel.updateTimeInRange(
+                        veryHigh: (Double(veryHighCount) / total) * 100.0,
+                        high: (Double(highCount) / total) * 100.0,
+                        inRange: (Double(inRangeCount) / total) * 100.0,
+                        low: (Double(lowCount) / total) * 100.0,
+                        veryLow: (Double(veryLowCount) / total) * 100.0
+                    )
+                }
+
+                // Calculate days of data available
+                if let firstSample = samples.first, let lastSample = samples.last {
+                    let timeInterval = lastSample.startDate.timeIntervalSince(firstSample.startDate)
+                    let daysAvailable = Int(ceil(timeInterval / 86400)) // 86400 seconds in a day
+                    self.statsViewModel.updateDaysAvailable(daysAvailable)
+                }
+
+            case .failure(let error):
+                self.log.error("Failed to fetch glucose samples for stats: %{public}@", String(describing: error))
+            }
+        }
     }
 
     private func automaticDosingStatusChanged(_ automaticDosingEnabled: Bool) {
