@@ -13,7 +13,8 @@
       "Bash(open:*)",
       "Bash(xcrun simctl get_app_container:*)",
       "Bash(xcrun simctl listapps:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(xcrun simctl uninstall:*)"
     ]
   }
 }

@@ -48,21 +48,12 @@ public struct ProfileView: View {
             VStack(spacing: 20) {
                 // Profile Photo and Name
                 VStack(spacing: 16) {
-                    ZStack(alignment: .bottomTrailing) {
-                        Circle()
-                            .fill(Color.gray.opacity(0.2))
-                            .frame(width: 150, height: 150)
-                            .overlay(Circle().stroke(Color.black, lineWidth: 2))
-
-                        // Plus icon
-                        Image(systemName: "plus")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(.white)
-                            .frame(width: 40, height: 40)
-                            .background(Color.black)
-                            .clipShape(Circle())
-                            .offset(x: 5, y: 5)
-                    }
+                    Image(frameworkImage: "ProfilePhoto")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 150, height: 150)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color.black, lineWidth: 2))
 
                     Text("Arian Emamjomeh")
                         .font(.system(size: 28, weight: .bold))

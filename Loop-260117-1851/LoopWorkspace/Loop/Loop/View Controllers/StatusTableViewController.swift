@@ -185,6 +185,15 @@ final class StatusTableViewController: LoopChartsTableViewController {
                 viewModel: homeViewModel,
                 onInputBolus: { [weak self] in
                     self?.presentBolusScreen()
+                },
+                onToggleSuspend: { [weak self] in
+                    self?.toggleInsulinSuspend()
+                },
+                onToggleClosedLoop: { [weak self] in
+                    self?.handleToggleClosedLoop()
+                },
+                onActivityTapped: { [weak self] in
+                    self?.handleActivityTapped()
                 }
             )
             .background(Color.white)
@@ -1162,9 +1171,7 @@ final class StatusTableViewController: LoopChartsTableViewController {
                         self?.toggleInsulinSuspend()
                     },
                     onToggleClosedLoop: { [weak self] in
-                        guard let self = self else { return }
-                        let currentDosingEnabled = self.deviceManager.loopManager.settings.dosingEnabled
-                        self.dosingEnabledChanged(!currentDosingEnabled)
+                        self?.handleToggleClosedLoop()
                     },
                     onActivityTapped: { [weak self] in
                         self?.handleActivityTapped()
@@ -2032,6 +2039,34 @@ final class StatusTableViewController: LoopChartsTableViewController {
         }
     }
 
+    private func handleToggleClosedLoop() {
+        // Check if closed loop is allowed
+        guard automaticDosingStatus.isAutomaticDosingAllowed else {
+            // Show alert explaining why closed loop can't be enabled
+            let message: String
+            if let description = deviceManager.closedLoopDisallowedLocalizedDescription {
+                message = description
+            } else if deviceManager.pumpManager == nil {
+                message = NSLocalizedString("Please connect a pump before enabling closed loop.", comment: "Message for no pump alert")
+            } else {
+                message = NSLocalizedString("Please complete your therapy settings before enabling closed loop.", comment: "Message for incomplete settings alert")
+            }
+
+            let alert = UIAlertController(
+                title: NSLocalizedString("Closed Loop Not Available", comment: "Title for closed loop not available alert"),
+                message: message,
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: .default))
+            present(alert, animated: true)
+            return
+        }
+
+        // Toggle dosingEnabled
+        let currentDosingEnabled = deviceManager.loopManager.settings.dosingEnabled
+        dosingEnabledChanged(!currentDosingEnabled)
+    }
+
     private func handleActivityTapped() {
         // Check if workout is currently active
         if let override = deviceManager.loopManager.settings.scheduleOverride,
@@ -2100,9 +2135,8 @@ final class StatusTableViewController: LoopChartsTableViewController {
             deviceManager.loopManager.settings.scheduleOverride?.isActive() == true
         homeViewModel.updateWorkoutState(isWorkoutActive)
 
-        // Update user name (could be from settings or user profile)
-        // For now, using a default
-        homeViewModel.updateUserName("User")
+        // Update user name
+        homeViewModel.updateUserName("Arian")
     }
 
     private func updateStatsViewModel() {
