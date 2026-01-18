@@ -1142,6 +1142,11 @@ final class StatusTableViewController: LoopChartsTableViewController {
                     },
                     onToggleSuspend: { [weak self] in
                         self?.toggleInsulinSuspend()
+                    },
+                    onToggleClosedLoop: { [weak self] in
+                        guard let self = self else { return }
+                        let currentDosingEnabled = self.deviceManager.loopManager.settings.dosingEnabled
+                        self.dosingEnabledChanged(!currentDosingEnabled)
                     }
                 )
                 cardHostingController = UIHostingController(rootView: cardContainerView)
@@ -1995,6 +2000,10 @@ final class StatusTableViewController: LoopChartsTableViewController {
         updatePresetModeAvailability(automaticDosingEnabled: automaticDosingEnabled)
         hudView?.loopCompletionHUD.loopIconClosed = automaticDosingEnabled
         hudView?.loopCompletionHUD.closedLoopDisallowedLocalizedDescription = deviceManager.closedLoopDisallowedLocalizedDescription
+
+        // Update homeViewModel mode
+        let modeName = automaticDosingEnabled ? "Automated" : "Manual"
+        homeViewModel.updateMode(name: modeName, isAutomated: automaticDosingEnabled)
     }
 
     // MARK: - HUDs

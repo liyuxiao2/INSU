@@ -14,11 +14,13 @@ public struct HomeCardContainer: View {
 
     let onInputBolus: () -> Void
     let onToggleSuspend: () -> Void
+    let onToggleClosedLoop: () -> Void
 
-    public init(viewModel: HomeViewModel, onInputBolus: @escaping () -> Void, onToggleSuspend: @escaping () -> Void = {}) {
+    public init(viewModel: HomeViewModel, onInputBolus: @escaping () -> Void, onToggleSuspend: @escaping () -> Void = {}, onToggleClosedLoop: @escaping () -> Void = {}) {
         self.viewModel = viewModel
         self.onInputBolus = onInputBolus
         self.onToggleSuspend = onToggleSuspend
+        self.onToggleClosedLoop = onToggleClosedLoop
     }
 
     private func getSubtitleForPage(_ page: Int) -> String {
@@ -94,7 +96,7 @@ public struct HomeCardContainer: View {
                         iobValue: viewModel.iobValue,
                         iobUnit: viewModel.iobUnit,
                         isAutomated: viewModel.isAutomatedMode,
-                        onChangeMode: {}
+                        onChangeMode: onToggleClosedLoop
                     )
                     .tag(2)
                 }
