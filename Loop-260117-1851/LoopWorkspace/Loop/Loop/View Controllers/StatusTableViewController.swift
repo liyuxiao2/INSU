@@ -2067,9 +2067,9 @@ final class StatusTableViewController: LoopChartsTableViewController {
         // Get target range from therapy settings
         if let targets = deviceManager.loopManager.settings.glucoseTargetRangeSchedule {
             let now = Date()
-            let targetRange = targets.value(at: now)
-            let lowValue = targetRange.minValue.doubleValue(for: unit)
-            let highValue = targetRange.maxValue.doubleValue(for: unit)
+            let targetQuantityRange = targets.quantityRange(at: now)
+            let lowValue = targetQuantityRange.lowerBound.doubleValue(for: unit)
+            let highValue = targetQuantityRange.upperBound.doubleValue(for: unit)
             statsViewModel.updateTargetRange(low: lowValue, high: highValue)
         }
 
@@ -2135,9 +2135,9 @@ final class StatusTableViewController: LoopChartsTableViewController {
                 // Calculate Time in Range percentages
                 if !samples.isEmpty, let targets = self.deviceManager.loopManager.settings.glucoseTargetRangeSchedule {
                     let now = Date()
-                    let targetRange = targets.value(at: now)
-                    let targetLow = targetRange.minValue.doubleValue(for: unit)
-                    let targetHigh = targetRange.maxValue.doubleValue(for: unit)
+                    let targetQuantityRange = targets.quantityRange(at: now)
+                    let targetLow = targetQuantityRange.lowerBound.doubleValue(for: unit)
+                    let targetHigh = targetQuantityRange.upperBound.doubleValue(for: unit)
 
                     // Define thresholds (standard CGM ranges)
                     let veryLowThreshold: Double

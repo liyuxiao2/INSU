@@ -5,7 +5,14 @@
       "mcp__figma__get_screenshot",
       "Bash(cat:*)",
       "Bash(grep:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(xcodebuild:*)",
+      "Bash(xcrun simctl boot:*)",
+      "Bash(xcrun simctl install:*)",
+      "Bash(xcrun simctl launch:*)",
+      "Bash(open:*)",
+      "Bash(xcrun simctl get_app_container:*)",
+      "Bash(xcrun simctl listapps:*)"
     ]
   }
 }
