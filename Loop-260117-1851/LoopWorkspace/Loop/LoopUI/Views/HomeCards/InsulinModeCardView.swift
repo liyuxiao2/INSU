@@ -66,15 +66,13 @@ public struct InsulinModeCardView: View {
 
                 // Change Mode button
                 Button(action: onChangeMode) {
-                    Text("Change Mode")
-                        .font(InsuTypography.cardDate)
-                        .foregroundColor(Color.insuTextPrimary)
+                    Text("Switch Mode")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
-                        .background(
-                            RoundedRectangle(cornerRadius: 15)
-                                .stroke(Color.insuGray.opacity(0.3), lineWidth: 1)
-                        )
+                        .padding(.vertical, 14)
+                        .background(Color.insuDarkBlue)
+                        .cornerRadius(15)
                 }
                 .padding(.horizontal, 40)
                 .padding(.bottom, 16)

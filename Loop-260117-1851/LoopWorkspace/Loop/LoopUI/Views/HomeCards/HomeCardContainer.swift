@@ -19,6 +19,19 @@ public struct HomeCardContainer: View {
         self.onInputBolus = onInputBolus
     }
 
+    private func getSubtitleForPage(_ page: Int) -> String {
+        switch page {
+        case 0:
+            return "Dashboard"
+        case 1:
+            return "Pod Status"
+        case 2:
+            return "Insulin"
+        default:
+            return "Dashboard"
+        }
+    }
+
     public var body: some View {
         VStack(spacing: 0) {
             // Header: Greeting and notification bell
@@ -32,7 +45,7 @@ public struct HomeCardContainer: View {
                         Text("View your ")
                             .font(InsuTypography.subtitle)
                             .foregroundColor(Color.insuTextPrimary)
-                        Text("Dashboard")
+                        Text(getSubtitleForPage(currentPage))
                             .font(InsuTypography.subtitleBold)
                             .foregroundColor(Color.insuTextPrimary)
                     }
@@ -98,22 +111,25 @@ public struct HomeCardContainer: View {
             .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
             .padding(.top, 20)
 
-            // Two small cards side by side
+            // Bottom section: Last Bolus + Action Cards
             HStack(spacing: 13) {
-                // Left card: Last Bolus
+                // Left card: Last Bolus (taller card)
                 LastBolusCardView(
                     bolusValue: viewModel.lastBolusValue,
                     bolusUnit: viewModel.lastBolusUnit,
                     dateString: viewModel.lastBolusDate
                 )
-                .frame(maxWidth: .infinity)
-                .frame(height: InsuSpacing.smallCardHeight)
+                .frame(width: 171, height: InsuSpacing.smallCardHeight)
 
-                // Right card: Placeholder (empty blue card)
-                RoundedRectangle(cornerRadius: InsuSpacing.cardCornerRadius)
-                    .fill(Color.insuBlue)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: InsuSpacing.smallCardHeight)
+                // Right side: Pause Glucose + Activity cards (stacked)
+                VStack(spacing: 7) {
+                    PauseGlucoseCardView(onPause: {})
+                        .frame(height: 118)
+
+                    ActivityCardView(onActivity: {})
+                        .frame(height: 118)
+                }
+                .frame(width: 170)
             }
             .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
             .padding(.top, 20)
@@ -147,7 +163,10 @@ struct HomeCardContainer_Previews: PreviewProvider {
                 reservoirLevel: 40,
                 reservoirUnit: "U",
                 modeName: "Automated",
-                isAutomatedMode: true
+                isAutomatedMode: true,
+                lastBolusValue: 4.15,
+                lastBolusUnit: "Units",
+                lastBolusDate: "Jan 17 (4:19PM)"
             ),
             onInputBolus: {}
         )
