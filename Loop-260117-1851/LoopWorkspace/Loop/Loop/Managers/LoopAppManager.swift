@@ -60,6 +60,7 @@ class LoopAppManager: NSObject {
         case initialize
         case checkProtectedDataAvailable
         case launchManagers
+        case launchInsuOnboarding  // INSU: New onboarding flow (splash, carousel, signup/login)
         case launchOnboarding
         case launchHomeScreen
         case launchComplete
@@ -139,13 +140,16 @@ class LoopAppManager: NSObject {
         if state == .launchManagers {
             launchManagers()
         }
+        if state == .launchInsuOnboarding {
+            launchInsuOnboarding()
+        }
         if state == .launchOnboarding {
             launchOnboarding()
         }
         if state == .launchHomeScreen {
             launchHomeScreen()
         }
-        
+
         askUserToConfirmLoopReset()
     }
 
@@ -268,7 +272,75 @@ class LoopAppManager: NSObject {
             .assign(to: \.automaticDosingStatus.automaticDosingEnabled, on: self)
             .store(in: &cancellables)
 
+        // Setup INSU logout observer
+        setupInsuLogoutObserver()
+
         state = state.next
+    }
+
+    // MARK: - INSU Onboarding
+
+    private func launchInsuOnboarding() {
+        dispatchPrecondition(condition: .onQueue(.main))
+        precondition(state == .launchInsuOnboarding)
+
+        // Skip if INSU onboarding has already been completed
+        guard !InsuOnboardingCoordinator.isComplete else {
+            self.state = state.next
+            return
+        }
+
+        // Present the INSU onboarding coordinator
+        let insuOnboardingCoordinator = InsuOnboardingCoordinator { [weak self] in
+            DispatchQueue.main.async {
+                self?.state = self?.state.next ?? .launchOnboarding
+                self?.resumeLaunch()
+            }
+        }
+
+        windowProvider?.window?.rootViewController = insuOnboardingCoordinator
+    }
+
+    private func setupInsuLogoutObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleInsuLogoutRequested),
+            name: .InsuLogoutRequested,
+            object: nil
+        )
+    }
+
+    @objc private func handleInsuLogoutRequested() {
+        // Present INSU onboarding from the beginning
+        let insuOnboardingCoordinator = InsuOnboardingCoordinator { [weak self] in
+            DispatchQueue.main.async {
+                // After completing onboarding again, return to home screen
+                self?.launchHomeScreenAfterLogout()
+            }
+        }
+
+        windowProvider?.window?.rootViewController = insuOnboardingCoordinator
+    }
+
+    private func launchHomeScreenAfterLogout() {
+        let storyboard = UIStoryboard(name: "Main", bundle: Bundle(for: Self.self))
+        let statusTableViewController = storyboard.instantiateViewController(withIdentifier: "MainStatusViewController") as! StatusTableViewController
+        statusTableViewController.alertPermissionsChecker = alertPermissionsChecker
+        statusTableViewController.alertMuter = alertManager.alertMuter
+        statusTableViewController.automaticDosingStatus = automaticDosingStatus
+        statusTableViewController.deviceManager = deviceDataManager
+        statusTableViewController.onboardingManager = onboardingManager
+        statusTableViewController.supportManager = supportManager
+        statusTableViewController.testingScenariosManager = testingScenariosManager
+        bluetoothStateManager.addBluetoothObserver(statusTableViewController)
+
+        var rootNavigationController = rootViewController as? RootNavigationController
+        if rootNavigationController == nil {
+            rootNavigationController = RootNavigationController()
+            rootViewController = rootNavigationController
+        }
+
+        rootNavigationController?.setViewControllers([statusTableViewController], animated: true)
     }
 
     private func launchOnboarding() {
