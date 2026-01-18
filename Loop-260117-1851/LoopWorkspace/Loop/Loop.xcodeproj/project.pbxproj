@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		04CC1DAD321241AC9D854850 /* InsuLogInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D187B935DCB560D7294D0E /* InsuLogInView.swift */; };
 		05E79FA876A02628FA724787 /* InsuPageIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503B93EEB104757DE138BD8B /* InsuPageIndicator.swift */; };
 		1419606428D9550400BA86E0 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 437AFEE6203688CF008C4892 /* LoopKitUI.framework */; };
 		1419606928D9554E00BA86E0 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 437AFEE6203688CF008C4892 /* LoopKitUI.framework */; };
@@ -414,7 +413,6 @@
 		B4D4534128E5CA7900F1A8D9 /* AlertMuterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D4534028E5CA7900F1A8D9 /* AlertMuterTests.swift */; };
 		B4D620D424D9EDB900043B3C /* GuidanceColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D620D324D9EDB900043B3C /* GuidanceColors.swift */; };
 		B4D904412AA8989100CBD826 /* StatefulPluginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D904402AA8989100CBD826 /* StatefulPluginManager.swift */; };
-		B4DC9CE262D6B40964197F24 /* InsuSignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BB8C9A80E2A4C151A0168C /* InsuSignUpView.swift */; };
 		B4E202302661063E009421B5 /* AutomaticDosingStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E2022F2661063E009421B5 /* AutomaticDosingStatus.swift */; };
 		B4E96D4B248A6B6E002DABAD /* DeviceStatusHUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E96D4A248A6B6E002DABAD /* DeviceStatusHUDView.swift */; };
 		B4E96D4F248A6E20002DABAD /* CGMStatusHUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E96D4E248A6E20002DABAD /* CGMStatusHUDView.swift */; };
@@ -827,7 +825,6 @@
 		1DC63E7325351BDF004605DA /* TrueTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TrueTime.framework; path = Carthage/Build/iOS/TrueTime.framework; sourceTree = "<group>"; };
 		1DE09BA824A3E23F009EE9F9 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		1DFE9E162447B6270082C280 /* UserNotificationAlertSchedulerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationAlertSchedulerTests.swift; sourceTree = "<group>"; };
-		23BB8C9A80E2A4C151A0168C /* InsuSignUpView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InsuSignUpView.swift; sourceTree = "<group>"; };
 		3D03C6DA2AACE6AC00FDE5D2 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Intents.strings; sourceTree = "<group>"; };
 		3E21436473620185DC4CD620 /* InsuSplashView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InsuSplashView.swift; sourceTree = "<group>"; };
 		3ED319862EB659E600820BCF /* BasalViewActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasalViewActivity.swift; sourceTree = "<group>"; };
@@ -1022,7 +1019,6 @@
 		4FF4D0FF1E18374700846527 /* WatchContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchContext.swift; sourceTree = "<group>"; };
 		4FFEDFBE20E5CF22000BFC58 /* ChartHUDController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartHUDController.swift; sourceTree = "<group>"; };
 		503B93EEB104757DE138BD8B /* InsuPageIndicator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InsuPageIndicator.swift; sourceTree = "<group>"; };
-		57D187B935DCB560D7294D0E /* InsuLogInView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InsuLogInView.swift; sourceTree = "<group>"; };
 		716108252F1C88E10054ED70 /* DashboardCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardCardView.swift; sourceTree = "<group>"; };
 		716108262F1C88E10054ED70 /* HomeCardContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCardContainer.swift; sourceTree = "<group>"; };
 		716108272F1C88E10054ED70 /* HomeCardStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCardStyle.swift; sourceTree = "<group>"; };
@@ -2731,8 +2727,6 @@
 				3E21436473620185DC4CD620 /* InsuSplashView.swift */,
 				7ED39C16741694E67AB535F0 /* InsuCarouselSlideView.swift */,
 				9D19FF77E495326F1FA746DB /* InsuCarouselView.swift */,
-				23BB8C9A80E2A4C151A0168C /* InsuSignUpView.swift */,
-				57D187B935DCB560D7294D0E /* InsuLogInView.swift */,
 				3F6B9841BDA3622034285875 /* InsuOnboardingCoordinator.swift */,
 				AD8184772AF093AD8C8676F7 /* InsuAuthView.swift */,
 			);
@@ -3662,8 +3656,6 @@
 				78B96E9552CA051B61A9A1D4 /* InsuSplashView.swift in Sources */,
 				B0C901803805F69ACE6E3F15 /* InsuCarouselSlideView.swift in Sources */,
 				A7057DCAAB2C5DEDEC91540F /* InsuCarouselView.swift in Sources */,
-				B4DC9CE262D6B40964197F24 /* InsuSignUpView.swift in Sources */,
-				04CC1DAD321241AC9D854850 /* InsuLogInView.swift in Sources */,
 				3792FD6E836ED5AF0E6A699A /* InsuOnboardingCoordinator.swift in Sources */,
 				773118265D36335D5236998F /* InsuAuthView.swift in Sources */,
 			);
