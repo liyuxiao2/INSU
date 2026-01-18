@@ -1,7 +1,5 @@
 name: Claude Code
 
-#test
-
 on:
   issue_comment:
     types: [created]
