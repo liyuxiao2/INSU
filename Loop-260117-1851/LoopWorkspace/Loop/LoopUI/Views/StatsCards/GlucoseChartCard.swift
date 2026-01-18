@@ -67,7 +67,7 @@ struct TimeRangeSelector: View {
             HStack(spacing: 0) {
                 ForEach(options, id: \.self) { option in
                     Button(action: { onSelect(option) }) {
-                        Text(option == options.last ? "\(option) \(suffix)" : "\(option)")
+                        Text(option == selected ? "\(option) \(suffix)" : "\(option)")
                             .font(.system(size: 14, weight: selected == option ? .bold : .regular))
                             .foregroundColor(Color.insuTextPrimary)
                             .frame(maxWidth: .infinity)
@@ -97,9 +97,35 @@ struct GlucoseLineChart: View {
     @Binding var selectedPoint: GlucoseDataPoint?
     let hourRange: Int
 
-    // Chart bounds
-    private let minY: Double = 2.0
-    private let maxY: Double = 22.0
+    // Computed chart bounds based on actual data
+    private var minY: Double {
+        guard !data.isEmpty else { return 2.0 }
+        let dataMin = data.map { $0.value }.min() ?? 2.0
+        let dataMax = data.map { $0.value }.max() ?? 22.0
+
+        // Add 20% padding to min/max for better visualization
+        let range = dataMax - dataMin
+        let padding = range * 0.2
+        return max(0, dataMin - padding)
+    }
+
+    private var maxY: Double {
+        guard !data.isEmpty else { return 22.0 }
+        let dataMin = data.map { $0.value }.min() ?? 2.0
+        let dataMax = data.map { $0.value }.max() ?? 22.0
+
+        // Add 20% padding to min/max for better visualization
+        let range = dataMax - dataMin
+        let padding = range * 0.2
+        return dataMax + padding
+    }
+
+    // Time range for x-axis
+    private var timeRange: (start: Date, end: Date) {
+        let now = Date()
+        let start = Calendar.current.date(byAdding: .hour, value: -hourRange, to: now)!
+        return (start, now)
+    }
 
     var body: some View {
         GeometryReader { geometry in
@@ -142,7 +168,7 @@ struct GlucoseLineChart: View {
                     Path { path in
                         let chartWidth = width - 45
                         for (index, point) in data.enumerated() {
-                            let x = CGFloat(index) / CGFloat(data.count - 1) * chartWidth
+                            let x = xPosition(for: point.date, in: chartWidth)
                             let y = yPosition(for: point.value, in: height)
 
                             if index == 0 {
@@ -157,7 +183,7 @@ struct GlucoseLineChart: View {
                     // Data points
                     ForEach(Array(data.enumerated()), id: \.element.id) { index, point in
                         let chartWidth = width - 45
-                        let x = CGFloat(index) / CGFloat(data.count - 1) * chartWidth
+                        let x = xPosition(for: point.date, in: chartWidth)
                         let y = yPosition(for: point.value, in: height)
 
                         Circle()
@@ -168,10 +194,9 @@ struct GlucoseLineChart: View {
                 }
 
                 // Selected point indicator
-                if let selected = selectedPoint,
-                   let index = data.firstIndex(where: { $0.id == selected.id }) {
+                if let selected = selectedPoint {
                     let chartWidth = width - 45
-                    let x = CGFloat(index) / CGFloat(data.count - 1) * chartWidth
+                    let x = xPosition(for: selected.date, in: chartWidth)
                     let y = yPosition(for: selected.value, in: height)
 
                     // Vertical line
@@ -225,9 +250,14 @@ struct GlucoseLineChart: View {
                     .onChanged { value in
                         let chartWidth = geometry.size.width - 45
                         let x = value.location.x
-                        let index = Int((x / chartWidth) * CGFloat(data.count - 1))
-                        if index >= 0 && index < data.count {
-                            selectedPoint = data[index]
+
+                        // Find the closest data point by x position
+                        if let closest = data.min(by: { point1, point2 in
+                            let x1 = xPosition(for: point1.date, in: chartWidth)
+                            let x2 = xPosition(for: point2.date, in: chartWidth)
+                            return abs(x1 - x) < abs(x2 - x)
+                        }) {
+                            selectedPoint = closest
                         }
                     }
                     .onEnded { _ in
@@ -245,18 +275,24 @@ struct GlucoseLineChart: View {
         return height * (1 - CGFloat(normalizedValue))
     }
 
+    private func xPosition(for date: Date, in width: CGFloat) -> CGFloat {
+        let totalTimeInterval = timeRange.end.timeIntervalSince(timeRange.start)
+        let pointTimeInterval = date.timeIntervalSince(timeRange.start)
+        let normalizedPosition = pointTimeInterval / totalTimeInterval
+        return CGFloat(normalizedPosition) * width
+    }
+
     private var xAxisStartLabel: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "ha"
-        let hoursAgo = Calendar.current.date(byAdding: .hour, value: -hourRange, to: Date())!
-        return formatter.string(from: hoursAgo).uppercased()
+        return formatter.string(from: timeRange.start).uppercased()
     }
 
     private var xAxisMidLabel: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "ha"
-        let hoursAgo = Calendar.current.date(byAdding: .hour, value: -hourRange / 2, to: Date())!
-        return formatter.string(from: hoursAgo).uppercased()
+        let midTime = Date(timeIntervalSince1970: (timeRange.start.timeIntervalSince1970 + timeRange.end.timeIntervalSince1970) / 2)
+        return formatter.string(from: midTime).uppercased()
     }
 
     private func formatTime(_ date: Date) -> String {

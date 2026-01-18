@@ -1,18 +1,24 @@
 //
 //  InsuSettingsView.swift
-//  LoopUI
+//  Loop
 //
 //  Created for Loop redesign - Settings page matching Figma design
 //  Copyright © 2026. All rights reserved.
 //
 
 import SwiftUI
+import LoopUI
 
-public struct InsuSettingsView: View {
+struct InsuSettingsView: View {
+    @ObservedObject var alertPermissionsChecker: AlertPermissionsChecker
+    @ObservedObject var alertMuter: AlertMuter
 
-    public init() {}
+    init(alertPermissionsChecker: AlertPermissionsChecker, alertMuter: AlertMuter) {
+        self.alertPermissionsChecker = alertPermissionsChecker
+        self.alertMuter = alertMuter
+    }
 
-    public var body: some View {
+    var body: some View {
         NavigationView {
             ZStack {
                 Color.white
@@ -41,6 +47,16 @@ public struct InsuSettingsView: View {
 
                     // Settings Sections
                     VStack(spacing: 12) {
+                        NavigationLink(destination: AlertManagementSettingsView(
+                            alertPermissionsChecker: alertPermissionsChecker,
+                            alertMuter: alertMuter
+                        )) {
+                            SettingsRowContentWithWarning(
+                                title: "Alert Management",
+                                showWarning: alertPermissionsChecker.showWarning || alertMuter.configuration.shouldMute
+                            )
+                        }
+
                         NavigationLink(destination: RemindersSettingsView()) {
                             SettingsRowContent(title: "Reminders")
                         }
@@ -84,9 +100,41 @@ public struct InsuSettingsView: View {
     }
 }
 
+// MARK: - Settings Row Content With Warning
+
+private struct SettingsRowContentWithWarning: View {
+    let title: String
+    let showWarning: Bool
+
+    var body: some View {
+        HStack {
+            Text(title)
+                .font(.system(size: 16, weight: .bold))
+                .foregroundColor(.black)
+
+            Spacer()
+
+            if showWarning {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 14))
+                    .foregroundColor(.orange)
+                    .padding(.trailing, 8)
+            }
+
+            Image(systemName: "chevron.down")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(Color.insuDarkBlue)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .background(Color.insuBlue)
+        .cornerRadius(10)
+    }
+}
+
 // MARK: - Settings Row Content
 
-struct SettingsRowContent: View {
+private struct SettingsRowContent: View {
     let title: String
 
     var body: some View {
@@ -108,9 +156,234 @@ struct SettingsRowContent: View {
     }
 }
 
+// MARK: - Alert Management Settings View
+
+struct AlertManagementSettingsView: View {
+    @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var alertPermissionsChecker: AlertPermissionsChecker
+    @ObservedObject var alertMuter: AlertMuter
+
+    @State private var showMuteAlertOptions = false
+    @State private var missedMealNotificationsEnabled = UserDefaults.standard.bool(forKey: "com.loopkit.Loop.MissedMealNotificationsEnabled")
+
+    private var formatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .full
+        formatter.allowedUnits = [.hour, .minute]
+        return formatter
+    }()
+
+    init(alertPermissionsChecker: AlertPermissionsChecker, alertMuter: AlertMuter) {
+        self.alertPermissionsChecker = alertPermissionsChecker
+        self.alertMuter = alertMuter
+    }
+
+    var body: some View {
+        ZStack {
+            Color.white.ignoresSafeArea()
+
+            VStack(spacing: 0) {
+                SettingsDetailHeader(title: "Alert Management", onBack: { presentationMode.wrappedValue.dismiss() })
+
+                ScrollView {
+                    VStack(spacing: 16) {
+                        // Alert Permissions Section
+                        SettingsSectionCard(title: "Permissions") {
+                            HStack {
+                                Text("Alert Permissions")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.black)
+
+                                Spacer()
+
+                                if alertPermissionsChecker.showWarning {
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(.orange)
+                                        .padding(.trailing, 4)
+                                }
+
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.gray)
+                            }
+                            .padding(.vertical, 4)
+
+                            HStack {
+                                Text("Notifications")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.black)
+
+                                Spacer()
+
+                                Text(!alertPermissionsChecker.notificationCenterSettings.notificationsDisabled ? "Enabled" : "Disabled")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(!alertPermissionsChecker.notificationCenterSettings.notificationsDisabled ? Color.insuDarkBlue : .orange)
+                            }
+                            .padding(.vertical, 4)
+
+                            HStack {
+                                Text("Critical Alerts")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.black)
+
+                                Spacer()
+
+                                Text(!alertPermissionsChecker.notificationCenterSettings.criticalAlertsDisabled ? "Enabled" : "Disabled")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(!alertPermissionsChecker.notificationCenterSettings.criticalAlertsDisabled ? Color.insuDarkBlue : .orange)
+                            }
+                            .padding(.vertical, 4)
+                        }
+
+                        // Mute Alerts Section
+                        SettingsSectionCard(title: "Mute Alerts") {
+                            if !alertMuter.configuration.shouldMute {
+                                Button(action: { showMuteAlertOptions = true }) {
+                                    HStack {
+                                        Image(systemName: "speaker.slash.fill")
+                                            .font(.system(size: 16))
+                                            .foregroundColor(.white)
+                                            .frame(width: 28, height: 28)
+                                            .background(Color.orange)
+                                            .cornerRadius(6)
+
+                                        Text("Mute All Alerts")
+                                            .font(.system(size: 14, weight: .semibold))
+                                            .foregroundColor(Color.insuDarkBlue)
+
+                                        Spacer()
+                                    }
+                                }
+                                .actionSheet(isPresented: $showMuteAlertOptions) {
+                                    ActionSheet(
+                                        title: Text("Mute All Alerts"),
+                                        message: Text("Select how long you would like to mute alerts."),
+                                        buttons: muteAlertDurationButtons()
+                                    )
+                                }
+                            } else {
+                                Button(action: { alertMuter.unmuteAlerts() }) {
+                                    HStack {
+                                        Image(systemName: "speaker.wave.2.fill")
+                                            .font(.system(size: 16))
+                                            .foregroundColor(.white)
+                                            .frame(width: 28, height: 28)
+                                            .background(Color.green)
+                                            .cornerRadius(6)
+
+                                        Text("Tap to Unmute")
+                                            .font(.system(size: 14, weight: .semibold))
+                                            .foregroundColor(Color.insuDarkBlue)
+
+                                        Spacer()
+                                    }
+                                }
+
+                                HStack {
+                                    Text("Muted Until")
+                                        .font(.system(size: 14))
+                                        .foregroundColor(.black)
+
+                                    Spacer()
+
+                                    Text(alertMuter.formattedEndTime)
+                                        .font(.system(size: 14, weight: .semibold))
+                                        .foregroundColor(.orange)
+                                }
+                                .padding(.vertical, 4)
+                            }
+                        }
+
+                        // Missed Meal Notifications
+                        SettingsSectionCard(title: "Meal Detection") {
+                            HStack {
+                                Text("Missed Meal Notifications")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.black)
+
+                                Spacer()
+
+                                Toggle("", isOn: $missedMealNotificationsEnabled)
+                                    .labelsHidden()
+                                    .toggleStyle(SwitchToggleStyle(tint: Color.insuDarkBlue))
+                                    .onChange(of: missedMealNotificationsEnabled) { newValue in
+                                        UserDefaults.standard.set(newValue, forKey: "com.loopkit.Loop.MissedMealNotificationsEnabled")
+                                    }
+                            }
+                            .padding(.vertical, 4)
+
+                            Text("When enabled, Loop can notify you when it detects a meal that wasn't logged.")
+                                .font(.system(size: 12))
+                                .foregroundColor(.gray)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+
+                        // Info Section
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack(alignment: .top, spacing: 12) {
+                                Image(systemName: "iphone")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(Color.insuDarkBlue)
+                                    .frame(width: 40)
+
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("App Sounds")
+                                        .font(.system(size: 12, weight: .bold))
+                                        .foregroundColor(.black)
+                                    Text("While mute alerts is on, all alerts will temporarily display without sounds and will vibrate only.")
+                                        .font(.system(size: 11))
+                                        .foregroundColor(.gray)
+                                }
+                            }
+
+                            HStack(alignment: .top, spacing: 12) {
+                                Image(systemName: "moon.fill")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(Color.insuDarkBlue)
+                                    .frame(width: 40)
+
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("iOS Focus Modes")
+                                        .font(.system(size: 12, weight: .bold))
+                                        .foregroundColor(.black)
+                                    Text("Critical Alerts will still be delivered during Focus modes. Add Loop to allowed apps for other notifications.")
+                                        .font(.system(size: 11))
+                                        .foregroundColor(.gray)
+                                }
+                            }
+                        }
+                        .padding(16)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.insuBlue.opacity(0.5))
+                        .cornerRadius(12)
+                    }
+                    .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
+                    .padding(.top, 16)
+                    .padding(.bottom, 40)
+                }
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarHidden(true)
+    }
+
+    private func muteAlertDurationButtons() -> [ActionSheet.Button] {
+        var buttons: [ActionSheet.Button] = AlertMuter.allowedDurations.compactMap { duration in
+            guard let formattedDuration = formatter.string(from: duration) else { return nil }
+            return .default(Text(formattedDuration)) {
+                alertMuter.configuration.startTime = Date()
+                alertMuter.configuration.duration = duration
+            }
+        }
+        buttons.append(.cancel())
+        return buttons
+    }
+}
+
 // MARK: - Reminders Settings View
 
-struct RemindersSettingsView: View {
+private struct RemindersSettingsView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var bloodGlucoseReminder = true
     @State private var bolusReminder = true
@@ -154,7 +427,7 @@ struct RemindersSettingsView: View {
 
 // MARK: - Glucose Goal Range Settings View
 
-struct GlucoseGoalRangeSettingsView: View {
+private struct GlucoseGoalRangeSettingsView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var lowThreshold = "3.9"
     @State private var highThreshold = "10.0"
@@ -210,7 +483,7 @@ struct GlucoseGoalRangeSettingsView: View {
 
 // MARK: - Bolus and Temp Basal Settings View
 
-struct BolusAndTempBasalSettingsView: View {
+private struct BolusAndTempBasalSettingsView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var maxBasalRate = "2.0"
     @State private var maxBolus = "10.0"
@@ -255,7 +528,7 @@ struct BolusAndTempBasalSettingsView: View {
 
 // MARK: - Bolus Settings View
 
-struct BolusSettingsView: View {
+private struct BolusSettingsView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var insulinSensitivity = "2.5"
     @State private var carbRatio = "10"
@@ -312,7 +585,7 @@ struct BolusSettingsView: View {
 
 // MARK: - Reusable Components
 
-struct SettingsDetailHeader: View {
+private struct SettingsDetailHeader: View {
     let title: String
     let onBack: () -> Void
 
@@ -343,7 +616,7 @@ struct SettingsDetailHeader: View {
     }
 }
 
-struct SettingsSectionCard<Content: View>: View {
+private struct SettingsSectionCard<Content: View>: View {
     let title: String
     @ViewBuilder let content: Content
 
@@ -365,7 +638,7 @@ struct SettingsSectionCard<Content: View>: View {
     }
 }
 
-struct SettingsTextField: View {
+private struct SettingsTextField: View {
     let label: String
     @Binding var text: String
     var suffix: String? = nil
@@ -396,7 +669,7 @@ struct SettingsTextField: View {
     }
 }
 
-struct SettingsToggleRow: View {
+private struct SettingsToggleRow: View {
     let label: String
     @Binding var isOn: Bool
 
@@ -416,7 +689,7 @@ struct SettingsToggleRow: View {
     }
 }
 
-struct SettingsPickerRow: View {
+private struct SettingsPickerRow: View {
     let label: String
     let value: String
 
@@ -442,7 +715,7 @@ struct SettingsPickerRow: View {
     }
 }
 
-struct SettingsInfoRow: View {
+private struct SettingsInfoRow: View {
     let label: String
     let value: String
 

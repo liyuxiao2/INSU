@@ -1966,7 +1966,10 @@ final class StatusTableViewController: LoopChartsTableViewController {
             delegate: self)
 
         return AnyView(
-            InsuSettingsView()
+            InsuSettingsView(
+                alertPermissionsChecker: alertPermissionsChecker,
+                alertMuter: alertMuter
+            )
         )
     }
 

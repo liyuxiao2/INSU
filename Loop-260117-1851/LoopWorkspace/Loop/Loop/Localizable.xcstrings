@@ -7324,6 +7324,9 @@
         }
       }
     },
+    "App Sounds" : {
+
+    },
     "Apple" : {
       "comment" : "Default name on add favorite food screen",
       "localizations" : {
@@ -13118,6 +13121,9 @@
         }
       }
     },
+    "Configure your " : {
+
+    },
     "Continue" : {
       "comment" : "Button label for continue\nDefault alert dismissal",
       "localizations" : {
@@ -13623,6 +13629,9 @@
           }
         }
       }
+    },
+    "Critical Alerts will still be delivered during Focus modes. Add Loop to allowed apps for other notifications." : {
+
     },
     "Critical Event Log Ready" : {
       "comment" : "Critical event log ready text",
@@ -15899,6 +15908,9 @@
           }
         }
       }
+    },
+    "Disabled" : {
+
     },
     "Disables" : {
       "comment" : "The action hint of the workout mode toggle button when enabled",
@@ -20305,6 +20317,9 @@
     "Google" : {
 
     },
+    "Grams of carbs covered by 1 unit of insulin" : {
+
+    },
     "HARDWARE SOUNDS" : {
       "localizations" : {
         "da" : {
@@ -20553,6 +20568,12 @@
           }
         }
       }
+    },
+    "How long insulin remains active in your body" : {
+
+    },
+    "How much 1 unit of insulin lowers your blood glucose" : {
+
     },
     "How to update (LoopDocs)" : {
       "comment" : "The title text for how to update",
@@ -22835,6 +22856,9 @@
           }
         }
       }
+    },
+    "iOS Focus Modes" : {
+
     },
     "IOS FOCUS MODES" : {
       "localizations" : {
@@ -26237,6 +26261,9 @@
           }
         }
       }
+    },
+    "Muted Until" : {
+
     },
     "Name" : {
       "comment" : "Label for name row on add favorite food screen",
@@ -32110,6 +32137,9 @@
         }
       }
     },
+    "Recommended Ranges" : {
+
+    },
     "Remote Bolus Entry: %@ U" : {
       "comment" : "The notification title for a remote bolus. (1: Bolus amount)\nThe notification title for a remote failure. (1: Bolus amount)",
       "localizations" : {
@@ -32990,6 +33020,9 @@
           }
         }
       }
+    },
+    "Select how long you would like to mute alerts." : {
+
     },
     "Selecting a favorite food in the carb entry screen automatically fills in the carb quantity, food type, and absorption time fields! Tap the add button below to create your first favorite food!" : {
       "localizations" : {
@@ -35212,6 +35245,9 @@
         }
       }
     },
+    "Tap to Unmute" : {
+
+    },
     "Tap to Unmute Alerts" : {
       "comment" : "Label for button to unmute all alerts",
       "localizations" : {
@@ -35526,6 +35562,9 @@
           }
         }
       }
+    },
+    "The American Diabetes Association recommends a target range of 3.9-10.0 mmol/L (70-180 mg/dL) for most adults with diabetes." : {
+
     },
     "The bolus amount entered is smaller than the minimum deliverable." : {
       "comment" : "Alert message for a bolus too small validation error",
@@ -39547,6 +39586,9 @@
           }
         }
       }
+    },
+    "While mute alerts is on, all alerts will temporarily display without sounds and will vibrate only." : {
+
     },
     "While mute alerts is on, your insulin pump and CGM hardware may still sound." : {
       "localizations" : {
