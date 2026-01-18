@@ -525,6 +525,11 @@
 		C1FB428F217921D600FAB378 /* PumpManagerUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB428E217921D600FAB378 /* PumpManagerUI.swift */; };
 		C1FB4290217922A100FAB378 /* PumpManagerUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB428E217921D600FAB378 /* PumpManagerUI.swift */; };
 		C94989147A19F3B745CC88A7 /* InsuOnboardingColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11276FDDB4DA70DECA0F4881 /* InsuOnboardingColors.swift */; };
+		D43070292F1CCA650039B00C /* StatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43070282F1CCA650039B00C /* StatsViewModel.swift */; };
+		D430702F2F1CCA820039B00C /* StatsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430702C2F1CCA820039B00C /* StatsHeaderView.swift */; };
+		D43070302F1CCA820039B00C /* GlucoseSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430702B2F1CCA820039B00C /* GlucoseSummaryCard.swift */; };
+		D43070312F1CCA820039B00C /* GlucoseChartCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430702A2F1CCA820039B00C /* GlucoseChartCard.swift */; };
+		D43070322F1CCA820039B00C /* TimeInRangeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430702D2F1CCA820039B00C /* TimeInRangeCard.swift */; };
 		DD3DBD292A33AFE9000F8B5B /* IntegralRetrospectiveCorrectionSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3DBD282A33AFE9000F8B5B /* IntegralRetrospectiveCorrectionSelectionView.swift */; };
 		DDC389F62A2B61750066E2E8 /* ApplicationFactorStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC389F52A2B61750066E2E8 /* ApplicationFactorStrategy.swift */; };
 		DDC389F82A2B620B0066E2E8 /* GlucoseBasedApplicationFactorStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC389F72A2B620B0066E2E8 /* GlucoseBasedApplicationFactorStrategy.swift */; };
@@ -1363,6 +1368,11 @@
 		C1F8B1DB223862D500DD66CF /* BolusProgressTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BolusProgressTableViewCell.xib; sourceTree = "<group>"; };
 		C1FB428B217806A300FAB378 /* StateColorPalette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateColorPalette.swift; sourceTree = "<group>"; };
 		C1FB428E217921D600FAB378 /* PumpManagerUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PumpManagerUI.swift; sourceTree = "<group>"; };
+		D43070282F1CCA650039B00C /* StatsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewModel.swift; sourceTree = "<group>"; };
+		D430702A2F1CCA820039B00C /* GlucoseChartCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseChartCard.swift; sourceTree = "<group>"; };
+		D430702B2F1CCA820039B00C /* GlucoseSummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseSummaryCard.swift; sourceTree = "<group>"; };
+		D430702C2F1CCA820039B00C /* StatsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsHeaderView.swift; sourceTree = "<group>"; };
+		D430702D2F1CCA820039B00C /* TimeInRangeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeInRangeCard.swift; sourceTree = "<group>"; };
 		DD3DBD282A33AFE9000F8B5B /* IntegralRetrospectiveCorrectionSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegralRetrospectiveCorrectionSelectionView.swift; sourceTree = "<group>"; };
 		DDC389F52A2B61750066E2E8 /* ApplicationFactorStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationFactorStrategy.swift; sourceTree = "<group>"; };
 		DDC389F72A2B620B0066E2E8 /* GlucoseBasedApplicationFactorStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseBasedApplicationFactorStrategy.swift; sourceTree = "<group>"; };
@@ -2163,6 +2173,8 @@
 				B48B0BAB24900093009A48DE /* PumpStatusHUDView.swift */,
 				B4E96D5A248A8229002DABAD /* StatusBarHUDView.swift */,
 				B4E96D56248A7B0F002DABAD /* StatusHighlightHUDView.swift */,
+				D43070282F1CCA650039B00C /* StatsViewModel.swift */,
+				D430702E2F1CCA820039B00C /* StatsCards */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2570,6 +2582,17 @@
 				C1092BFD29F8116700AE3D1C /* apply-info-customizations.sh */,
 			);
 			path = Scripts;
+			sourceTree = "<group>";
+		};
+		D430702E2F1CCA820039B00C /* StatsCards */ = {
+			isa = PBXGroup;
+			children = (
+				D430702A2F1CCA820039B00C /* GlucoseChartCard.swift */,
+				D430702B2F1CCA820039B00C /* GlucoseSummaryCard.swift */,
+				D430702C2F1CCA820039B00C /* StatsHeaderView.swift */,
+				D430702D2F1CCA820039B00C /* TimeInRangeCard.swift */,
+			);
+			path = StatsCards;
 			sourceTree = "<group>";
 		};
 		E90909CB24E34A7A00F963D2 /* high_and_rising_with_cob */ = {
@@ -3888,6 +3911,7 @@
 				7D23667D21250C7E0028B67D /* LocalizedString.swift in Sources */,
 				4FF4D0F81E1725B000846527 /* NibLoadable.swift in Sources */,
 				4326BA641F3A44D9007CCAD4 /* ChartLineModel.swift in Sources */,
+				D43070292F1CCA650039B00C /* StatsViewModel.swift in Sources */,
 				4374B5F0209D857E00D17AA8 /* OSLog.swift in Sources */,
 				B4E96D4F248A6E20002DABAD /* CGMStatusHUDView.swift in Sources */,
 				716108352F1C916A0054ED70 /* LastBolusCardView.swift in Sources */,
@@ -3908,6 +3932,10 @@
 				B4E96D5B248A8229002DABAD /* StatusBarHUDView.swift in Sources */,
 				4F7528A11DFE200B00C322D6 /* BasalStateView.swift in Sources */,
 				43BFF0C61E465A4400FF19A9 /* UIColor+HIG.swift in Sources */,
+				D430702F2F1CCA820039B00C /* StatsHeaderView.swift in Sources */,
+				D43070302F1CCA820039B00C /* GlucoseSummaryCard.swift in Sources */,
+				D43070312F1CCA820039B00C /* GlucoseChartCard.swift in Sources */,
+				D43070322F1CCA820039B00C /* TimeInRangeCard.swift in Sources */,
 				716108C42F1CC5F10054ED70 /* PauseGlucoseCardView.swift in Sources */,
 				716108C52F1CC5F10054ED70 /* ActivityCardView.swift in Sources */,
 				4F7528A01DFE1F9D00C322D6 /* LoopStateView.swift in Sources */,

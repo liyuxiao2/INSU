@@ -1339,6 +1339,19 @@
         }
       }
     },
+    "%lld" : {
+
+    },
+    "%lld %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld %2$@"
+          }
+        }
+      }
+    },
     "<1 min ago" : {
       "comment" : "Format string describing last completion",
       "localizations" : {
@@ -1416,6 +1429,7 @@
         }
       }
     },
+    "7 Days" : {
     "4PM" : {
 
     },
@@ -1435,6 +1449,9 @@
 
     },
     "Average Glucose (%@)" : {
+
+    },
+    "Change Mode" : {
 
     },
     "Closed loop" : {
@@ -3270,7 +3287,7 @@
         }
       }
     },
-    "Stats Page" : {
+    "Sensor Info" : {
 
     },
     "Switch Mode" : {
@@ -3353,6 +3370,8 @@
         }
       }
     },
+    "Target Range" : {
+
     "Target Range\n%@ - %@ mmol/L" : {
       "localizations" : {
         "en" : {
