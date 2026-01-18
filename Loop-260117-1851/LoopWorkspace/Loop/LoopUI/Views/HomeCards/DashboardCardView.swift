@@ -57,7 +57,7 @@ public struct DashboardCardView: View {
                 HStack(alignment: .center, spacing: 12) {
                     Text(formatGlucose(glucoseValue))
                         .font(InsuTypography.glucoseValue)
-                        .foregroundColor(isStale ? Color.insuGray : Color.insuTextPrimary)
+                        .foregroundColor(isStale ? Color.insuGray : glucoseColor)
 
                     if let arrow = trendArrow {
                         Image(systemName: trendIconName(for: arrow))
@@ -85,6 +85,16 @@ public struct DashboardCardView: View {
             .padding(7)
         }
         .frame(height: InsuSpacing.mainCardHeight)
+    }
+
+    private var glucoseColor: Color {
+        if glucoseValue > 10 {
+            return Color.yellow
+        } else if glucoseValue < 4 {
+            return Color.red
+        } else {
+            return Color.insuTextPrimary // Normal range (4-10)
+        }
     }
 
     private func formatGlucose(_ value: Double) -> String {
