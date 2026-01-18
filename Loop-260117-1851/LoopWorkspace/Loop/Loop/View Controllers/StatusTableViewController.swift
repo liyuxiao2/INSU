@@ -1959,7 +1959,10 @@ final class StatusTableViewController: LoopChartsTableViewController {
             delegate: self)
 
         return AnyView(
-            InsuSettingsView()
+            InsuSettingsView(
+                alertPermissionsChecker: alertPermissionsChecker,
+                alertMuter: alertMuter
+            )
         )
     }
 
@@ -2118,8 +2121,8 @@ final class StatusTableViewController: LoopChartsTableViewController {
         if let targets = deviceManager.loopManager.settings.glucoseTargetRangeSchedule {
             let now = Date()
             let targetRange = targets.value(at: now)
-            let lowValue = targetRange.minValue.doubleValue(for: unit)
-            let highValue = targetRange.maxValue.doubleValue(for: unit)
+            let lowValue = targetRange.minValue
+            let highValue = targetRange.maxValue
             statsViewModel.updateTargetRange(low: lowValue, high: highValue)
         }
 
@@ -2186,8 +2189,8 @@ final class StatusTableViewController: LoopChartsTableViewController {
                 if !samples.isEmpty, let targets = self.deviceManager.loopManager.settings.glucoseTargetRangeSchedule {
                     let now = Date()
                     let targetRange = targets.value(at: now)
-                    let targetLow = targetRange.minValue.doubleValue(for: unit)
-                    let targetHigh = targetRange.maxValue.doubleValue(for: unit)
+                    let targetLow = targetRange.minValue
+                    let targetHigh = targetRange.maxValue
 
                     // Define thresholds (standard CGM ranges)
                     let veryLowThreshold: Double
