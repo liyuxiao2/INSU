@@ -2068,8 +2068,8 @@ final class StatusTableViewController: LoopChartsTableViewController {
         if let targets = deviceManager.loopManager.settings.glucoseTargetRangeSchedule {
             let now = Date()
             let targetRange = targets.value(at: now)
-            let lowValue = targetRange.minValue.doubleValue(for: unit)
-            let highValue = targetRange.maxValue.doubleValue(for: unit)
+            let lowValue = targetRange.minValue
+            let highValue = targetRange.maxValue
             statsViewModel.updateTargetRange(low: lowValue, high: highValue)
         }
 
@@ -2105,14 +2105,12 @@ final class StatusTableViewController: LoopChartsTableViewController {
 
             switch result {
             case .success(let samples):
-                // Convert to GlucoseDataPoint for chart
-                let dataPoints = samples.map { sample in
-                    GlucoseDataPoint(
-                        date: sample.startDate,
-                        value: sample.quantity.doubleValue(for: unit)
-                    )
+                // Update connection state if we have real data
+                if !samples.isEmpty {
+                    DispatchQueue.main.async {
+                        self.statsViewModel.isPumpConnected = true
+                    }
                 }
-                self.statsViewModel.updateGlucoseData(dataPoints)
 
                 // Calculate average glucose
                 if !samples.isEmpty {
@@ -2136,8 +2134,8 @@ final class StatusTableViewController: LoopChartsTableViewController {
                 if !samples.isEmpty, let targets = self.deviceManager.loopManager.settings.glucoseTargetRangeSchedule {
                     let now = Date()
                     let targetRange = targets.value(at: now)
-                    let targetLow = targetRange.minValue.doubleValue(for: unit)
-                    let targetHigh = targetRange.maxValue.doubleValue(for: unit)
+                    let targetLow = targetRange.minValue
+                    let targetHigh = targetRange.maxValue
 
                     // Define thresholds (standard CGM ranges)
                     let veryLowThreshold: Double
@@ -2194,6 +2192,33 @@ final class StatusTableViewController: LoopChartsTableViewController {
                     let timeInterval = lastSample.startDate.timeIntervalSince(firstSample.startDate)
                     let daysAvailable = Int(ceil(timeInterval / 86400)) // 86400 seconds in a day
                     self.statsViewModel.updateDaysAvailable(daysAvailable)
+                }
+
+                // Calculate change from prior period
+                let currentAverage = self.statsViewModel.averageGlucose
+                if currentAverage > 0 {
+                    // Fetch prior period data (same duration, but shifted back)
+                    let priorPeriodEnd = summaryStartDate
+                    let priorPeriodStart = Calendar.current.date(byAdding: .day, value: -daysToFetch, to: priorPeriodEnd)!
+
+                    self.deviceManager.glucoseStore.getGlucoseSamples(start: priorPeriodStart, end: priorPeriodEnd) { result in
+                        switch result {
+                        case .success(let priorSamples):
+                            if !priorSamples.isEmpty {
+                                let priorSum = priorSamples.reduce(0.0) { $0 + $1.quantity.doubleValue(for: unit) }
+                                let priorAverage = priorSum / Double(priorSamples.count)
+
+                                // Calculate percentage change
+                                let percentChange = ((currentAverage - priorAverage) / priorAverage) * 100.0
+                                self.statsViewModel.updateChangeFromPriorPeriod(percentChange)
+                            } else {
+                                // Not enough historical data for comparison
+                                self.statsViewModel.updateChangeFromPriorPeriod(nil)
+                            }
+                        case .failure:
+                            self.statsViewModel.updateChangeFromPriorPeriod(nil)
+                        }
+                    }
                 }
 
             case .failure(let error):
