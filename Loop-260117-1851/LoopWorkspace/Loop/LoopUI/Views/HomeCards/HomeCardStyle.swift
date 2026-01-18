@@ -81,6 +81,8 @@ public struct InsuSpacing {
     public static let mainCardHeight: CGFloat = 234
     public static let smallCardHeight: CGFloat = 258
     public static let smallCardWidth: CGFloat = 171
+    public static let smallCardVerticalSpacing: CGFloat = 11  // Spacing between stacked action cards
+    public static let actionCardHeight: CGFloat = 123.5  // (258 - 11) / 2 = 123.5
     public static let buttonHeight: CGFloat = 46
     public static let tabBarHeight: CGFloat = 65
 }

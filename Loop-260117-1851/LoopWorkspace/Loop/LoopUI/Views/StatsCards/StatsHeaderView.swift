@@ -39,7 +39,7 @@ public struct StatsHeaderView: View {
                 // Notification action - decorative for now
             }) {
                 Image(systemName: "bell.fill")
-                    .font(.system(size: 24))
+                    .font(.system(size: 26))
                     .foregroundColor(Color.insuTextPrimary)
             }
             .padding(.top, 8)
