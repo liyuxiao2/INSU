@@ -219,6 +219,12 @@ public class StatsViewModel: ObservableObject {
         }
     }
 
+    public func updateChangeFromPriorPeriod(_ change: Double?) {
+        DispatchQueue.main.async {
+            self.changeFromPriorPeriod = change
+        }
+    }
+
     // MARK: - Computed Properties
 
     public var hourRangeOptions: [Int] {

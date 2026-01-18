@@ -143,7 +143,8 @@ public struct HomeNavigationBar: View {
                 Circle()
                     .fill(Color.insuDarkBlue)
                     .frame(width: circleSize, height: circleSize)
-                    .shadow(color: Color.insuDarkBlue.opacity(0.25), radius: 6, x: 0, y: 3)
+                    .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 4)
+                    .shadow(color: Color.insuDarkBlue.opacity(0.4), radius: 12, x: 0, y: 6)
                     .position(x: selectedX, y: circleY)
 
                 // Layer 4: Icons - each positioned independently

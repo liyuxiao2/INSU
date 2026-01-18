@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "\n%1$@\n\n%2$@ is operating with Closed Loop in the ON position." : {
       "comment" : "Green closed loop ON message (1: last loop string) (2: app name)",
       "localizations" : {
@@ -308,6 +311,9 @@
           }
         }
       }
+    },
+    " Below" : {
+
     },
     "– – –" : {
       "comment" : "No glucose value representation (3 dashes for mg/dL)",
@@ -692,6 +698,19 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ 单位"
+          }
+        }
+      }
+    },
+    "%@ your " : {
+
+    },
+    "%@: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@"
           }
         }
       }
@@ -1453,6 +1472,15 @@
     "Average Glucose (%@)" : {
 
     },
+    "Bolus" : {
+
+    },
+    "Calculations" : {
+
+    },
+    "Cancel" : {
+
+    },
     "Closed loop" : {
       "comment" : "Accessibility hint describing completion HUD for a closed loop",
       "localizations" : {
@@ -1750,6 +1778,12 @@
         }
       }
     },
+    "Configure your " : {
+
+    },
+    "Confirm Bolus" : {
+
+    },
     "dB" : {
       "comment" : "The short unit display string for decibles",
       "localizations" : {
@@ -1868,6 +1902,9 @@
           }
         }
       }
+    },
+    "Deliver Bolus" : {
+
     },
     "g" : {
       "comment" : "The short unit display string for grams",
@@ -1995,6 +2032,9 @@
       }
     },
     "GMI (%)" : {
+
+    },
+    "Grams of carbs covered by 1 unit of insulin" : {
 
     },
     "Hello, %@" : {
@@ -2131,10 +2171,19 @@
     "History Page" : {
 
     },
+    "How long insulin remains active in your body" : {
+
+    },
+    "How much 1 unit of insulin lowers your blood glucose" : {
+
+    },
     "Input Bolus" : {
 
     },
     "IOB " : {
+
+    },
+    "IOB of %@" : {
 
     },
     "Jan 18 (2:29 PM)" : {
@@ -2219,6 +2268,9 @@
           }
         }
       }
+    },
+    "Log Out" : {
+
     },
     "Loop Failure" : {
       "comment" : "Title of red loop message",
@@ -2653,6 +2705,9 @@
           }
         }
       }
+    },
+    "Meal: %@" : {
+
     },
     "mg/dL" : {
       "comment" : "The short unit display string for milligrams of glucose per decilter",
@@ -3286,6 +3341,9 @@
         }
       }
     },
+    "Recommended Ranges" : {
+
+    },
     "Resume Insulin" : {
 
     },
@@ -3293,6 +3351,9 @@
 
     },
     "Settings" : {
+
+    },
+    "Summary" : {
 
     },
     "Switch Mode" : {
@@ -3388,7 +3449,13 @@
         }
       }
     },
+    "The American Diabetes Association recommends a target range of 3.9-10.0 mmol/L (70-180 mg/dL) for most adults with diabetes." : {
+
+    },
     "Time in Range" : {
+
+    },
+    "Total Bolus" : {
 
     },
     "U" : {

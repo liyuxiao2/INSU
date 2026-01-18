@@ -251,6 +251,7 @@
 		4FF4D0F81E1725B000846527 /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434F54561D287FDB002A9274 /* NibLoadable.swift */; };
 		4FF4D1001E18374700846527 /* WatchContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF4D0FF1E18374700846527 /* WatchContext.swift */; };
 		4FF4D1011E18375000846527 /* WatchContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF4D0FF1E18374700846527 /* WatchContext.swift */; };
+		52A1C035156BB586DDDA2141 /* InsuBolusViewModelAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0EF97EFDD8F5A084626BD4 /* InsuBolusViewModelAdapter.swift */; };
 		7161082D2F1C88E10054ED70 /* HomeNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7161082C2F1C88E10054ED70 /* HomeNavigationBar.swift */; };
 		7161082E2F1C88E10054ED70 /* HomeCardContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108262F1C88E10054ED70 /* HomeCardContainer.swift */; };
 		7161082F2F1C88E10054ED70 /* HomeCardStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108272F1C88E10054ED70 /* HomeCardStyle.swift */; };
@@ -338,6 +339,9 @@
 		89F9119424358E4500ECCAF3 /* CarbAbsorptionTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F9119324358E4500ECCAF3 /* CarbAbsorptionTime.swift */; };
 		89F9119624358E6900ECCAF3 /* BolusPickerValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89F9119524358E6900ECCAF3 /* BolusPickerValues.swift */; };
 		89FE21AD24AC57E30033F501 /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FE21AC24AC57E30033F501 /* Collection.swift */; };
+		8B4D524C24EDFB9371E091B0 /* InsuBolusInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88F03BD1F0ABE81012D57707 /* InsuBolusInputView.swift */; };
+		9455BBC422363BE831F253CC /* InsuBolusCardComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFCC6BC2F088674378C4DE4A /* InsuBolusCardComponents.swift */; };
+		9A1725AFCAAD5F6C8364EFE9 /* InsuBolusHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3B89F7A5787E3591AF9FAD /* InsuBolusHeaderView.swift */; };
 		A7057DCAAB2C5DEDEC91540F /* InsuCarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D19FF77E495326F1FA746DB /* InsuCarouselView.swift */; };
 		A90EF53C25DEF06200F32D61 /* PluginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16DA84122E8E112008624C2 /* PluginManager.swift */; };
 		A90EF54425DEF0A000F32D61 /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4374B5EE209D84BE00D17AA8 /* OSLog.swift */; };
@@ -524,13 +528,16 @@
 		C1FB428D21791D2500FAB378 /* PumpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C3B6F620BBCAA30026CAFA /* PumpManager.swift */; };
 		C1FB428F217921D600FAB378 /* PumpManagerUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB428E217921D600FAB378 /* PumpManagerUI.swift */; };
 		C1FB4290217922A100FAB378 /* PumpManagerUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB428E217921D600FAB378 /* PumpManagerUI.swift */; };
+		C627225B108CAB9D44B5F036 /* InsuBolusFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0944169B10B35F2820C1F4DC /* InsuBolusFlowView.swift */; };
 		C94989147A19F3B745CC88A7 /* InsuOnboardingColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11276FDDB4DA70DECA0F4881 /* InsuOnboardingColors.swift */; };
+		D05C016CF94D55CB979E05CE /* InsuBolusConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F47BEE8ED373A4BE7EC6DD /* InsuBolusConfirmView.swift */; };
 		D43070292F1CCA650039B00C /* StatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43070282F1CCA650039B00C /* StatsViewModel.swift */; };
 		D430702F2F1CCA820039B00C /* StatsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430702C2F1CCA820039B00C /* StatsHeaderView.swift */; };
 		D43070302F1CCA820039B00C /* GlucoseSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430702B2F1CCA820039B00C /* GlucoseSummaryCard.swift */; };
 		D43070312F1CCA820039B00C /* GlucoseChartCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430702A2F1CCA820039B00C /* GlucoseChartCard.swift */; };
 		D43070322F1CCA820039B00C /* TimeInRangeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430702D2F1CCA820039B00C /* TimeInRangeCard.swift */; };
 		D43070342F1CD5D50039B00C /* SettingsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43070332F1CD5D50039B00C /* SettingsTabView.swift */; };
+		D43070362F1D0BD40039B00C /* InsuSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43070352F1D0BD40039B00C /* InsuSettingsView.swift */; };
 		DD3DBD292A33AFE9000F8B5B /* IntegralRetrospectiveCorrectionSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3DBD282A33AFE9000F8B5B /* IntegralRetrospectiveCorrectionSelectionView.swift */; };
 		DDC389F62A2B61750066E2E8 /* ApplicationFactorStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC389F52A2B61750066E2E8 /* ApplicationFactorStrategy.swift */; };
 		DDC389F82A2B620B0066E2E8 /* GlucoseBasedApplicationFactorStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC389F72A2B620B0066E2E8 /* GlucoseBasedApplicationFactorStrategy.swift */; };
@@ -786,6 +793,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0944169B10B35F2820C1F4DC /* InsuBolusFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InsuBolusFlowView.swift; sourceTree = "<group>"; };
+		0B0EF97EFDD8F5A084626BD4 /* InsuBolusViewModelAdapter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InsuBolusViewModelAdapter.swift; sourceTree = "<group>"; };
 		11276FDDB4DA70DECA0F4881 /* InsuOnboardingColors.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InsuOnboardingColors.swift; sourceTree = "<group>"; };
 		142CB7582A60BF2E0075748A /* EditMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditMode.swift; sourceTree = "<group>"; };
 		142CB75A2A60BFC30075748A /* FavoriteFoodsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteFoodsView.swift; sourceTree = "<group>"; };
@@ -1113,6 +1122,7 @@
 		84AA81E42A4A3981000B658B /* DeeplinkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeeplinkManager.swift; sourceTree = "<group>"; };
 		84AA81E62A4A4DEF000B658B /* PumpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PumpView.swift; sourceTree = "<group>"; };
 		84D2879E2AC756C8007ED283 /* ContentMargin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentMargin.swift; sourceTree = "<group>"; };
+		88F03BD1F0ABE81012D57707 /* InsuBolusInputView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InsuBolusInputView.swift; sourceTree = "<group>"; };
 		891B508424342BE1005DA578 /* CarbAndBolusFlowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarbAndBolusFlowViewModel.swift; sourceTree = "<group>"; };
 		892A5D29222EF60A008961AB /* MockKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = MockKit.framework; path = Carthage/Build/iOS/MockKit.framework; sourceTree = SOURCE_ROOT; };
 		892A5D2B222EF60A008961AB /* MockKitUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = MockKitUI.framework; path = Carthage/Build/iOS/MockKitUI.framework; sourceTree = SOURCE_ROOT; };
@@ -1176,6 +1186,7 @@
 		89F9119524358E6900ECCAF3 /* BolusPickerValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BolusPickerValues.swift; sourceTree = "<group>"; };
 		89FE21AC24AC57E30033F501 /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 		9D19FF77E495326F1FA746DB /* InsuCarouselView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InsuCarouselView.swift; sourceTree = "<group>"; };
+		A8F47BEE8ED373A4BE7EC6DD /* InsuBolusConfirmView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InsuBolusConfirmView.swift; sourceTree = "<group>"; };
 		A900531A28D60862000BC15B /* Loop.shortcut */ = {isa = PBXFileReference; lastKnownFileType = file; path = Loop.shortcut; sourceTree = "<group>"; };
 		A900531B28D608CA000BC15B /* Cancel Override.shortcut */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Cancel Override.shortcut"; sourceTree = "<group>"; };
 		A900531C28D6090D000BC15B /* Loop Remote Overrides.shortcut */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Loop Remote Overrides.shortcut"; sourceTree = "<group>"; };
@@ -1375,6 +1386,8 @@
 		D430702C2F1CCA820039B00C /* StatsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsHeaderView.swift; sourceTree = "<group>"; };
 		D430702D2F1CCA820039B00C /* TimeInRangeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeInRangeCard.swift; sourceTree = "<group>"; };
 		D43070332F1CD5D50039B00C /* SettingsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTabView.swift; sourceTree = "<group>"; };
+		D43070352F1D0BD40039B00C /* InsuSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsuSettingsView.swift; sourceTree = "<group>"; };
+		DB3B89F7A5787E3591AF9FAD /* InsuBolusHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InsuBolusHeaderView.swift; sourceTree = "<group>"; };
 		DD3DBD282A33AFE9000F8B5B /* IntegralRetrospectiveCorrectionSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegralRetrospectiveCorrectionSelectionView.swift; sourceTree = "<group>"; };
 		DDC389F52A2B61750066E2E8 /* ApplicationFactorStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationFactorStrategy.swift; sourceTree = "<group>"; };
 		DDC389F72A2B620B0066E2E8 /* GlucoseBasedApplicationFactorStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseBasedApplicationFactorStrategy.swift; sourceTree = "<group>"; };
@@ -1456,6 +1469,7 @@
 		E9C58A7924DB529A00487A17 /* dynamic_glucose_effect_partially_observed.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = dynamic_glucose_effect_partially_observed.json; sourceTree = "<group>"; };
 		E9C58A7A24DB529A00487A17 /* counteraction_effect_falling_glucose.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = counteraction_effect_falling_glucose.json; sourceTree = "<group>"; };
 		E9C58A7B24DB529A00487A17 /* insulin_effect.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = insulin_effect.json; sourceTree = "<group>"; };
+		EFCC6BC2F088674378C4DE4A /* InsuBolusCardComponents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InsuBolusCardComponents.swift; sourceTree = "<group>"; };
 		F59F52FB3870920C1E308397 /* InsuWaveBackgroundView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = InsuWaveBackgroundView.swift; sourceTree = "<group>"; };
 		F5D9C01727DABBE0002E48F6 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Intents.strings; sourceTree = "<group>"; };
 		F5D9C01C27DABBE1002E48F6 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
@@ -2051,6 +2065,7 @@
 				DDC389FD2A2C4C830066E2E8 /* GlucoseBasedApplicationFactorSelectionView.swift */,
 				DD3DBD282A33AFE9000F8B5B /* IntegralRetrospectiveCorrectionSelectionView.swift */,
 				F38A921C46D0828C25289CE3 /* InsuOnboarding */,
+				0B0EF97EFDD8F5A084626BD4 /* InsuBolusViewModelAdapter.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2155,6 +2170,7 @@
 		4F7528931DFE1E1600C322D6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D43070352F1D0BD40039B00C /* InsuSettingsView.swift */,
 				716108362F1C988E0054ED70 /* HistoryView.swift */,
 				716108372F1C988E0054ED70 /* ProfileView.swift */,
 				716108382F1C988E0054ED70 /* StatsView.swift */,
@@ -2178,6 +2194,7 @@
 				D43070282F1CCA650039B00C /* StatsViewModel.swift */,
 				D430702E2F1CCA820039B00C /* StatsCards */,
 				D43070332F1CD5D50039B00C /* SettingsTabView.swift */,
+				6FFF4A7BD5099582F4DB526C /* Bolus */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2281,6 +2298,18 @@
 				E9B08015253BBD7300BAD8F8 /* UserDefaults+LoopIntents.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		6FFF4A7BD5099582F4DB526C /* Bolus */ = {
+			isa = PBXGroup;
+			children = (
+				DB3B89F7A5787E3591AF9FAD /* InsuBolusHeaderView.swift */,
+				EFCC6BC2F088674378C4DE4A /* InsuBolusCardComponents.swift */,
+				88F03BD1F0ABE81012D57707 /* InsuBolusInputView.swift */,
+				A8F47BEE8ED373A4BE7EC6DD /* InsuBolusConfirmView.swift */,
+				0944169B10B35F2820C1F4DC /* InsuBolusFlowView.swift */,
+			);
+			path = Bolus;
 			sourceTree = "<group>";
 		};
 		7161082B2F1C88E10054ED70 /* HomeCards */ = {
@@ -3692,6 +3721,7 @@
 				A7057DCAAB2C5DEDEC91540F /* InsuCarouselView.swift in Sources */,
 				3792FD6E836ED5AF0E6A699A /* InsuOnboardingCoordinator.swift in Sources */,
 				773118265D36335D5236998F /* InsuAuthView.swift in Sources */,
+				52A1C035156BB586DDDA2141 /* InsuBolusViewModelAdapter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3938,6 +3968,7 @@
 				D430702F2F1CCA820039B00C /* StatsHeaderView.swift in Sources */,
 				D43070302F1CCA820039B00C /* GlucoseSummaryCard.swift in Sources */,
 				D43070312F1CCA820039B00C /* GlucoseChartCard.swift in Sources */,
+				D43070362F1D0BD40039B00C /* InsuSettingsView.swift in Sources */,
 				D43070322F1CCA820039B00C /* TimeInRangeCard.swift in Sources */,
 				716108C42F1CC5F10054ED70 /* PauseGlucoseCardView.swift in Sources */,
 				716108C52F1CC5F10054ED70 /* ActivityCardView.swift in Sources */,
@@ -3960,6 +3991,11 @@
 				B4E96D57248A7B0F002DABAD /* StatusHighlightHUDView.swift in Sources */,
 				B42C951424A3C76000857C73 /* CGMStatusHUDViewModel.swift in Sources */,
 				4F75289E1DFE1F6000C322D6 /* LoopCompletionHUDView.swift in Sources */,
+				9A1725AFCAAD5F6C8364EFE9 /* InsuBolusHeaderView.swift in Sources */,
+				9455BBC422363BE831F253CC /* InsuBolusCardComponents.swift in Sources */,
+				8B4D524C24EDFB9371E091B0 /* InsuBolusInputView.swift in Sources */,
+				D05C016CF94D55CB979E05CE /* InsuBolusConfirmView.swift in Sources */,
+				C627225B108CAB9D44B5F036 /* InsuBolusFlowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

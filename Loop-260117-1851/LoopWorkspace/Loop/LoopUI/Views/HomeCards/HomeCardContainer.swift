@@ -40,7 +40,7 @@ public struct HomeCardContainer: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            // Header: Greeting and notification bell
+            // Header: Greeting and notification bell (fixed at top)
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Hello, \(viewModel.userName)")
@@ -68,87 +68,91 @@ public struct HomeCardContainer: View {
             .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
             .padding(.top, 16)
 
-            // Main glucose card with page indicator
-            VStack(spacing: 12) {
-                TabView(selection: $currentPage) {
-                    // Page 0: Dashboard (Glucose)
-                    DashboardCardView(
-                        glucoseValue: viewModel.glucoseValue,
-                        glucoseUnit: viewModel.glucoseUnit,
-                        iobValue: viewModel.iobValue,
-                        iobUnit: viewModel.iobUnit,
-                        trendArrow: viewModel.trendArrow,
-                        isStale: viewModel.isGlucoseStale
-                    )
-                    .tag(0)
+            // Scrollable content
+            ScrollView {
+                VStack(spacing: 0) {
+                    // Main glucose card with page indicator
+                    VStack(spacing: 12) {
+                        TabView(selection: $currentPage) {
+                            // Page 0: Dashboard (Glucose)
+                            DashboardCardView(
+                                glucoseValue: viewModel.glucoseValue,
+                                glucoseUnit: viewModel.glucoseUnit,
+                                iobValue: viewModel.iobValue,
+                                iobUnit: viewModel.iobUnit,
+                                trendArrow: viewModel.trendArrow,
+                                isStale: viewModel.isGlucoseStale
+                            )
+                            .tag(0)
 
-                    // Page 1: Pod Status
-                    PodStatusCardView(
-                        reservoirLevel: viewModel.reservoirLevel,
-                        reservoirUnit: viewModel.reservoirUnit,
-                        iobValue: viewModel.iobValue,
-                        iobUnit: viewModel.iobUnit,
-                        onViewDetails: {}
-                    )
-                    .tag(1)
+                            // Page 1: Pod Status
+                            PodStatusCardView(
+                                reservoirLevel: viewModel.reservoirLevel,
+                                reservoirUnit: viewModel.reservoirUnit,
+                                iobValue: viewModel.iobValue,
+                                iobUnit: viewModel.iobUnit,
+                                onViewDetails: {}
+                            )
+                            .tag(1)
 
-                    // Page 2: Insulin Mode
-                    InsulinModeCardView(
-                        modeName: viewModel.modeName,
-                        iobValue: viewModel.iobValue,
-                        iobUnit: viewModel.iobUnit,
-                        isAutomated: viewModel.isAutomatedMode,
-                        onChangeMode: onToggleClosedLoop
-                    )
-                    .tag(2)
-                }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                .frame(height: InsuSpacing.mainCardHeight)
+                            // Page 2: Insulin Mode
+                            InsulinModeCardView(
+                                modeName: viewModel.modeName,
+                                iobValue: viewModel.iobValue,
+                                iobUnit: viewModel.iobUnit,
+                                isAutomated: viewModel.isAutomatedMode,
+                                onChangeMode: onToggleClosedLoop
+                            )
+                            .tag(2)
+                        }
+                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                        .frame(height: InsuSpacing.mainCardHeight)
 
-                // Custom page indicator
-                HStack(spacing: 5) {
-                    ForEach(0..<3) { index in
-                        RoundedRectangle(cornerRadius: 5)
-                            .fill(currentPage == index ? Color.insuDarkBlue : Color.gray.opacity(0.4))
-                            .frame(width: currentPage == index ? 50 : 23, height: 11)
+                        // Custom page indicator
+                        HStack(spacing: 5) {
+                            ForEach(0..<3) { index in
+                                RoundedRectangle(cornerRadius: 5)
+                                    .fill(currentPage == index ? Color.insuDarkBlue : Color.gray.opacity(0.4))
+                                    .frame(width: currentPage == index ? 50 : 23, height: 11)
+                            }
+                        }
                     }
+                    .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
+                    .padding(.top, 20)
+
+                    // Bottom section: Last Bolus + Action Cards
+                    HStack(spacing: 13) {
+                        // Left card: Last Bolus (taller card)
+                        LastBolusCardView(
+                            bolusValue: viewModel.lastBolusValue,
+                            bolusUnit: viewModel.lastBolusUnit,
+                            dateString: viewModel.lastBolusDate
+                        )
+                        .frame(width: 171, height: InsuSpacing.smallCardHeight)
+
+                        // Right side: Pause/Resume Insulin + Activity cards (stacked)
+                        VStack(spacing: 7) {
+                            PauseGlucoseCardView(isSuspended: viewModel.isInsulinSuspended, onToggle: onToggleSuspend)
+                                .frame(height: 118)
+
+                            ActivityCardView(isWorkoutActive: viewModel.isWorkoutActive, onActivity: onActivityTapped)
+                                .frame(height: 118)
+                        }
+                        .frame(width: 170)
+                    }
+                    .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
+                    .padding(.top, 20)
+
+                    // Input Bolus button
+                    Button(action: onInputBolus) {
+                        Text("Input Bolus")
+                    }
+                    .buttonStyle(InsuPrimaryButtonStyle())
+                    .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
+                    .padding(.top, 20)
+                    .padding(.bottom, InsuSpacing.tabBarHeight + 20)
                 }
             }
-            .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
-            .padding(.top, 20)
-
-            // Bottom section: Last Bolus + Action Cards
-            HStack(spacing: 13) {
-                // Left card: Last Bolus (taller card)
-                LastBolusCardView(
-                    bolusValue: viewModel.lastBolusValue,
-                    bolusUnit: viewModel.lastBolusUnit,
-                    dateString: viewModel.lastBolusDate
-                )
-                .frame(width: 171, height: InsuSpacing.smallCardHeight)
-
-                // Right side: Pause/Resume Insulin + Activity cards (stacked)
-                VStack(spacing: 7) {
-                    PauseGlucoseCardView(isSuspended: viewModel.isInsulinSuspended, onToggle: onToggleSuspend)
-                        .frame(height: 118)
-
-                    ActivityCardView(isWorkoutActive: viewModel.isWorkoutActive, onActivity: onActivityTapped)
-                        .frame(height: 118)
-                }
-                .frame(width: 170)
-            }
-            .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
-            .padding(.top, 20)
-
-            Spacer()
-
-            // Input Bolus button
-            Button(action: onInputBolus) {
-                Text("Input Bolus")
-            }
-            .buttonStyle(InsuPrimaryButtonStyle())
-            .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
-            .padding(.bottom, 20)
         }
     }
 }
