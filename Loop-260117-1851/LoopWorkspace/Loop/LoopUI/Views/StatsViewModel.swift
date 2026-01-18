@@ -62,6 +62,9 @@ public class StatsViewModel: ObservableObject {
     // MARK: - Selected Data Point (for interactive chart)
     @Published public var selectedDataPoint: GlucoseDataPoint?
 
+    // MARK: - Refresh Callback
+    public var onRefreshNeeded: (() -> Void)?
+
     // MARK: - Initialization
 
     public init(isPumpConnected: Bool = false) {
@@ -143,6 +146,9 @@ public class StatsViewModel: ObservableObject {
         selectedHourRange = hours
         if !isPumpConnected {
             generateDummyChartData()
+        } else {
+            // Trigger refresh from real data
+            onRefreshNeeded?()
         }
     }
 
@@ -152,12 +158,64 @@ public class StatsViewModel: ObservableObject {
         if !isPumpConnected {
             // Adjust dummy data slightly for different ranges
             daysOfDataAvailable = min(days, 7)
+        } else {
+            // Trigger refresh from real data
+            onRefreshNeeded?()
         }
     }
 
     public func updateUserName(_ name: String) {
         DispatchQueue.main.async {
             self.userName = name
+        }
+    }
+
+    // MARK: - Real Data Update Methods
+
+    public func updateGlucoseData(_ dataPoints: [GlucoseDataPoint]) {
+        DispatchQueue.main.async {
+            self.glucoseData = dataPoints
+        }
+    }
+
+    public func updateGlucoseUnit(_ unit: String) {
+        DispatchQueue.main.async {
+            self.glucoseUnit = unit
+        }
+    }
+
+    public func updateAverageGlucose(_ average: Double) {
+        DispatchQueue.main.async {
+            self.averageGlucose = average
+        }
+    }
+
+    public func updateGMI(_ gmiValue: Double) {
+        DispatchQueue.main.async {
+            self.gmi = gmiValue
+        }
+    }
+
+    public func updateTimeInRange(veryHigh: Double, high: Double, inRange: Double, low: Double, veryLow: Double) {
+        DispatchQueue.main.async {
+            self.veryHighPercent = veryHigh
+            self.highPercent = high
+            self.inRangePercent = inRange
+            self.lowPercent = low
+            self.veryLowPercent = veryLow
+        }
+    }
+
+    public func updateTargetRange(low: Double, high: Double) {
+        DispatchQueue.main.async {
+            self.targetRangeLow = low
+            self.targetRangeHigh = high
+        }
+    }
+
+    public func updateDaysAvailable(_ days: Int) {
+        DispatchQueue.main.async {
+            self.daysOfDataAvailable = days
         }
     }
 
