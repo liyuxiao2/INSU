@@ -14,3 +14,5 @@ SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) EXPERIMENTAL_FEATURES_ENABLED
 
 // Put your team id here for signing
 //LOOP_DEVELOPMENT_TEAM = UY678SP37Q
+
+OTHER_SWIFT_FLAGS = $(inherited) -no-verify-emitted-module-interface

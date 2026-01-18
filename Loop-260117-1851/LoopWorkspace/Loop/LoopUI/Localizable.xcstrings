@@ -1430,9 +1430,19 @@
       }
     },
     "7 Days" : {
+    "4PM" : {
+
+    },
+    "7-Day Glucose Summary" : {
+
+    },
+    "8AM" : {
 
     },
     "Active Mode: %@" : {
+
+    },
+    "Activity" : {
 
     },
     "Arian Emamjomeh" : {
@@ -1740,9 +1750,6 @@
           }
         }
       }
-    },
-    "Dashboard" : {
-
     },
     "dB" : {
       "comment" : "The short unit display string for decibles",
@@ -3026,6 +3033,9 @@
     "Now" : {
 
     },
+    "Only %lld days of data available" : {
+
+    },
     "Open loop" : {
       "comment" : "Accessbility hint describing completion HUD for an open loop",
       "localizations" : {
@@ -3144,6 +3154,9 @@
           }
         }
       }
+    },
+    "Pause Glucose" : {
+
     },
     "Pod Expires: Tomorrow" : {
 
@@ -3277,6 +3290,9 @@
     "Sensor Info" : {
 
     },
+    "Switch Mode" : {
+
+    },
     "Tap Settings to toggle Closed Loop ON if you wish for the app to automate your insulin." : {
       "comment" : "Instructions for user to close loop if it is allowed.",
       "localizations" : {
@@ -3356,6 +3372,15 @@
     },
     "Target Range" : {
 
+    "Target Range\n%@ - %@ mmol/L" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Target Range\n%1$@ - %2$@ mmol/L"
+          }
+        }
+      }
     },
     "Time in Range" : {
 

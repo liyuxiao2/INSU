@@ -51,43 +51,53 @@ final class StatusTableViewController: LoopChartsTableViewController {
     private var cardHostingController: UIHostingController<HomeCardContainer>?
     private var navigationOverlay: UIHostingController<HomeNavigationBar>?
     private var activeContentController: UIViewController?
-    private var selectedTab: HomeTab = .home
+    private let tabSelectionState = TabSelectionState()
+    private var tabSelectionCancellable: AnyCancellable?
 
     private func setupCustomNavigationBar() {
         guard let navigationController = self.navigationController, navigationOverlay == nil else { return }
-        
+
         let navBar = HomeNavigationBar(
-            selectedTab: Binding(
-                get: { [weak self] in self?.selectedTab ?? .home },
-                set: { [weak self] newValue in self?.switchTab(to: newValue) }
-            ),
+            tabState: tabSelectionState,
             onTabSelected: { [weak self] tab in
-                self?.switchTab(to: tab)
+                self?.handleTabChange(to: tab)
             }
         )
-        
+
+        // Subscribe to tab selection changes
+        tabSelectionCancellable = tabSelectionState.$selectedTab
+            .dropFirst()  // Skip initial value
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newTab in
+                self?.handleTabChange(to: newTab)
+            }
+
         let hostingController = UIHostingController(rootView: navBar)
         hostingController.view.backgroundColor = .clear
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-        
+
         navigationController.view.addSubview(hostingController.view)
         hostingController.didMove(toParent: navigationController)
-        
+
         NSLayoutConstraint.activate([
             hostingController.view.leadingAnchor.constraint(equalTo: navigationController.view.leadingAnchor),
             hostingController.view.trailingAnchor.constraint(equalTo: navigationController.view.trailingAnchor),
             hostingController.view.bottomAnchor.constraint(equalTo: navigationController.view.bottomAnchor)
         ])
-        
+
         self.navigationOverlay = hostingController
     }
 
-    private func switchTab(to tab: HomeTab) {
+    private func handleTabChange(to tab: HomeTab) {
         // Ensure we are on main thread
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            guard tab != self.selectedTab else { return }
-            self.selectedTab = tab
+
+            // Check if we're already showing this tab's content
+            let currentlyShowingHome = self.activeContentController == nil
+            let switchingToHome = tab == .home
+
+            if currentlyShowingHome && switchingToHome { return }
             
             // Remove existing content overlay
             if let active = self.activeContentController {

@@ -262,6 +262,9 @@
 		716108392F1C988E0054ED70 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108362F1C988E0054ED70 /* HistoryView.swift */; };
 		7161083A2F1C988E0054ED70 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108372F1C988E0054ED70 /* ProfileView.swift */; };
 		7161083B2F1C988E0054ED70 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108382F1C988E0054ED70 /* StatsView.swift */; };
+		716108C42F1CC5F10054ED70 /* PauseGlucoseCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108C32F1CC5F10054ED70 /* PauseGlucoseCardView.swift */; };
+		716108C52F1CC5F10054ED70 /* ActivityCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108C22F1CC5F10054ED70 /* ActivityCardView.swift */; };
+		716108C72F1CC7250054ED70 /* SensorAnalyticsCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716108C62F1CC7250054ED70 /* SensorAnalyticsCardView.swift */; };
 		773118265D36335D5236998F /* InsuAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8184772AF093AD8C8676F7 /* InsuAuthView.swift */; };
 		78B96E9552CA051B61A9A1D4 /* InsuSplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E21436473620185DC4CD620 /* InsuSplashView.swift */; };
 		7D23667D21250C7E0028B67D /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D23667C21250C7E0028B67D /* LocalizedString.swift */; };
@@ -1035,6 +1038,9 @@
 		716108362F1C988E0054ED70 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		716108372F1C988E0054ED70 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		716108382F1C988E0054ED70 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		716108C22F1CC5F10054ED70 /* ActivityCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCardView.swift; sourceTree = "<group>"; };
+		716108C32F1CC5F10054ED70 /* PauseGlucoseCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseGlucoseCardView.swift; sourceTree = "<group>"; };
+		716108C62F1CC7250054ED70 /* SensorAnalyticsCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorAnalyticsCardView.swift; sourceTree = "<group>"; };
 		7D23667C21250C7E0028B67D /* LocalizedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalizedString.swift; path = LoopUI/Common/LocalizedString.swift; sourceTree = SOURCE_ROOT; };
 		7D9BEEE62335A6B3005DCFD6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7D9BEEE82335A6B9005DCFD6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -2277,6 +2283,9 @@
 		7161082B2F1C88E10054ED70 /* HomeCards */ = {
 			isa = PBXGroup;
 			children = (
+				716108C62F1CC7250054ED70 /* SensorAnalyticsCardView.swift */,
+				716108C22F1CC5F10054ED70 /* ActivityCardView.swift */,
+				716108C32F1CC5F10054ED70 /* PauseGlucoseCardView.swift */,
 				716108252F1C88E10054ED70 /* DashboardCardView.swift */,
 				716108262F1C88E10054ED70 /* HomeCardContainer.swift */,
 				716108272F1C88E10054ED70 /* HomeCardStyle.swift */,
@@ -3916,6 +3925,7 @@
 				43BFF0B71E45C20C00FF19A9 /* NumberFormatter.swift in Sources */,
 				B43DA44124D9C12100CAFF4E /* DismissibleHostingController.swift in Sources */,
 				4F7528A51DFE208C00C322D6 /* NSTimeInterval.swift in Sources */,
+				716108C72F1CC7250054ED70 /* SensorAnalyticsCardView.swift in Sources */,
 				A9C62D8E2331708700535612 /* AuthenticationTableViewCell+NibLoadable.swift in Sources */,
 				B490A04324D055D900F509FA /* DeviceStatusHighlight.swift in Sources */,
 				B4AC0D3F24B9005300CDB0A1 /* UIImage.swift in Sources */,
@@ -3926,6 +3936,8 @@
 				D43070302F1CCA820039B00C /* GlucoseSummaryCard.swift in Sources */,
 				D43070312F1CCA820039B00C /* GlucoseChartCard.swift in Sources */,
 				D43070322F1CCA820039B00C /* TimeInRangeCard.swift in Sources */,
+				716108C42F1CC5F10054ED70 /* PauseGlucoseCardView.swift in Sources */,
+				716108C52F1CC5F10054ED70 /* ActivityCardView.swift in Sources */,
 				4F7528A01DFE1F9D00C322D6 /* LoopStateView.swift in Sources */,
 				B491B0A324D0B66D004CBE8F /* Color.swift in Sources */,
 				B4D620D424D9EDB900043B3C /* GuidanceColors.swift in Sources */,
@@ -4546,8 +4558,8 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_LDFLAGS = "";
-				"OTHER_SWIFT_FLAGS[arch=*]" = "-DDEBUG";
-				"OTHER_SWIFT_FLAGS[sdk=iphonesimulator*]" = "-D IOS_SIMULATOR -D DEBUG";
+				"OTHER_SWIFT_FLAGS[arch=*]" = "$(inherited) -DDEBUG";
+				"OTHER_SWIFT_FLAGS[sdk=iphonesimulator*]" = "$(inherited) -D IOS_SIMULATOR -D DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(MAIN_APP_BUNDLE_IDENTIFIER)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "$(LOOP_PROVISIONING_PROFILE_SPECIFIER_DEBUG)";
