@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "INSU",
+			"path": "."
+		},
+		{
+			"name": "BuildLoop",
+			"path": "../../../Downloads/BuildLoop"
+		}
+	],
+	"settings": {}
+}
