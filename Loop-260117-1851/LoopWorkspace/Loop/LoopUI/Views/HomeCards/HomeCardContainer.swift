@@ -13,10 +13,12 @@ public struct HomeCardContainer: View {
     @State private var currentPage = 0
 
     let onInputBolus: () -> Void
+    let onToggleSuspend: () -> Void
 
-    public init(viewModel: HomeViewModel, onInputBolus: @escaping () -> Void) {
+    public init(viewModel: HomeViewModel, onInputBolus: @escaping () -> Void, onToggleSuspend: @escaping () -> Void = {}) {
         self.viewModel = viewModel
         self.onInputBolus = onInputBolus
+        self.onToggleSuspend = onToggleSuspend
     }
 
     private func getSubtitleForPage(_ page: Int) -> String {
@@ -121,9 +123,9 @@ public struct HomeCardContainer: View {
                 )
                 .frame(width: 171, height: InsuSpacing.smallCardHeight)
 
-                // Right side: Pause Glucose + Activity cards (stacked)
+                // Right side: Pause/Resume Insulin + Activity cards (stacked)
                 VStack(spacing: 7) {
-                    PauseGlucoseCardView(onPause: {})
+                    PauseGlucoseCardView(isSuspended: viewModel.isInsulinSuspended, onToggle: onToggleSuspend)
                         .frame(height: 118)
 
                     ActivityCardView(onActivity: {})

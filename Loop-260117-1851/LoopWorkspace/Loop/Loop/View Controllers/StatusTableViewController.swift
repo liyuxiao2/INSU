@@ -449,6 +449,13 @@ final class StatusTableViewController: LoopChartsTableViewController {
                 log.debug("New basalDeliveryState: %@", String(describing: basalDeliveryState))
                 refreshContext.update(with: .status)
                 reloadData(animated: true)
+
+                // Update homeViewModel suspended state
+                if case .suspended = basalDeliveryState {
+                    homeViewModel.updateSuspendedState(true)
+                } else {
+                    homeViewModel.updateSuspendedState(false)
+                }
             }
         }
     }
@@ -1132,6 +1139,9 @@ final class StatusTableViewController: LoopChartsTableViewController {
                     viewModel: homeViewModel,
                     onInputBolus: { [weak self] in
                         self?.presentBolusScreen()
+                    },
+                    onToggleSuspend: { [weak self] in
+                        self?.toggleInsulinSuspend()
                     }
                 )
                 cardHostingController = UIHostingController(rootView: cardContainerView)
@@ -1903,6 +1913,51 @@ final class StatusTableViewController: LoopChartsTableViewController {
         settings.completionDelegate = self
         // Present modally to work when ProfileView overlay is showing
         navigationController?.present(settings, animated: true)
+    }
+
+    private func toggleInsulinSuspend() {
+        guard let pumpManager = deviceManager.pumpManager else {
+            let alert = UIAlertController(
+                title: NSLocalizedString("No Pump Connected", comment: "Title for no pump alert"),
+                message: NSLocalizedString("Please connect a pump before suspending insulin delivery.", comment: "Message for no pump alert"),
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: .default))
+            navigationController?.present(alert, animated: true)
+            return
+        }
+
+        if case .suspended = basalDeliveryState {
+            // Currently suspended - resume delivery
+            pumpManager.resumeDelivery { [weak self] error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        let alert = UIAlertController(
+                            with: error,
+                            title: NSLocalizedString("Failed to Resume Insulin Delivery", comment: "Alert title for resume error")
+                        )
+                        self?.present(alert, animated: true)
+                    } else {
+                        self?.homeViewModel.updateSuspendedState(false)
+                    }
+                }
+            }
+        } else {
+            // Not suspended - suspend delivery
+            pumpManager.suspendDelivery { [weak self] error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        let alert = UIAlertController(
+                            with: error,
+                            title: NSLocalizedString("Failed to Suspend Insulin Delivery", comment: "Alert title for suspend error")
+                        )
+                        self?.present(alert, animated: true)
+                    } else {
+                        self?.homeViewModel.updateSuspendedState(true)
+                    }
+                }
+            }
+        }
     }
 
     private func updateHomeViewModel() {

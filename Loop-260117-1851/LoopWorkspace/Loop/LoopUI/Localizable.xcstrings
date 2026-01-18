@@ -3154,7 +3154,7 @@
         }
       }
     },
-    "Pause Glucose" : {
+    "Pause Insulin" : {
 
     },
     "Pod Expires: Tomorrow" : {
@@ -3285,6 +3285,9 @@
           }
         }
       }
+    },
+    "Resume Insulin" : {
+
     },
     "Sensor Info" : {
 

@@ -18286,7 +18286,7 @@
       }
     },
     "Failed to Resume Insulin Delivery" : {
-      "comment" : "The alert title for a resume error",
+      "comment" : "Alert title for resume error\nThe alert title for a resume error",
       "localizations" : {
         "da" : {
           "stringUnit" : {
@@ -18379,6 +18379,9 @@
           }
         }
       }
+    },
+    "Failed to Suspend Insulin Delivery" : {
+      "comment" : "Alert title for suspend error"
     },
     "Favorite Foods" : {
       "comment" : "Title for Favorite Foods view",
@@ -27154,6 +27157,9 @@
         }
       }
     },
+    "No Pump Connected" : {
+      "comment" : "Title for no pump alert"
+    },
     "No Recent Glucose" : {
       "comment" : "The title of the cell indicating that there is no recent glucose",
       "localizations" : {
@@ -28318,7 +28324,7 @@
       }
     },
     "OK" : {
-      "comment" : "Alert acknowledgment OK button\nCritical Alert permissions disabled alert button\nDefault action for alert when alert acknowledgment fails\nNotifications permissions disabled alert button\nText for ok action on notification of upcoming TestFlight expiration\nText for ok action on notification of upcoming profile expiration\nThe title of the notification action to acknowledge a device alert",
+      "comment" : "Alert acknowledgment OK button\nCritical Alert permissions disabled alert button\nDefault action for alert when alert acknowledgment fails\nNotifications permissions disabled alert button\nOK button\nText for ok action on notification of upcoming TestFlight expiration\nText for ok action on notification of upcoming profile expiration\nThe title of the notification action to acknowledge a device alert",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -28707,6 +28713,9 @@
           }
         }
       }
+    },
+    "Please connect a pump before suspending insulin delivery." : {
+      "comment" : "Message for no pump alert"
     },
     "Possible Missed Meal" : {
       "comment" : "The notification title for a meal that was possibly not logged in Loop.",
