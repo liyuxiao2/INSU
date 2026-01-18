@@ -1419,6 +1419,9 @@
     "Active Mode: %@" : {
 
     },
+    "Arian Emamjomeh" : {
+
+    },
     "Change Mode" : {
 
     },
@@ -1967,6 +1970,9 @@
       }
     },
     "Hello, %@" : {
+
+    },
+    "Help" : {
 
     },
     "HIGH" : {
@@ -2870,6 +2876,9 @@
         }
       }
     },
+    "Name: Arian Emamjomeh\nAge: 18\nType: 1" : {
+
+    },
     "Needs attention" : {
       "comment" : "Accessibility label component for glucose HUD describing an invalid state",
       "localizations" : {
@@ -2988,6 +2997,9 @@
           }
         }
       }
+    },
+    "No FAQs currently available." : {
+
     },
     "Open loop" : {
       "comment" : "Accessbility hint describing completion HUD for an open loop",
@@ -3109,9 +3121,6 @@
       }
     },
     "Pod Expires: Tomorrow" : {
-
-    },
-    "Profile Page" : {
 
     },
     "QUANTITY_VALUE_AND_UNIT" : {
