@@ -9854,7 +9854,7 @@
       "comment" : "Title for Bottom row configuration"
     },
     "Cancel" : {
-      "comment" : "Button label for cancel\nButton text to cancel\nCancel button for reset loop alert\nCancel export button title\nThe title of the cancel action in an action sheet",
+      "comment" : "Button label for cancel\nButton text to cancel\nCancel button\nCancel button for reset loop alert\nCancel export button title\nThe title of the cancel action in an action sheet",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -16785,6 +16785,9 @@
           }
         }
       }
+    },
+    "End Workout" : {
+      "comment" : "End workout button"
     },
     "Enter a blood glucose from a meter for a recommended bolus amount." : {
       "comment" : "Caption for bolus screen notice when glucose data is missing or stale",
@@ -28714,6 +28717,9 @@
         }
       }
     },
+    "Please configure a Workout correction range in your Therapy Settings before using this feature." : {
+      "comment" : "Message for workout not configured alert"
+    },
     "Please connect a pump before suspending insulin delivery." : {
       "comment" : "Message for no pump alert"
     },
@@ -39647,6 +39653,12 @@
         }
       }
     },
+    "Workout Active" : {
+      "comment" : "Title for workout active alert"
+    },
+    "Workout Not Configured" : {
+      "comment" : "Title for workout not configured alert"
+    },
     "Workout Targets" : {
       "comment" : "The label of the workout mode toggle button",
       "localizations" : {
@@ -39943,6 +39955,9 @@
           }
         }
       }
+    },
+    "Would you like to end your workout preset?" : {
+      "comment" : "Message for workout active alert"
     },
     "Yes" : {
       "comment" : "The title of the action used when confirming entered amount of carbohydrates.",

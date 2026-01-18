@@ -15,12 +15,14 @@ public struct HomeCardContainer: View {
     let onInputBolus: () -> Void
     let onToggleSuspend: () -> Void
     let onToggleClosedLoop: () -> Void
+    let onActivityTapped: () -> Void
 
-    public init(viewModel: HomeViewModel, onInputBolus: @escaping () -> Void, onToggleSuspend: @escaping () -> Void = {}, onToggleClosedLoop: @escaping () -> Void = {}) {
+    public init(viewModel: HomeViewModel, onInputBolus: @escaping () -> Void, onToggleSuspend: @escaping () -> Void = {}, onToggleClosedLoop: @escaping () -> Void = {}, onActivityTapped: @escaping () -> Void = {}) {
         self.viewModel = viewModel
         self.onInputBolus = onInputBolus
         self.onToggleSuspend = onToggleSuspend
         self.onToggleClosedLoop = onToggleClosedLoop
+        self.onActivityTapped = onActivityTapped
     }
 
     private func getSubtitleForPage(_ page: Int) -> String {
@@ -130,7 +132,7 @@ public struct HomeCardContainer: View {
                     PauseGlucoseCardView(isSuspended: viewModel.isInsulinSuspended, onToggle: onToggleSuspend)
                         .frame(height: 118)
 
-                    ActivityCardView(onActivity: {})
+                    ActivityCardView(isWorkoutActive: viewModel.isWorkoutActive, onActivity: onActivityTapped)
                         .frame(height: 118)
                 }
                 .frame(width: 170)

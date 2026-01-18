@@ -30,6 +30,7 @@ public class HomeViewModel: ObservableObject {
     @Published var lastBolusUnit: String
     @Published var lastBolusDate: String
     @Published var isInsulinSuspended: Bool
+    @Published var isWorkoutActive: Bool
 
     // MARK: - Initialization
 
@@ -48,7 +49,8 @@ public class HomeViewModel: ObservableObject {
         lastBolusValue: Double = 0.0,
         lastBolusUnit: String = "Units",
         lastBolusDate: String = "--",
-        isInsulinSuspended: Bool = false
+        isInsulinSuspended: Bool = false,
+        isWorkoutActive: Bool = false
     ) {
         self.userName = userName
         self.glucoseValue = glucoseValue
@@ -65,6 +67,7 @@ public class HomeViewModel: ObservableObject {
         self.lastBolusUnit = lastBolusUnit
         self.lastBolusDate = lastBolusDate
         self.isInsulinSuspended = isInsulinSuspended
+        self.isWorkoutActive = isWorkoutActive
     }
 
     // MARK: - Update Methods
@@ -106,6 +109,12 @@ public class HomeViewModel: ObservableObject {
     public func updateSuspendedState(_ isSuspended: Bool) {
         DispatchQueue.main.async {
             self.isInsulinSuspended = isSuspended
+        }
+    }
+
+    public func updateWorkoutState(_ isActive: Bool) {
+        DispatchQueue.main.async {
+            self.isWorkoutActive = isActive
         }
     }
 }

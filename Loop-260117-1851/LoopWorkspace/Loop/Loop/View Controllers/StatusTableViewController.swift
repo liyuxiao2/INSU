@@ -1147,6 +1147,9 @@ final class StatusTableViewController: LoopChartsTableViewController {
                         guard let self = self else { return }
                         let currentDosingEnabled = self.deviceManager.loopManager.settings.dosingEnabled
                         self.dosingEnabledChanged(!currentDosingEnabled)
+                    },
+                    onActivityTapped: { [weak self] in
+                        self?.handleActivityTapped()
                     }
                 )
                 cardHostingController = UIHostingController(rootView: cardContainerView)
@@ -1726,7 +1729,8 @@ final class StatusTableViewController: LoopChartsTableViewController {
     }
     
     func presentWorkoutModeAlertController() {
-        let vc = UIAlertController(workoutDurationSelectionHandler: { duration in
+        let vc = UIAlertController(workoutDurationSelectionHandler: { [weak self] duration in
+            guard let self = self else { return }
             let startDate = Date()
 
             guard self.preMealMode != true else {
@@ -1738,6 +1742,7 @@ final class StatusTableViewController: LoopChartsTableViewController {
                     self.deviceManager.loopManager.mutateSettings { settings in
                         settings.enableLegacyWorkoutOverride(at: startDate, for: duration)
                     }
+                    self.homeViewModel.updateWorkoutState(true)
                 }
                 return
             }
@@ -1745,6 +1750,7 @@ final class StatusTableViewController: LoopChartsTableViewController {
             self.deviceManager.loopManager.mutateSettings { settings in
                 settings.enableLegacyWorkoutOverride(at: startDate, for: duration)
             }
+            self.homeViewModel.updateWorkoutState(true)
         })
 
         present(vc, animated: true, completion: nil)
@@ -1965,6 +1971,43 @@ final class StatusTableViewController: LoopChartsTableViewController {
         }
     }
 
+    private func handleActivityTapped() {
+        // Check if workout is currently active
+        if let override = deviceManager.loopManager.settings.scheduleOverride,
+           override.context == .legacyWorkout,
+           override.isActive() {
+            // Workout is active - offer to cancel
+            let alert = UIAlertController(
+                title: NSLocalizedString("Workout Active", comment: "Title for workout active alert"),
+                message: NSLocalizedString("Would you like to end your workout preset?", comment: "Message for workout active alert"),
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: NSLocalizedString("End Workout", comment: "End workout button"), style: .destructive) { [weak self] _ in
+                self?.deviceManager.loopManager.mutateSettings { settings in
+                    settings.clearOverride(matching: .legacyWorkout)
+                }
+                self?.homeViewModel.updateWorkoutState(false)
+            })
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button"), style: .cancel))
+            present(alert, animated: true)
+        } else {
+            // Check if workout target range is configured
+            guard deviceManager.loopManager.settings.legacyWorkoutTargetRange != nil else {
+                let alert = UIAlertController(
+                    title: NSLocalizedString("Workout Not Configured", comment: "Title for workout not configured alert"),
+                    message: NSLocalizedString("Please configure a Workout correction range in your Therapy Settings before using this feature.", comment: "Message for workout not configured alert"),
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: .default))
+                present(alert, animated: true)
+                return
+            }
+
+            // Show workout duration picker
+            presentWorkoutModeAlertController()
+        }
+    }
+
     private func updateHomeViewModel() {
         // Update glucose
         if let glucose = deviceManager.glucoseStore.latestGlucose {
@@ -1990,6 +2033,11 @@ final class StatusTableViewController: LoopChartsTableViewController {
         let isAutomated = automaticDosingStatus.automaticDosingEnabled
         let modeName = isAutomated ? "Automated" : "Manual"
         homeViewModel.updateMode(name: modeName, isAutomated: isAutomated)
+
+        // Update workout state
+        let isWorkoutActive = deviceManager.loopManager.settings.scheduleOverride?.context == .legacyWorkout &&
+            deviceManager.loopManager.settings.scheduleOverride?.isActive() == true
+        homeViewModel.updateWorkoutState(isWorkoutActive)
 
         // Update user name (could be from settings or user profile)
         // For now, using a default
