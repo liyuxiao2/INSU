@@ -24,8 +24,8 @@ public class TabSelectionState: ObservableObject {
 public enum HomeTab: Int, CaseIterable {
     case home = 0
     case stats = 1
-    case history = 2
-    case profile = 3
+    case profile = 2
+    case settings = 3
 
     public var icon: String {
         switch self {
@@ -33,18 +33,18 @@ public enum HomeTab: Int, CaseIterable {
             return "house.fill"
         case .stats:
             return "chart.bar.fill"
-        case .history:
-            return "person.fill"
         case .profile:
+            return "person.fill"
+        case .settings:
             return "gearshape.fill"
         }
     }
 }
 
-// MARK: - Dip Cover Shape (White overlay with cosine wave bottom)
+// MARK: - Dip Cover Shape (Just the cosine wave curve)
 
-/// A white shape that overlays the navbar to create the dip effect.
-/// Has a flat top and left/right edges, with a cosine-wave curved bottom.
+/// A shape that draws only the cosine wave dip area (no rectangle above).
+/// Creates a curved "bump" that fills just the wave portion.
 struct DipCoverShape: Shape {
     var dipCenterX: CGFloat
     let dipWidth: CGFloat = 120  // Width of the dip curve (wider)
@@ -58,38 +58,31 @@ struct DipCoverShape: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
 
-        // Start from top-left
-        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
+        // Start at the baseline on the left side of the dip
+        let dipLeftX = dipCenterX - dipWidth / 2
+        let dipRightX = dipCenterX + dipWidth / 2
 
-        // Top edge
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
+        path.move(to: CGPoint(x: dipLeftX, y: rect.maxY))
 
-        // Right edge
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-
-        // Bottom edge with cosine wave dip
-        // We draw from right to left, with a smooth dip centered at dipCenterX
+        // Draw the cosine wave from left to right
         let steps = 100
         for i in 0...steps {
-            let x = rect.maxX - (CGFloat(i) / CGFloat(steps)) * rect.width
+            let x = dipLeftX + (CGFloat(i) / CGFloat(steps)) * dipWidth
 
             // Calculate distance from dip center (normalized)
             let distanceFromCenter = abs(x - dipCenterX)
             let normalizedDistance = min(distanceFromCenter / (dipWidth / 2), 1.0)
 
             // Cosine curve: 1 at center, 0 at edges of dip
-            let cosValue = normalizedDistance < 1.0 ? (1 + cos(normalizedDistance * .pi)) / 2 : 0
+            let cosValue = (1 + cos(normalizedDistance * .pi)) / 2
             let y = rect.maxY + cosValue * dipDepth
 
-            if i == 0 {
-                path.addLine(to: CGPoint(x: x, y: y))
-            } else {
-                path.addLine(to: CGPoint(x: x, y: y))
-            }
+            path.addLine(to: CGPoint(x: x, y: y))
         }
 
-        // Left edge back to start
-        path.addLine(to: CGPoint(x: rect.minX, y: rect.minY))
+        // Close back to start along the baseline
+        path.addLine(to: CGPoint(x: dipRightX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: dipLeftX, y: rect.maxY))
 
         path.closeSubpath()
         return path

@@ -123,10 +123,11 @@ final class StatusTableViewController: LoopChartsTableViewController {
                     statsViewModel.updateUserName(self.homeViewModel.userName)
                 }
                 contentView = AnyView(StatsView(viewModel: statsViewModel))
-            case .history:
-                contentView = AnyView(HistoryView())
             case .profile:
                 contentView = AnyView(ProfileView())
+            case .settings:
+                // Settings tab - show settings as embedded view
+                contentView = self.createSettingsView()
             case .home:
                 return
             }
@@ -1779,6 +1780,79 @@ final class StatusTableViewController: LoopChartsTableViewController {
                 .environment(\.appName, Bundle.main.bundleDisplayName),
             isModalInPresentation: false)
         present(hostingController, animated: true)
+    }
+
+    private func createSettingsView() -> AnyView {
+        let deletePumpDataFunc: () -> PumpManagerViewModel.DeleteTestingDataFunc? = { [weak self] in
+            (self?.deviceManager.pumpManager is TestingPumpManager) ? {
+                [weak self] in self?.deviceManager.deleteTestingPumpData()
+            } : nil
+        }
+        let deleteCGMDataFunc: () -> CGMManagerViewModel.DeleteTestingDataFunc? = { [weak self] in
+            (self?.deviceManager.cgmManager is TestingCGMManager) ? {
+                [weak self] in self?.deviceManager.deleteTestingCGMData()
+            } : nil
+        }
+        let pumpViewModel = PumpManagerViewModel(
+            image: { [weak self] in self?.deviceManager.pumpManager?.smallImage },
+            name: { [weak self] in self?.deviceManager.pumpManager?.localizedTitle ?? "" },
+            isSetUp: { [weak self] in self?.deviceManager.pumpManager?.isOnboarded == true },
+            availableDevices: deviceManager.availablePumpManagers,
+            deleteTestingDataFunc: deletePumpDataFunc,
+            onTapped: { [weak self] in
+                self?.onPumpTapped()
+            },
+            didTapAddDevice: { [weak self] in
+                self?.addPumpManager(withIdentifier: $0.identifier)
+            })
+
+        let cgmViewModel = CGMManagerViewModel(
+            image: { [weak self] in (self?.deviceManager.cgmManager as? DeviceManagerUI)?.smallImage },
+            name: { [weak self] in self?.deviceManager.cgmManager?.localizedTitle ?? "" },
+            isSetUp: { [weak self] in self?.deviceManager.cgmManager?.isOnboarded == true },
+            availableDevices: deviceManager.availableCGMManagers,
+            deleteTestingDataFunc: deleteCGMDataFunc,
+            onTapped: { [weak self] in
+                self?.onCGMTapped()
+            },
+            didTapAddDevice: { [weak self] in
+                self?.addCGMManager(withIdentifier: $0.identifier)
+            })
+
+        let servicesViewModel = ServicesViewModel(
+            showServices: FeatureFlags.includeServicesInSettingsEnabled,
+            availableServices: { [weak self] in self?.deviceManager.servicesManager.availableServices ?? [] },
+            activeServices: { [weak self] in self?.deviceManager.servicesManager.activeServices ?? [] },
+            delegate: self)
+
+        let versionUpdateViewModel = VersionUpdateViewModel(supportManager: supportManager, guidanceColors: .default)
+
+        let viewModel = SettingsViewModel(
+            alertPermissionsChecker: alertPermissionsChecker,
+            alertMuter: alertMuter,
+            versionUpdateViewModel: versionUpdateViewModel,
+            pumpManagerSettingsViewModel: pumpViewModel,
+            cgmManagerSettingsViewModel: cgmViewModel,
+            servicesViewModel: servicesViewModel,
+            criticalEventLogExportViewModel: CriticalEventLogExportViewModel(exporterFactory: deviceManager.criticalEventLogExportManager),
+            therapySettings: { [weak self] in self?.deviceManager.loopManager.therapySettings ?? TherapySettings() },
+            sensitivityOverridesEnabled: FeatureFlags.sensitivityOverridesEnabled,
+            initialDosingEnabled: deviceManager.loopManager.settings.dosingEnabled,
+            isClosedLoopAllowed: automaticDosingStatus.$isAutomaticDosingAllowed,
+            automaticDosingStrategy: deviceManager.loopManager.settings.automaticDosingStrategy,
+            availableSupports: supportManager.availableSupports,
+            isOnboardingComplete: onboardingManager.isComplete,
+            therapySettingsViewModelDelegate: deviceManager,
+            delegate: self)
+
+        return AnyView(
+            SettingsTabView {
+                SettingsView(viewModel: viewModel, localizedAppNameAndVersion: supportManager.localizedAppNameAndVersion)
+                    .environmentObject(deviceManager.displayGlucosePreference)
+                    .environment(\.appName, Bundle.main.bundleDisplayName)
+                    .navigationBarHidden(true)
+            }
+        )
     }
 
     private func onPumpTapped() {

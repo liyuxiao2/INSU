@@ -5,21 +5,18 @@ public struct ProfileView: View {
     @State private var isFAQsExpanded = false
 
     public init() {}
-    
+
     public var body: some View {
         ScrollView {
-            VStack(spacing: 30) {
-                // Profile Header
+            VStack(spacing: 20) {
+                // Profile Photo and Name
                 VStack(spacing: 16) {
                     ZStack(alignment: .bottomTrailing) {
-                        Image("profile_placeholder") // You might need to add this asset or use a system placeholder
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
+                        Circle()
+                            .fill(Color.gray.opacity(0.2))
                             .frame(width: 150, height: 150)
-                            .clipShape(Circle())
                             .overlay(Circle().stroke(Color.black, lineWidth: 2))
-                            .background(Circle().fill(Color.gray.opacity(0.2))) // Fallback if image missing
-                        
+
                         // Plus icon
                         Image(systemName: "plus")
                             .font(.system(size: 20, weight: .bold))
@@ -29,12 +26,12 @@ public struct ProfileView: View {
                             .clipShape(Circle())
                             .offset(x: 5, y: 5)
                     }
-                    
+
                     Text("Arian Emamjomeh")
-                        .font(.system(size: 28, weight: .bold)) // Slightly smaller than "greeting" but bold
+                        .font(.system(size: 28, weight: .bold))
                         .foregroundColor(.black)
                 }
-                .padding(.top, 40)
+                .padding(.top, 60) // Account for safe area
                 
                 // Expandable Sections
                 VStack(spacing: 20) {
@@ -103,3 +100,4 @@ public struct ProfileView: View {
         }
     }
 }
+

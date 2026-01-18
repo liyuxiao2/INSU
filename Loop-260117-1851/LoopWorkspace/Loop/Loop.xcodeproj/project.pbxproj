@@ -530,6 +530,7 @@
 		D43070302F1CCA820039B00C /* GlucoseSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430702B2F1CCA820039B00C /* GlucoseSummaryCard.swift */; };
 		D43070312F1CCA820039B00C /* GlucoseChartCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430702A2F1CCA820039B00C /* GlucoseChartCard.swift */; };
 		D43070322F1CCA820039B00C /* TimeInRangeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D430702D2F1CCA820039B00C /* TimeInRangeCard.swift */; };
+		D43070342F1CD5D50039B00C /* SettingsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43070332F1CD5D50039B00C /* SettingsTabView.swift */; };
 		DD3DBD292A33AFE9000F8B5B /* IntegralRetrospectiveCorrectionSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3DBD282A33AFE9000F8B5B /* IntegralRetrospectiveCorrectionSelectionView.swift */; };
 		DDC389F62A2B61750066E2E8 /* ApplicationFactorStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC389F52A2B61750066E2E8 /* ApplicationFactorStrategy.swift */; };
 		DDC389F82A2B620B0066E2E8 /* GlucoseBasedApplicationFactorStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC389F72A2B620B0066E2E8 /* GlucoseBasedApplicationFactorStrategy.swift */; };
@@ -1373,6 +1374,7 @@
 		D430702B2F1CCA820039B00C /* GlucoseSummaryCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseSummaryCard.swift; sourceTree = "<group>"; };
 		D430702C2F1CCA820039B00C /* StatsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsHeaderView.swift; sourceTree = "<group>"; };
 		D430702D2F1CCA820039B00C /* TimeInRangeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeInRangeCard.swift; sourceTree = "<group>"; };
+		D43070332F1CD5D50039B00C /* SettingsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTabView.swift; sourceTree = "<group>"; };
 		DD3DBD282A33AFE9000F8B5B /* IntegralRetrospectiveCorrectionSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegralRetrospectiveCorrectionSelectionView.swift; sourceTree = "<group>"; };
 		DDC389F52A2B61750066E2E8 /* ApplicationFactorStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationFactorStrategy.swift; sourceTree = "<group>"; };
 		DDC389F72A2B620B0066E2E8 /* GlucoseBasedApplicationFactorStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseBasedApplicationFactorStrategy.swift; sourceTree = "<group>"; };
@@ -2175,6 +2177,7 @@
 				B4E96D56248A7B0F002DABAD /* StatusHighlightHUDView.swift */,
 				D43070282F1CCA650039B00C /* StatsViewModel.swift */,
 				D430702E2F1CCA820039B00C /* StatsCards */,
+				D43070332F1CD5D50039B00C /* SettingsTabView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3944,6 +3947,7 @@
 				B48B0BAC24900093009A48DE /* PumpStatusHUDView.swift in Sources */,
 				B4C9859425D5A3BB009FD9CA /* StatusBadgeHUDView.swift in Sources */,
 				B491B0A424D0B675004CBE8F /* UIColor.swift in Sources */,
+				D43070342F1CD5D50039B00C /* SettingsTabView.swift in Sources */,
 				C1AD4200256D61E500164DDD /* Comparable.swift in Sources */,
 				43FCEEAD221A66780013DD30 /* DateFormatter.swift in Sources */,
 				1DB1CA4D24A55F0000B3B94C /* Image.swift in Sources */,

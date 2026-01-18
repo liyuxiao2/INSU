@@ -51,31 +51,36 @@ public struct InsulinModeCardView: View {
 
                 Spacer()
 
-                // Mode label
-                Text("Active Mode: \(modeName)")
-                    .font(InsuTypography.cardDate)
-                    .foregroundColor(Color.insuGray)
+                // Mode label with bold mode name
+                HStack(spacing: 0) {
+                    Text("Active Mode: ")
+                        .font(InsuTypography.cardDate)
+                        .foregroundColor(Color.insuGray)
+                    Text(modeName)
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(Color.insuTextPrimary)
+                }
 
-                // Mode icon
-                Image(systemName: isAutomated ? "arrow.triangle.2.circlepath.circle.fill" : "hand.raised.circle.fill")
-                    .font(.system(size: 88))
+                // Mode icon - smaller
+                Image(systemName: isAutomated ? "circle.circle" : "hand.raised.circle.fill")
+                    .font(.system(size: 60))
                     .foregroundColor(Color.insuDarkBlue)
-                    .padding(.vertical, 16)
+                    .padding(.vertical, 12)
 
                 Spacer()
 
-                // Change Mode button
+                // Change Mode button - smaller
                 Button(action: onChangeMode) {
                     Text("Switch Mode")
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
+                        .padding(.vertical, 10)
                         .background(Color.insuDarkBlue)
-                        .cornerRadius(15)
+                        .cornerRadius(12)
                 }
-                .padding(.horizontal, 40)
-                .padding(.bottom, 16)
+                .padding(.horizontal, 50)
+                .padding(.bottom, 12)
             }
             .padding(7)
             .background(Color.white)

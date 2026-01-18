@@ -21,7 +21,7 @@ public struct StatsView: View {
 
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 16) {
-                    // Header section
+                    // Header section - matches Home page header positioning
                     StatsHeaderView(userName: viewModel.userName)
 
                     // Glucose chart card
@@ -34,7 +34,7 @@ public struct StatsView: View {
                     TimeInRangeCard(viewModel: viewModel)
                 }
                 .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
-                .padding(.top, 60)
+                .padding(.top, 60) // Account for safe area (status bar/dynamic island)
                 .padding(.bottom, InsuSpacing.tabBarHeight + 20)
             }
         }

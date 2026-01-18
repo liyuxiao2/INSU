@@ -31,7 +31,7 @@ public struct PodStatusCardView: View {
 
             // Inner white card
             VStack(spacing: 0) {
-                // IOB header bar with shadow
+                // IOB and Reservoir header bar with shadow
                 HStack {
                     Text("IOB ")
                         .font(InsuTypography.iobLabel)
@@ -41,6 +41,13 @@ public struct PodStatusCardView: View {
                         .foregroundColor(Color.insuGray)
 
                     Spacer()
+
+                    Text(String(format: "%.0f", reservoirLevel) + " ")
+                        .font(InsuTypography.iobValue)
+                        .foregroundColor(Color.insuGray)
+                    + Text(reservoirUnit + " Left")
+                        .font(InsuTypography.iobLabel)
+                        .foregroundColor(Color.insuGray)
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
@@ -51,21 +58,10 @@ public struct PodStatusCardView: View {
 
                 Spacer()
 
-                // Reservoir value
-                HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text(String(format: "%.0f", reservoirLevel))
-                        .font(.system(size: 72, weight: .bold))
-                        .foregroundColor(Color.insuTextPrimary)
-
-                    Text(reservoirUnit + " Left in Pod")
-                        .font(InsuTypography.glucoseUnit)
-                        .foregroundColor(Color.insuGray)
-                }
-
+                // Pod Expires info
                 Text("Pod Expires: Tomorrow")
                     .font(InsuTypography.cardDate)
                     .foregroundColor(Color.insuGray)
-                    .padding(.top, 8)
 
                 Text("Jan 18 (2:29 PM)")
                     .font(InsuTypography.cardDate)
@@ -74,18 +70,18 @@ public struct PodStatusCardView: View {
 
                 Spacer()
 
-                // View Pod Details button
+                // View Pod Details button - smaller
                 Button(action: onViewDetails) {
                     Text("View Pod Details")
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
+                        .padding(.vertical, 10)
                         .background(Color.insuDarkBlue)
-                        .cornerRadius(15)
+                        .cornerRadius(12)
                 }
-                .padding(.horizontal, 40)
-                .padding(.bottom, 16)
+                .padding(.horizontal, 50)
+                .padding(.bottom, 12)
             }
             .padding(7)
             .background(Color.white)

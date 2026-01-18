@@ -44,7 +44,6 @@ public struct StatsHeaderView: View {
             }
             .padding(.top, 8)
         }
-        .padding(.top, 16)
     }
 }
 
