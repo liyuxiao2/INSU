@@ -3,7 +3,6 @@ import UIKit
 
 public struct ProfileView: View {
     @State private var isPersonalDetailsExpanded = false
-    @State private var isFAQsExpanded = false
 
     // Device status
     let isPumpSetUp: Bool
@@ -99,13 +98,6 @@ public struct ProfileView: View {
                     expandableButton(title: "Personal Details", isExpanded: $isPersonalDetailsExpanded) {
                         // Content for Personal Details would go here
                         Text("Name: Arian Emamjomeh\nAge: 18\nType: 1")
-                            .font(InsuTypography.subtitle)
-                            .padding()
-                    }
-
-                    expandableButton(title: "FAQs", isExpanded: $isFAQsExpanded) {
-                        // Content for FAQs
-                        Text("No FAQs currently available.")
                             .font(InsuTypography.subtitle)
                             .padding()
                     }
