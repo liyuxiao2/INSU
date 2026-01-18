@@ -29,9 +29,10 @@ public struct SettingsView: View {
             var id: String {
                 rawValue
             }
-            
+
             case deleteCGMData
             case deletePumpData
+            case confirmLogout
         }
         
         enum ActionSheet: String, Identifiable {
@@ -102,6 +103,8 @@ public struct SettingsView: View {
                     if let profileExpiration = BuildDetails.default.profileExpiration, FeatureFlags.profileExpirationSettingsViewEnabled {
                         appExpirationSection(profileExpiration: profileExpiration)
                     }
+
+                    logoutSection
                 }
             }
             .insetGroupedListStyle()
@@ -132,6 +135,8 @@ public struct SettingsView: View {
                     return makeDeleteAlert(for: self.viewModel.cgmManagerSettingsViewModel)
                 case .deletePumpData:
                     return makeDeleteAlert(for: self.viewModel.pumpManagerSettingsViewModel)
+                case .confirmLogout:
+                    return makeLogoutAlert()
                 }
             }
             .sheet(item: $sheet) { sheet in
@@ -463,6 +468,45 @@ extension SettingsView {
             NavigationLink(destination: CriticalEventLogExportView(viewModel: viewModel.criticalEventLogExportViewModel)) {
                 Text(NSLocalizedString("Export Critical Event Logs", comment: "The title of the export critical event logs in support"))
             }
+        }
+    }
+
+    // MARK: - INSU Logout Section
+
+    private var logoutSection: some View {
+        Section {
+            Button(action: { alert = .confirmLogout }) {
+                HStack {
+                    Spacer()
+                    Text(NSLocalizedString("Log Out", comment: "The title text for the logout button"))
+                        .foregroundColor(.red)
+                    Spacer()
+                }
+            }
+        }
+    }
+
+    private func makeLogoutAlert() -> SwiftUI.Alert {
+        SwiftUI.Alert(
+            title: Text(NSLocalizedString("Log Out", comment: "Logout alert title")),
+            message: Text(NSLocalizedString("Are you sure you want to log out? You will need to complete the onboarding process again.", comment: "Logout confirmation message")),
+            primaryButton: .cancel(),
+            secondaryButton: .destructive(Text(NSLocalizedString("Log Out", comment: "Logout button"))) {
+                performLogout()
+            }
+        )
+    }
+
+    private func performLogout() {
+        // Reset INSU onboarding state
+        InsuOnboardingCoordinator.resetOnboardingState()
+
+        // Dismiss settings and restart app flow
+        dismiss()
+
+        // Post notification to restart onboarding
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            NotificationCenter.default.post(name: .InsuLogoutRequested, object: nil)
         }
     }
     
