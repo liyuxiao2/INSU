@@ -64,6 +64,7 @@ public struct HomeCardContainer: View {
                         .font(.system(size: 26))
                         .foregroundColor(Color.insuTextPrimary)
                 }
+                .padding(.top, 8)
             }
             .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
             .padding(.top, 16)
@@ -120,28 +121,30 @@ public struct HomeCardContainer: View {
                     .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
                     .padding(.top, 20)
 
-                    // Bottom section: Last Bolus + Action Cards
-                    HStack(spacing: 13) {
-                        // Left card: Last Bolus (taller card)
-                        LastBolusCardView(
-                            bolusValue: viewModel.lastBolusValue,
-                            bolusUnit: viewModel.lastBolusUnit,
-                            dateString: viewModel.lastBolusDate
-                        )
-                        .frame(width: 171, height: InsuSpacing.smallCardHeight)
+            // Bottom section: Last Bolus + Action Cards
+            HStack(spacing: 13) {
+                // Left card: Last Bolus (taller card)
+                LastBolusCardView(
+                    bolusValue: viewModel.lastBolusValue,
+                    bolusUnit: viewModel.lastBolusUnit,
+                    dateString: viewModel.lastBolusDate
+                )
+                .frame(width: InsuSpacing.smallCardWidth, height: InsuSpacing.smallCardHeight)
 
-                        // Right side: Pause/Resume Insulin + Activity cards (stacked)
-                        VStack(spacing: 7) {
-                            PauseGlucoseCardView(isSuspended: viewModel.isInsulinSuspended, onToggle: onToggleSuspend)
-                                .frame(height: 118)
+                // Right side: Pause/Resume Insulin + Activity cards (stacked)
+                VStack(spacing: InsuSpacing.smallCardVerticalSpacing) {
+                    PauseGlucoseCardView(isSuspended: viewModel.isInsulinSuspended, onToggle: onToggleSuspend)
+                        .frame(height: InsuSpacing.actionCardHeight)
 
-                            ActivityCardView(isWorkoutActive: viewModel.isWorkoutActive, onActivity: onActivityTapped)
-                                .frame(height: 118)
-                        }
-                        .frame(width: 170)
-                    }
-                    .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
-                    .padding(.top, 20)
+                    ActivityCardView(isWorkoutActive: viewModel.isWorkoutActive, onActivity: onActivityTapped)
+                        .frame(height: InsuSpacing.actionCardHeight)
+                }
+                .frame(width: InsuSpacing.smallCardWidth)
+            }
+            .padding(.horizontal, InsuSpacing.screenHorizontalPadding)
+            .padding(.top, 20)
+
+            Spacer()
 
                     // Input Bolus button
                     Button(action: onInputBolus) {
