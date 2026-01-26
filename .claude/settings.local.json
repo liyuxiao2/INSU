@@ -14,7 +14,8 @@
       "Bash(xcrun simctl get_app_container:*)",
       "Bash(xcrun simctl listapps:*)",
       "Bash(git add:*)",
-      "Bash(xcrun simctl uninstall:*)"
+      "Bash(xcrun simctl uninstall:*)",
+      "Bash(git -C /Users/liyuxiao/Documents/INSU/insuliproto log --oneline --grep=\"alert\\\\|stats\\\\|activity\" -5)"
     ]
   }
 }
