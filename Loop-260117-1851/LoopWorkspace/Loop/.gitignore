@@ -86,3 +86,6 @@ Loop\ Widget\ Extension/DerivedAssets.xcassets/*
 Loop/DerivedAssetsOverride.xcassets
 WatchApp/DerivedAssetsOverride.xcassets
 Loop\ Widget\ Extension/DerivedAssetsOverride.xcassets
+
+# Gemini API Key
+GeminiAPIKey.xcconfig

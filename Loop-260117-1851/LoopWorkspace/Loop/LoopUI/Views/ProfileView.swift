@@ -3,7 +3,6 @@ import UIKit
 
 public struct ProfileView: View {
     @State private var isPersonalDetailsExpanded = false
-    @State private var isFAQsExpanded = false
 
     // Device status
     let isPumpSetUp: Bool
@@ -18,6 +17,7 @@ public struct ProfileView: View {
     let onAddCGM: () -> Void
     let onPumpTapped: () -> Void
     let onCGMTapped: () -> Void
+    let onHelpTapped: () -> Void
 
     public init(
         isPumpSetUp: Bool = false,
@@ -29,7 +29,8 @@ public struct ProfileView: View {
         onAddPump: @escaping () -> Void = {},
         onAddCGM: @escaping () -> Void = {},
         onPumpTapped: @escaping () -> Void = {},
-        onCGMTapped: @escaping () -> Void = {}
+        onCGMTapped: @escaping () -> Void = {},
+        onHelpTapped: @escaping () -> Void = {}
     ) {
         self.isPumpSetUp = isPumpSetUp
         self.pumpName = pumpName
@@ -41,6 +42,7 @@ public struct ProfileView: View {
         self.onAddCGM = onAddCGM
         self.onPumpTapped = onPumpTapped
         self.onCGMTapped = onCGMTapped
+        self.onHelpTapped = onHelpTapped
     }
 
     public var body: some View {
@@ -99,20 +101,13 @@ public struct ProfileView: View {
                             .font(InsuTypography.subtitle)
                             .padding()
                     }
-
-                    expandableButton(title: "FAQs", isExpanded: $isFAQsExpanded) {
-                        // Content for FAQs
-                        Text("No FAQs currently available.")
-                            .font(InsuTypography.subtitle)
-                            .padding()
-                    }
                 }
 
                 Spacer(minLength: 40)
 
                 // Help Button
                 Button(action: {
-                    // Help action
+                    onHelpTapped()
                 }) {
                     Text("Help")
                 }
